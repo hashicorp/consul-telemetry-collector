@@ -23,6 +23,8 @@ GOLDFLAGS=-X github.com/hashicorp/consul-telemetry-collector/pkg/version.GitComm
 # Get latest revision (no dirty check for now).
 REVISION = $(shell git rev-parse HEAD)
 
+default: dev
+
 .PHONY: version
 version:
 	@echo $(VERSION)
