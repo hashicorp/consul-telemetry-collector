@@ -2,6 +2,7 @@ package otelcol
 
 import (
 	"context"
+	"fmt"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/connector"
@@ -26,14 +27,19 @@ func Exporters() exporter.Factory {
 }
 
 func NewService(ctx context.Context, _ service.Settings, _ service.Config) (*service.Service, error) {
-	traces := component.NewID(component.DataTypeTraces)
-
-	r := Receivers()
-	e := Exporters()
-
 	factories, err := components()
 	if err != nil {
 		return nil, err
+	}
+
+	cfgProvider, err := Provider()
+	if err != nil {
+		return nil, err
+	}
+
+	staticCfg, err := cfgProvider.Get(ctx, factories)
+	if err != nil {
+		fmt.Println(err)
 	}
 
 	cfg := service.Config{
@@ -44,10 +50,7 @@ func NewService(ctx context.Context, _ service.Settings, _ service.Config) (*ser
 				Encoding:    "console",
 				OutputPaths: []string{"stderr"},
 			},
-			Metrics: telemetry.MetricsConfig{
-				Level:   0,
-				Address: "",
-			},
+			Metrics: staticCfg.Service.Telemetry.Metrics,
 			Traces: telemetry.TracesConfig{
 				Propagators: []string{},
 			},
@@ -55,13 +58,7 @@ func NewService(ctx context.Context, _ service.Settings, _ service.Config) (*ser
 				"": nil,
 			},
 		},
-		Pipelines: map[component.ID]*service.PipelineConfig{
-			traces: {
-				Receivers:  []component.ID{component.NewID(r.Type())},
-				Processors: []component.ID{},
-				Exporters:  []component.ID{component.NewID(e.Type())},
-			},
-		},
+		Pipelines: staticCfg.Service.Pipelines,
 	}
 
 	set := service.Settings{
@@ -70,11 +67,9 @@ func NewService(ctx context.Context, _ service.Settings, _ service.Config) (*ser
 			Description: "",
 			Version:     "",
 		},
-		Receivers: receiver.NewBuilder(map[component.ID]component.Config{
-			component.NewID(r.Type()): r.CreateDefaultConfig(),
-		}, factories.Receivers),
+		Receivers:         receiver.NewBuilder(staticCfg.Receivers, factories.Receivers),
 		Processors:        &processor.Builder{},
-		Exporters:         exporter.NewBuilder(map[component.ID]component.Config{component.NewID(e.Type()): e.CreateDefaultConfig()}, factories.Exporters),
+		Exporters:         exporter.NewBuilder(staticCfg.Exporters, factories.Exporters),
 		Connectors:        &connector.Builder{},
 		Extensions:        &extension.Builder{},
 		AsyncErrorChannel: make(chan error),

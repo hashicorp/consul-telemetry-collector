@@ -39,7 +39,7 @@ bin: dist
 
 .PHONY: dev
 dev: bin
-	cp $(BIN) $(GOBIN)/$(BIN_NAME)
+	./$(BIN)
 
 # Docker Stuff.
 export DOCKER_BUILDKIT=1
