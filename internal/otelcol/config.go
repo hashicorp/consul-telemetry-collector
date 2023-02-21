@@ -11,6 +11,7 @@ import (
 	"go.opentelemetry.io/collector/receiver"
 )
 
+// This should be dependency injection
 var cfg string = `
 receivers:
   otlp:
