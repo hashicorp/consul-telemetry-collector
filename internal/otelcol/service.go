@@ -31,6 +31,11 @@ func NewService(ctx context.Context, _ service.Settings, _ service.Config) (*ser
 	r := Receivers()
 	e := Exporters()
 
+	factories, err := components()
+	if err != nil {
+		return nil, err
+	}
+
 	cfg := service.Config{
 		Telemetry: telemetry.Config{
 			Logs: telemetry.LogsConfig{
@@ -67,9 +72,9 @@ func NewService(ctx context.Context, _ service.Settings, _ service.Config) (*ser
 		},
 		Receivers: receiver.NewBuilder(map[component.ID]component.Config{
 			component.NewID(r.Type()): r.CreateDefaultConfig(),
-		}, map[component.Type]receiver.Factory{r.Type(): r}),
+		}, factories.Receivers),
 		Processors:        &processor.Builder{},
-		Exporters:         exporter.NewBuilder(map[component.ID]component.Config{component.NewID(e.Type()): e.CreateDefaultConfig()}, map[component.Type]exporter.Factory{e.Type(): e}),
+		Exporters:         exporter.NewBuilder(map[component.ID]component.Config{component.NewID(e.Type()): e.CreateDefaultConfig()}, factories.Exporters),
 		Connectors:        &connector.Builder{},
 		Extensions:        &extension.Builder{},
 		AsyncErrorChannel: make(chan error),
