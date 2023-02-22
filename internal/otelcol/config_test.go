@@ -4,6 +4,8 @@ import (
 	"context"
 	"testing"
 
+	"go.opentelemetry.io/collector/service"
+
 	"go.opentelemetry.io/collector/component"
 
 	"github.com/stretchr/testify/require"
@@ -37,5 +39,14 @@ func TestStaticCfg(t *testing.T) {
 		require.Contains(t, cfg.Receivers, component.NewID("otlp"))
 		require.Contains(t, cfg.Exporters, component.NewID("logging"))
 	})
+}
 
+func TestNewService(t *testing.T) {
+	ctx := context.Background()
+	svc, err := NewService(ctx, service.Settings{}, service.Config{})
+	require.NoError(t, err)
+	err = svc.Start(ctx)
+	require.NoError(t, err)
+	err = svc.Shutdown(ctx)
+	require.NoError(t, err)
 }

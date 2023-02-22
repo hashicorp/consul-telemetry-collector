@@ -58,7 +58,8 @@ func NewService(ctx context.Context, _ service.Settings, _ service.Config) (*ser
 				"": nil,
 			},
 		},
-		Pipelines: staticCfg.Service.Pipelines,
+		Extensions: staticCfg.Service.Extensions,
+		Pipelines:  staticCfg.Service.Pipelines,
 	}
 
 	set := service.Settings{
@@ -71,7 +72,7 @@ func NewService(ctx context.Context, _ service.Settings, _ service.Config) (*ser
 		Processors:        &processor.Builder{},
 		Exporters:         exporter.NewBuilder(staticCfg.Exporters, factories.Exporters),
 		Connectors:        &connector.Builder{},
-		Extensions:        &extension.Builder{},
+		Extensions:        extension.NewBuilder(staticCfg.Extensions, factories.Extensions),
 		AsyncErrorChannel: make(chan error),
 		LoggingOptions:    []zap.Option{},
 	}

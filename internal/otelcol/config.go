@@ -22,14 +22,29 @@ exporters:
   logging: {}
 
 service:
+  extensions: [oauth2client]
   pipelines:
     traces:
       receivers: [otlp]
-      exporters: [logging]
+      exporters: [logging, otlphttp]
 `
 
 var othercfg string = `
+extensions:
+  oauth2client:
+    client_id: "..."
+    client_secret: "..."
+    token_url: "https://connorkelly02-yfhpavyj.dev.pedp-remote.hashicorp.services/oauth2/token"
+    endpoint_params:
+      audience: "https://api.hashicorp.cloud"
 
+
+exporters:
+  logging: {}
+  otlphttp:
+    endpoint: "http://localhost:8888"
+    auth:
+      authenticator: oauth2client
 `
 
 var _ confmap.Provider = (*staticCfg)(nil)
