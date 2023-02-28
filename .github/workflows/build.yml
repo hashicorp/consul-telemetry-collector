@@ -28,7 +28,7 @@ jobs:
         # version, because "goenv" can react to it automatically.
         run: |
           echo "Building with Go $(cat .go-version)"
-          echo "::set-output name=go-version::$(cat .go-version)"
+          echo "go-version=$(cat .go-version)" >> $GITHUB_OUTPUT
 
   get-product-version:
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
         id: get-product-version
         run: |
           make version
-          echo "::set-output name=product-version::$(make version)"
+          echo "product-version=$(make version)" >> $GITHUB_OUTPUT
 
   generate-metadata-file:
     needs: get-product-version
@@ -62,10 +62,28 @@ jobs:
           name: metadata.json
           path: ${{ steps.generate-metadata-file.outputs.filepath }}
 
+  test:
+    runs-on: ubuntu-latest
+    needs:
+      - get-go-version
+    steps:
+      - uses: actions/checkout@v2
+      - name: Deps
+        run: |
+          make deps
+      - name: Test
+        run: |
+          make unit-tests
+      - name: Lint
+        run: |
+          make lint
+
+
   build-linux:
     needs:
       - get-go-version
       - get-product-version
+      - test
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -126,6 +144,7 @@ jobs:
     needs:
       - get-go-version
       - get-product-version
+      - test
     runs-on: macos-latest
     strategy:
       matrix:

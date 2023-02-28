@@ -77,6 +77,14 @@ docker: docker/release-default
 unit-tests:
 	go test ./...
 
+.PHONY: lint
+lint:
+	@PATH=$$PATH:$(GOBIN) golangci-lint run
+
+.PHONY: deps
+deps:
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.1
+
 .PHONY: changelog
 changelog:
 ifdef LAST_RELEASE_GIT_TAG
