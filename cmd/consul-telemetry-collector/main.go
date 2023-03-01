@@ -14,7 +14,11 @@ import (
 )
 
 var (
-	printVersion          bool
+	// static loader
+	printVersion bool
+	configFile   string
+
+	// These are loaded from the environment or flag
 	hcpClientID           string
 	hcpClientSecret       string
 	hcpResourceID         string
@@ -22,14 +26,16 @@ var (
 )
 
 func flags() {
-	// We'll want to implement the flag.Var interface which we can use to figure out if these values actually got set,
-	// fallback to environment variables, and override configuration files (only _really_ necessary for the cloud secrets)
 	flag.BoolVar(&printVersion, "version", false, "Print the build version and exit")
+	flag.StringVar(&configFile, "config-file", "", "Load configuration from a config file. "+
+		"Overrides environment and flag values")
+
 	StringVar(&hcpClientID, "hcp-client-id", "", "HCP Service Principal Client ID", "HCP_CLIENT_ID")
 	StringVar(&hcpClientSecret, "hcp-client-secret", "", "HCP Service Principal Client Secret", "HCP_CLIENT_SECRET")
 	StringVar(&hcpResourceID, "hcp-resource-id", "", "HCP Resource ID", "HCP_RESOURCE_ID")
 	StringVar(&httpCollectorEndpoint, "http-collector-endpoint", "", "OTLP HTTP endpoint to forward telemetry to",
 		"CO_OTEL_HTTP_ENDPOINT")
+
 }
 
 func main() {
@@ -40,14 +46,10 @@ func main() {
 		return
 	}
 
-	cfg := collector.Config{
-		HTTPCollectorEndpoint: httpCollectorEndpoint,
-		Cloud: collector.Cloud{
-			ClientSecret: hcpClientSecret,
-			ClientID:     hcpClientID,
-		},
+	cfg, err := loadConfig()
+	if err != nil {
+		log.Fatal(err)
 	}
-
 	ctx, cancel := context.WithCancel(context.Background())
 
 	sigCh := make(chan os.Signal, 1)
@@ -62,5 +64,23 @@ func main() {
 	if err := collector.Run(ctx, cfg); err != nil {
 		log.Fatal(err)
 	}
+}
 
+func loadConfig() (collector.Config, error) {
+	cfg := collector.Config{
+		HTTPCollectorEndpoint: httpCollectorEndpoint,
+		ConfigFile:            configFile,
+		Cloud: &collector.Cloud{
+			ClientSecret: hcpClientSecret,
+			ClientID:     hcpClientID,
+			ResourceID:   hcpResourceID,
+		},
+	}
+
+	if configFile != "" {
+		err := collector.LoadConfig(configFile, &cfg)
+		return cfg, err
+	}
+
+	return cfg, nil
 }

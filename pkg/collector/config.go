@@ -1,14 +1,15 @@
 package collector
 
 type Config struct {
-	Cloud                 Cloud  `hcl:"cloud"`
-	HTTPCollectorEndpoint string `hcl:"http_collector_endpoint"`
+	Cloud                 *Cloud `hcl:"cloud,block"`
+	HTTPCollectorEndpoint string `hcl:"http_collector_endpoint,optional"`
+	ConfigFile            string
 }
 
 type Cloud struct {
-	ClientID     string `hcl:"client_id"`
-	ClientSecret string `hcl:"client_secret"`
-	ResourceID   string `hcl:"resource_id"`
+	ClientID     string `hcl:"client_id,optional"`
+	ClientSecret string `hcl:"client_secret,optional"`
+	ResourceID   string `hcl:"resource_id,optional"`
 }
 
 func (c Cloud) IsEnabled() bool {
