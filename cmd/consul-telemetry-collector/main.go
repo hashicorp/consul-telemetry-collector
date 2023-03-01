@@ -24,11 +24,12 @@ var (
 func flags() {
 	// We'll want to implement the flag.Var interface which we can use to figure out if these values actually got set,
 	// fallback to environment variables, and override configuration files (only _really_ necessary for the cloud secrets)
-	flag.BoolVar(&printVersion, "version", false, "")
-	flag.StringVar(&hcpClientID, "hcp-client-id", "", "")
-	flag.StringVar(&hcpClientSecret, "hcp-client-secret", "", "")
-	flag.StringVar(&hcpResourceID, "hcp-resource-id", "", "")
-	flag.StringVar(&httpCollectorEndpoint, "http-collector-endpoint", "", "")
+	flag.BoolVar(&printVersion, "version", false, "Print the build version and exit")
+	StringVar(&hcpClientID, "hcp-client-id", "", "HCP Service Principal Client ID", "HCP_CLIENT_ID")
+	StringVar(&hcpClientSecret, "hcp-client-secret", "", "HCP Service Principal Client Secret", "HCP_CLIENT_SECRET")
+	StringVar(&hcpResourceID, "hcp-resource-id", "", "HCP Resource ID", "HCP_RESOURCE_ID")
+	StringVar(&httpCollectorEndpoint, "http-collector-endpoint", "", "OTLP HTTP endpoint to forward telemetry to",
+		"CO_OTEL_HTTP_ENDPOINT")
 }
 
 func main() {
