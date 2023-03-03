@@ -14,7 +14,7 @@ import (
 )
 
 var (
-	// Leave this as a global since we're going to print and bail early if it's set
+	// If this flag is set, print the human read-able collector version and exit
 	printVersion bool
 )
 
