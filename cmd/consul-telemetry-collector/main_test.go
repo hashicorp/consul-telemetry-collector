@@ -8,7 +8,7 @@ import (
 	"github.com/shoenig/test"
 )
 
-func Test_FlagVar(t *testing.T) {
+func Test_envVarString(t *testing.T) {
 	const flagName = "name"
 	const envKey = "TEST_NAME_KEY"
 	const defaultValue = "This is the unset value"
@@ -42,7 +42,8 @@ func Test_FlagVar(t *testing.T) {
 			flag.CommandLine = fs
 			setupEnv(t, tc.env)
 			var ptrString string
-			stringVarOrEnv(&ptrString, flagName, defaultValue, "usage", envKey)
+			flag.StringVar(&ptrString, flagName, defaultValue, "usage")
+			envVarString(envKey, &ptrString)
 			test.NoError(t, fs.Parse(tc.flags))
 			test.Eq(t, ptrString, tc.expect)
 		})

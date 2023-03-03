@@ -60,7 +60,6 @@ func flags() collector.Config {
 	flag.StringVar(&hcpResourceID, "hcp-resource-id", "", fmt.Sprintf("HCP Resource ID \n\tEnvironment variable %s", "HCP_RESOURCE_ID"))
 	flag.StringVar(&httpCollectorEndpoint, "http-collector-endpoint", "", fmt.Sprintf("OTLP HTTP endpoint to forward telemetry to \n\tEnvironment variable %s", "CO_OTEL_HTTP_ENDPOINT"))
 
-	// flags will override environment variables set in environmentConfig
 	flag.Parse()
 
 	return cfg
@@ -78,11 +77,7 @@ func main() {
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 
-	go func() {
-		sig := <-sigCh
-		log.Println("Caught", sig.String(), ". exiting")
-		cancel()
-	}()
+	go handleSignal(sigCh, cancel)
 
 	cfg := flags()
 
@@ -94,4 +89,10 @@ func main() {
 	if err := collector.Run(ctx, cfg); err != nil {
 		log.Fatal(err)
 	}
+}
+
+func handleSignal(sigCh <-chan os.Signal, cancel func()) {
+	sig := <-sigCh
+	log.Println("Caught", sig.String(), ". exiting")
+	cancel()
 }
