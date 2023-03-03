@@ -18,6 +18,8 @@ func Test_LoadConfig(t *testing.T) {
 		err    error
 	}{
 		"Empty": {
+			// preset should always have non-nil values
+			preset: Config{Cloud: &Cloud{}},
 			expect: Config{
 				Cloud: &Cloud{},
 			},
@@ -43,6 +45,7 @@ func Test_LoadConfig(t *testing.T) {
 		},
 		"InvalidConfigFile": {
 			config: `cloud = {}`,
+			preset: Config{Cloud: &Cloud{}},
 			err:    errors.New("unsupported argument"),
 		},
 	}
