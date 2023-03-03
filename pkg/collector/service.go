@@ -16,6 +16,11 @@ type Service struct {
 
 func Run(ctx context.Context, cfg Config) error {
 	logger := hclog.Default()
+
+	if err := LoadConfig(cfg.ConfigFile, &cfg); err != nil {
+		return err
+	}
+
 	if cfg.Cloud.IsEnabled() {
 		// Set up the HCP SDK here
 		logger.Info("Setting up HCP Cloud SDK")
@@ -45,6 +50,9 @@ func (s *Service) Stop() {
 }
 
 func LoadConfig(configFile string, cfg *Config) error {
+	if configFile == "" {
+		return nil
+	}
 	f, err := os.Open(configFile)
 	if err != nil {
 		return fmt.Errorf("failed to open file %s: %w", configFile, err)
