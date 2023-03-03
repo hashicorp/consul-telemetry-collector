@@ -35,10 +35,10 @@ func flags() collector.Config {
 	flag.StringVar(&configFile, "config-file", "", "Load configuration from a config file. "+
 		"Overrides environment and flag values")
 
-	StringVar(&hcpClientID, "hcp-client-id", "", "HCP Service Principal Client ID", "HCP_CLIENT_ID")
-	StringVar(&hcpClientSecret, "hcp-client-secret", "", "HCP Service Principal Client Secret", "HCP_CLIENT_SECRET")
-	StringVar(&hcpResourceID, "hcp-resource-id", "", "HCP Resource ID", "HCP_RESOURCE_ID")
-	StringVar(&httpCollectorEndpoint, "http-collector-endpoint", "", "OTLP HTTP endpoint to forward telemetry to",
+	stringVar(&hcpClientID, "hcp-client-id", "", "HCP Service Principal Client ID", "HCP_CLIENT_ID")
+	stringVar(&hcpClientSecret, "hcp-client-secret", "", "HCP Service Principal Client Secret", "HCP_CLIENT_SECRET")
+	stringVar(&hcpResourceID, "hcp-resource-id", "", "HCP Resource ID", "HCP_RESOURCE_ID")
+	stringVar(&httpCollectorEndpoint, "http-collector-endpoint", "", "OTLP HTTP endpoint to forward telemetry to",
 		"CO_OTEL_HTTP_ENDPOINT")
 
 	return collector.Config{

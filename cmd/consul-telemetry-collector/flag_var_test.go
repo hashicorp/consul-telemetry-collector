@@ -42,7 +42,7 @@ func Test_FlagVar(t *testing.T) {
 			flag.CommandLine = fs
 			setupEnv(t, tc.env)
 			var ptrString string
-			StringVar(&ptrString, flagName, defaultValue, "usage", envKey)
+			stringVar(&ptrString, flagName, defaultValue, "usage", envKey)
 			test.NoError(t, fs.Parse(tc.flags))
 			test.Eq(t, ptrString, tc.expect)
 		})

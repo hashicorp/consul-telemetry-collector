@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-func StringVar(ptr *string, name, defaultValue, usage, envKey string) {
+func stringVar(ptr *string, name, defaultValue, usage, envKey string) {
 	usage = appendEnvUsage(envKey, usage)
 	flag.StringVar(ptr, name, defaultValue, usage)
 	*ptr = must(parseEnv(envKey, defaultValue, func(s string) (string, error) {
