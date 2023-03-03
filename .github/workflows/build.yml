@@ -73,7 +73,7 @@ jobs:
           make deps
       - name: Test
         run: |
-          make unit-tests
+          make tests
       - name: Lint
         run: |
           make lint
