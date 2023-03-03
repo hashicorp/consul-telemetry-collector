@@ -97,6 +97,6 @@ func main() {
 
 func handleSignal(sigCh <-chan os.Signal, cancel func()) {
 	sig := <-sigCh
-	log.Println("Caught", sig.String(), ". exiting")
+	log.Println("Caught signal", sig.String(), ". Exiting")
 	cancel()
 }
