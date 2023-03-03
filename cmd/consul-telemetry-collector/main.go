@@ -14,10 +14,14 @@ import (
 )
 
 const (
-	HCP_CLIENT_ID         = "HCP_CLIENT_ID"
-	HCP_CLIENT_SECRET     = "HCP_CLIENT_SECRET"
-	HCP_RESOURCE_ID       = "HCP_RESOURCE_ID"
-	CO_OTEL_HTTP_ENDPOINT = "CO_OTEL_HTTP_ENDPOINT"
+	// HCPClientID is the environment variable for the hcpClientID
+	HCPClientID = "HCP_CLIENT_ID"
+	// HCPClientSecret is the environment variable for the hcpClientSecret
+	HCPClientSecret = "HCP_CLIENT_SECRET"
+	// HCPResourceID is the environment variable for the hcpResourceID
+	HCPResourceID = "HCP_RESOURCE_ID"
+	// COOtelHTTPEndpoint is the environment variable for the OpenTelemetry HTTP Endpoint we forward metrics metrics to
+	COOtelHTTPEndpoint = "CO_OTEL_HTTP_ENDPOINT"
 )
 
 var (
@@ -48,10 +52,10 @@ func flags() collector.Config {
 		},
 	}
 
-	envVarString(HCP_CLIENT_ID, &hcpClientID)
-	envVarString(HCP_CLIENT_SECRET, &hcpClientSecret)
-	envVarString(HCP_RESOURCE_ID, &hcpResourceID)
-	envVarString(CO_OTEL_HTTP_ENDPOINT, &httpCollectorEndpoint)
+	envVarString(HCPClientID, &hcpClientID)
+	envVarString(HCPClientSecret, &hcpClientSecret)
+	envVarString(HCPResourceID, &hcpResourceID)
+	envVarString(COOtelHTTPEndpoint, &httpCollectorEndpoint)
 
 	flag.BoolVar(&printVersion, "version", false, "Print the build version and exit")
 	flag.StringVar(&configFile, "config-file", "", "Load configuration from a config file. Overrides environment and flag values")

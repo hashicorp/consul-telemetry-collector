@@ -15,6 +15,9 @@ import (
 
 // Service manages the consul-telemetry-collector. It should be initialized and started by Run
 type Service struct {
+	// ctx is our lifecycle handler for the Service.
+	// All other lifecycle context cancelers should come from this context
+	ctx context.Context
 }
 
 // Run will initialize and Start the consul-telemetry-collector Service
@@ -34,12 +37,10 @@ func Run(ctx context.Context, cfg Config) error {
 		logger.Info("Forwarding telemetry to collector", "addr", cfg.HTTPCollectorEndpoint)
 	}
 
-	svc := new(Service)
-	go func() {
-		<-ctx.Done()
-		logger.Info("Shutting down service")
-		svc.Stop()
-	}()
+	ctx = hclog.WithContext(ctx, logger)
+	svc := &Service{
+		ctx: ctx,
+	}
 
 	return svc.Start(ctx)
 }
@@ -47,6 +48,10 @@ func Run(ctx context.Context, cfg Config) error {
 // Start starts the initialized Service
 func (s *Service) Start(ctx context.Context) error {
 	// We would start the otel collector here
+	<-ctx.Done()
+	logger := hclog.FromContext(s.ctx)
+	logger.Info("Shutting down service")
+	s.Stop()
 	return nil
 }
 
