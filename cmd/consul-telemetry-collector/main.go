@@ -31,17 +31,7 @@ func flags() collector.Config {
 		httpCollectorEndpoint string
 	)
 
-	flag.BoolVar(&printVersion, "version", false, "Print the build version and exit")
-	flag.StringVar(&configFile, "config-file", "", "Load configuration from a config file. "+
-		"Overrides environment and flag values")
-
-	stringVar(&hcpClientID, "hcp-client-id", "", "HCP Service Principal Client ID", "HCP_CLIENT_ID")
-	stringVar(&hcpClientSecret, "hcp-client-secret", "", "HCP Service Principal Client Secret", "HCP_CLIENT_SECRET")
-	stringVar(&hcpResourceID, "hcp-resource-id", "", "HCP Resource ID", "HCP_RESOURCE_ID")
-	stringVar(&httpCollectorEndpoint, "http-collector-endpoint", "", "OTLP HTTP endpoint to forward telemetry to",
-		"CO_OTEL_HTTP_ENDPOINT")
-
-	return collector.Config{
+	cfg := collector.Config{
 		HTTPCollectorEndpoint: httpCollectorEndpoint,
 		ConfigFile:            configFile,
 		Cloud: &collector.Cloud{
@@ -49,6 +39,38 @@ func flags() collector.Config {
 			ClientID:     hcpClientID,
 			ResourceID:   hcpResourceID,
 		},
+	}
+
+	flag.BoolVar(&printVersion, "version", false, "Print the build version and exit")
+	flag.StringVar(&configFile, "config-file", "", "Load configuration from a config file. "+
+		"Overrides environment and flag values")
+
+	stringVarOrEnv(&hcpClientID, "hcp-client-id", "", "HCP Service Principal Client ID", "HCP_CLIENT_ID")
+	stringVarOrEnv(&hcpClientSecret, "hcp-client-secret", "", "HCP Service Principal Client Secret", "HCP_CLIENT_SECRET")
+	stringVarOrEnv(&hcpResourceID, "hcp-resource-id", "", "HCP Resource ID", "HCP_RESOURCE_ID")
+	stringVarOrEnv(&httpCollectorEndpoint, "http-collector-endpoint", "", "OTLP HTTP endpoint to forward telemetry to",
+		"CO_OTEL_HTTP_ENDPOINT")
+
+	flag.Parse()
+
+	return cfg
+}
+
+func environmentConfig(c *collector.Config) {
+	if v, ok := os.LookupEnv("HCP_CLIENT_ID"); ok {
+		c.Cloud.ClientID = v
+	}
+
+	if v, ok := os.LookupEnv("HCP_CLIENT_SECRET"); ok {
+		c.Cloud.ClientSecret = v
+	}
+
+	if v, ok := os.LookupEnv("HCP_RESOURCE_ID"); ok {
+		c.Cloud.ResourceID = v
+	}
+
+	if v, ok := os.LookupEnv("CO_OTEL_HTTP_ENDPOINT"); ok {
+		c.HTTPCollectorEndpoint = v
 	}
 }
 
