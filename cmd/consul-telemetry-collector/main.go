@@ -13,6 +13,13 @@ import (
 	"github.com/hashicorp/consul-telemetry-collector/pkg/version"
 )
 
+const (
+	HCP_CLIENT_ID         = "HCP_CLIENT_ID"
+	HCP_CLIENT_SECRET     = "HCP_CLIENT_SECRET"
+	HCP_RESOURCE_ID       = "HCP_RESOURCE_ID"
+	CO_OTEL_HTTP_ENDPOINT = "CO_OTEL_HTTP_ENDPOINT"
+)
+
 var (
 	// If this flag is set, print the human read-able collector version and exit
 	printVersion bool
@@ -41,36 +48,27 @@ func flags() collector.Config {
 		},
 	}
 
+	envVarString(HCP_CLIENT_ID, &hcpClientID)
+	envVarString(HCP_CLIENT_SECRET, &hcpClientSecret)
+	envVarString(HCP_RESOURCE_ID, &hcpResourceID)
+	envVarString(CO_OTEL_HTTP_ENDPOINT, &httpCollectorEndpoint)
+
 	flag.BoolVar(&printVersion, "version", false, "Print the build version and exit")
-	flag.StringVar(&configFile, "config-file", "", "Load configuration from a config file. "+
-		"Overrides environment and flag values")
+	flag.StringVar(&configFile, "config-file", "", "Load configuration from a config file. Overrides environment and flag values")
+	flag.StringVar(&hcpClientID, "hcp-client-id", "", fmt.Sprintf("HCP Service Principal Client ID \n\tEnvironment variable %s", "HCP_CLIENT_ID"))
+	flag.StringVar(&hcpClientSecret, "hcp-client-secret", "", fmt.Sprintf("HCP Service Principal Client Secret \n\tEnvironment variable %s", "HCP_CLIENT_SECRET"))
+	flag.StringVar(&hcpResourceID, "hcp-resource-id", "", fmt.Sprintf("HCP Resource ID \n\tEnvironment variable %s", "HCP_RESOURCE_ID"))
+	flag.StringVar(&httpCollectorEndpoint, "http-collector-endpoint", "", fmt.Sprintf("OTLP HTTP endpoint to forward telemetry to \n\tEnvironment variable %s", "CO_OTEL_HTTP_ENDPOINT"))
 
-	stringVarOrEnv(&hcpClientID, "hcp-client-id", "", "HCP Service Principal Client ID", "HCP_CLIENT_ID")
-	stringVarOrEnv(&hcpClientSecret, "hcp-client-secret", "", "HCP Service Principal Client Secret", "HCP_CLIENT_SECRET")
-	stringVarOrEnv(&hcpResourceID, "hcp-resource-id", "", "HCP Resource ID", "HCP_RESOURCE_ID")
-	stringVarOrEnv(&httpCollectorEndpoint, "http-collector-endpoint", "", "OTLP HTTP endpoint to forward telemetry to",
-		"CO_OTEL_HTTP_ENDPOINT")
-
+	// flags will override environment variables set in environmentConfig
 	flag.Parse()
 
 	return cfg
 }
 
-func environmentConfig(c *collector.Config) {
-	if v, ok := os.LookupEnv("HCP_CLIENT_ID"); ok {
-		c.Cloud.ClientID = v
-	}
-
-	if v, ok := os.LookupEnv("HCP_CLIENT_SECRET"); ok {
-		c.Cloud.ClientSecret = v
-	}
-
-	if v, ok := os.LookupEnv("HCP_RESOURCE_ID"); ok {
-		c.Cloud.ResourceID = v
-	}
-
-	if v, ok := os.LookupEnv("CO_OTEL_HTTP_ENDPOINT"); ok {
-		c.HTTPCollectorEndpoint = v
+func envVarString(envKey string, value *string) {
+	if v, ok := os.LookupEnv(envKey); ok {
+		*value = v
 	}
 }
 
