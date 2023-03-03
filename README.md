@@ -3,7 +3,7 @@
   <span>Consul Telemetry Collector</span>
 </h1>
 
-Consul Telemetry Collector is a lightweight openteletry collector used to collect metrics, logs and traces from a Consul cluster and export it to HCP or another OTLP compliant endpoint.
+Consul Telemetry Collector is a lightweight OpenTelemetry collector used to collect metrics, logs and traces from a Consul cluster and export them to HCP or another OTLP compliant endpoint.
 
 ## Development
 
