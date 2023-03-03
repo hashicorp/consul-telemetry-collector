@@ -1,3 +1,5 @@
+// Package collector manages the consul-telemetry-collector process, loads the configuration,
+// and sets up and manages the lifecycle of the opentelemetry-collector.
 package collector
 
 import (
@@ -11,9 +13,11 @@ import (
 	"github.com/hashicorp/hcl/v2/hclsimple"
 )
 
+// Service manages the consul-telemetry-collector. It should be initialized and started by Run
 type Service struct {
 }
 
+// Run will initialize and Start the consul-telemetry-collector Service
 func Run(ctx context.Context, cfg Config) error {
 	logger := hclog.Default()
 
@@ -40,15 +44,18 @@ func Run(ctx context.Context, cfg Config) error {
 	return svc.Start(ctx)
 }
 
+// Start starts the initialized Service
 func (s *Service) Start(ctx context.Context) error {
 	// We would start the otel collector here
 	return nil
 }
 
+// Stop stops a started Service
 func (s *Service) Stop() {
 
 }
 
+// LoadConfig will read, and marshal a configuration file with hclsimple and merge it with the provided Config
 func LoadConfig(configFile string, cfg *Config) error {
 	if configFile == "" {
 		return nil
