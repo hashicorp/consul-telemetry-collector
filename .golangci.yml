@@ -1,0 +1,22 @@
+linters:
+  enable:
+    - errcheck
+    - govet
+    - ineffassign
+    - unused
+    - bodyclose
+    - gocritic
+    - misspell
+    - unconvert
+    - staticcheck
+    - gosimple
+    - stylecheck
+    - goimports
+    - depguard
+    - gofmt
+    - revive
+
+issues:
+  include:
+    - EXC0011
+    - EXC0012
