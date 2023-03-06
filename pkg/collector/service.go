@@ -20,14 +20,9 @@ type Service struct {
 	ctx context.Context
 }
 
-// Run will initialize and Start the consul-telemetry-collector Service
-func Run(ctx context.Context, cfg Config) error {
+// runSvc will initialize and Start the consul-telemetry-collector Service
+func runSvc(ctx context.Context, cfg Config) error {
 	logger := hclog.Default()
-
-	if err := LoadConfig(cfg.ConfigFile, &cfg); err != nil {
-		return err
-	}
-
 	if cfg.Cloud.IsEnabled() {
 		// Set up the HCP SDK here
 		logger.Info("Setting up HCP Cloud SDK")
@@ -42,26 +37,26 @@ func Run(ctx context.Context, cfg Config) error {
 		ctx: ctx,
 	}
 
-	return svc.Start(ctx)
+	return svc.start(ctx)
 }
 
 // Start starts the initialized Service
-func (s *Service) Start(ctx context.Context) error {
+func (s *Service) start(ctx context.Context) error {
 	// We would start the otel collector here
 	<-ctx.Done()
 	logger := hclog.FromContext(s.ctx)
 	logger.Info("Shutting down service")
-	s.Stop()
+	s.stop()
 	return nil
 }
 
 // Stop stops a started Service
-func (s *Service) Stop() {
+func (s *Service) stop() {
 
 }
 
 // LoadConfig will read, and marshal a configuration file with hclsimple and merge it with the provided Config
-func LoadConfig(configFile string, cfg *Config) error {
+func loadConfig(configFile string, cfg *Config) error {
 	if configFile == "" {
 		return nil
 	}

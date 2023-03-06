@@ -62,7 +62,7 @@ func Test_LoadConfig(t *testing.T) {
 
 			preset.ConfigFile = testfile
 
-			err := LoadConfig(testfile, &preset)
+			err := loadConfig(testfile, &preset)
 			if tc.err != nil {
 				test.Error(t, err)
 				return
