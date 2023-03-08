@@ -5,17 +5,19 @@ import (
 	"go.opentelemetry.io/collector/service"
 )
 
-// Config is a helper type to create a new opentelemetry server configuration
+// Config is a helper type to create a new opentelemetry server configuration.
+// It implements a map[string]interface{} representation of the opentelemetry-collector configuration.
+// More information can be found here: https://opentelemetry.io/docs/collector/configuration/
 type Config struct {
-	Receivers  components     `mapstructure:"receivers"`
-	Exporters  components     `mapstructure:"exporters"`
-	Processors components     `mapstructure:"processors"`
-	Connectors components     `mapstructure:"connectors"`
-	Extensions components     `mapstructure:"extensions"`
-	Service    service.Config `mapstructure:"service"`
+	Receivers  telemetryComponents `mapstructure:"receivers"`
+	Exporters  telemetryComponents `mapstructure:"exporters"`
+	Processors telemetryComponents `mapstructure:"processors"`
+	Connectors telemetryComponents `mapstructure:"connectors"`
+	Extensions telemetryComponents `mapstructure:"extensions"`
+	Service    service.Config      `mapstructure:"service"`
 }
 
-type components map[component.ID]interface{}
+type telemetryComponents map[component.ID]interface{}
 type componentConfig map[string]interface{}
 
 // ComponentConfig is an interface that lets us set key/value entries or child maps on the component
@@ -34,11 +36,12 @@ func (t componentConfig) Map(k string) ComponentConfig {
 	return tc
 }
 
-func addComponent(pipelineComponentConfig map[component.ID]interface{}, id component.ID,
+// addComponent ensures that when a new otel component is created it is always added to the pipeline and the appropriate component for further configuration.
+func addComponent(comp telemetryComponents, id component.ID,
 	pipelineComponent []component.ID) ([]component.ID, componentConfig) {
 	// create the new config
 	ccfg := make(componentConfig)
-	pipelineComponentConfig[id] = ccfg
+	comp[id] = ccfg
 
 	// add to the pipeline slice (and make sure that's not nil)
 	if pipelineComponent == nil {

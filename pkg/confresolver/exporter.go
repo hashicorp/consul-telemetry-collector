@@ -7,7 +7,7 @@ func (c *Config) NewExporter(p PipelineIDer, id component.ID) ComponentConfig {
 	var ccfg componentConfig
 
 	if c.Exporters == nil {
-		c.Exporters = make(components)
+		c.Exporters = make(telemetryComponents)
 	}
 
 	pipeline := c.Service.Pipelines[p.id()]

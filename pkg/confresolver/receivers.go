@@ -7,7 +7,7 @@ func (c *Config) NewReceiver(p PipelineIDer, id component.ID) ComponentConfig {
 	var ccfg componentConfig
 
 	if c.Receivers == nil {
-		c.Receivers = make(components)
+		c.Receivers = make(telemetryComponents)
 	}
 
 	pipeline := c.Service.Pipelines[p.id()]

@@ -11,13 +11,16 @@ import (
 
 	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/hcl/v2/hclsimple"
+
+	"github.com/hashicorp/consul-telemetry-collector/pkg/otelcol"
 )
 
 // Service manages the consul-telemetry-collector. It should be initialized and started by Run
 type Service struct {
 	// ctx is our lifecycle handler for the Service.
 	// All other lifecycle context cancelers should come from this context
-	ctx context.Context
+	ctx       context.Context
+	collector otelcol.Collector
 }
 
 // Run will initialize and Start the consul-telemetry-collector Service
@@ -38,8 +41,14 @@ func Run(ctx context.Context, cfg Config) error {
 	}
 
 	ctx = hclog.WithContext(ctx, logger)
+
+	collector, err := otelcol.New(ctx)
+	if err != nil {
+		return err
+	}
 	svc := &Service{
-		ctx: ctx,
+		ctx:       ctx,
+		collector: collector,
 	}
 
 	return svc.Start(ctx)
@@ -48,6 +57,12 @@ func Run(ctx context.Context, cfg Config) error {
 // Start starts the initialized Service
 func (s *Service) Start(ctx context.Context) error {
 	// We would start the otel collector here
+	ctx, cancel := context.WithCancel(ctx)
+	go func() {
+		err := s.collector.Run(ctx)
+		hclog.FromContext(ctx).Error("Failed to run opentelemetry-collector", "error", err)
+		cancel()
+	}()
 	<-ctx.Done()
 	logger := hclog.FromContext(s.ctx)
 	logger.Info("Shutting down service")
@@ -57,7 +72,7 @@ func (s *Service) Start(ctx context.Context) error {
 
 // Stop stops a started Service
 func (s *Service) Stop() {
-
+	s.collector.Shutdown()
 }
 
 // LoadConfig will read, and marshal a configuration file with hclsimple and merge it with the provided Config
