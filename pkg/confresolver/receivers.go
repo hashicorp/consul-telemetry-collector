@@ -2,7 +2,10 @@ package confresolver
 
 import "go.opentelemetry.io/collector/component"
 
-// NewReceiver creates a new receiver configuration and adds it to the referenced pipeline
+// NewReceiver adds a new receiver component to the overall configuration and
+// adds the component to the specified pipeline. It returns the component's
+// configuration for further configuring. The PipelineIDer parameter is the reference
+// returned from NewPipeline
 func (c *Config) NewReceiver(p PipelineIDer, id component.ID) ComponentConfig {
 	var ccfg componentConfig
 

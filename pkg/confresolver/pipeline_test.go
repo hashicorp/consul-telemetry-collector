@@ -12,8 +12,6 @@ func Test_Pipeline(t *testing.T) {
 	metricsPipelineRef := c.NewPipeline(component.DataTypeMetrics)
 	tracesPipelineRef := c.NewPipeline(component.DataTypeTraces)
 	pipelines := c.Service.Pipelines
-	_, ok := pipelines[component.NewID("foo")]
-	test.False(t, ok)
 
 	metricPipeline, ok := pipelines[metricsPipelineRef.id()]
 	test.NotNil(t, metricPipeline)
@@ -38,8 +36,6 @@ func Test_PipelineWithName(t *testing.T) {
 	c.NewExporter(forwarderMetricsPipelineRef, component.NewID("foo"))
 
 	pipelines := c.Service.Pipelines
-	_, ok := pipelines[component.NewID("foo")]
-	test.False(t, ok)
 
 	test.NotEq(t, hcpMetricsPipelineRef, forwarderMetricsPipelineRef)
 

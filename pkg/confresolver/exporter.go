@@ -2,7 +2,10 @@ package confresolver
 
 import "go.opentelemetry.io/collector/component"
 
-// NewExporter creates a new component configuration and adds it to the specified pipeline
+// NewExporter adds a new exporter component to the overall configuration and
+// adds the component to the specified pipeline. It returns the component's
+// configuration for further configuring. The PipelineIDer parameter is the reference
+// // returned from NewPipeline
 func (c *Config) NewExporter(p PipelineIDer, id component.ID) ComponentConfig {
 	var ccfg componentConfig
 

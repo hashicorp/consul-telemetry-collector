@@ -22,9 +22,9 @@ func Test_NewExporter(t *testing.T) {
 	test.Eq(t, component.NewID("custom-trace-exporter"), pipeline.Exporters[0])
 	test.Eq(t, component.NewID("otlp"), pipeline.Exporters[1])
 
-	customReceiver, ok := cfg.Exporters[component.NewID("custom-trace-exporter")]
+	customExporter, ok := cfg.Exporters[component.NewID("custom-trace-exporter")]
 	test.True(t, ok)
-	customComponentConfig, ok := customReceiver.(ComponentConfig)
+	customComponentConfig, ok := customExporter.(ComponentConfig)
 	test.True(t, ok)
 	test.Eq(t, ccfg, customComponentConfig)
 
