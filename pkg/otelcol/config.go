@@ -10,9 +10,9 @@ import (
 func newConfigProvider() (otelcol.ConfigProvider, error) {
 	return otelcol.NewConfigProvider(otelcol.ConfigProviderSettings{
 		ResolverSettings: confmap.ResolverSettings{
-			URIs: []string{"mem://"},
+			URIs: []string{"inmem://"},
 			Providers: map[string]confmap.Provider{
-				"mem": inmem.NewProvider(),
+				"inmem": inmem.NewProvider(),
 			},
 			Converters: []confmap.Converter{},
 		},

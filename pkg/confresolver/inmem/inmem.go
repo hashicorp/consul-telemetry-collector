@@ -36,10 +36,10 @@ func (m *inmemProvider) Retrieve(_ context.Context, _ string, _ confmap.WatcherF
 	return confmap.NewRetrieved(conf.ToStringMap())
 }
 
-func (m *memProvider) Scheme() string {
-	return "mem"
+func (m *inmemProvider) Scheme() string {
+	return "inmem"
 }
 
-func (m *memProvider) Shutdown(ctx context.Context) error {
+func (m *inmemProvider) Shutdown(ctx context.Context) error {
 	return nil
 }
