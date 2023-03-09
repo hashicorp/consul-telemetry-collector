@@ -14,7 +14,7 @@ func Test_NewReceiver(t *testing.T) {
 	otlp := cfg.NewReceiver(pipelineRef, component.NewID("otlp"))
 	ccfg.Set("key", "value")
 	ccfg.Set("endpoint", "http://localhost:8000")
-	otlp.Map("protocols").Map("http")
+	otlp.SetMap("protocols").SetMap("http")
 
 	pipeline, ok := cfg.Service.Pipelines[pipelineRef.id()]
 	test.True(t, ok)

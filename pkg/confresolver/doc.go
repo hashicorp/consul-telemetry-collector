@@ -12,7 +12,7 @@
 //
 //	pipeline := c.NewPipeline(component.DataTypeTraces)
 //	receiver := c.NewReceiver(pipeline, component.NewID("otlp"))
-//	receiver.Map("protocols").Map("http")
+//	receiver.SetMap("protocols").SetMap("http")
 //	c.NewExporter(pipeline, component.NewID("logging"))
 //
 //	/*

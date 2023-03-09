@@ -14,7 +14,7 @@ func TestComponentConfig(t *testing.T) {
 	ccfg.Set("key", keyValue)
 	ccfg.Set("otherkey", otherKeyValue)
 	ccfg.Set("secret", secretValue)
-	ccfg.Map("map").Set("key", keyValue)
+	ccfg.SetMap("map").Set("key", keyValue)
 
 	expectPresentAndValue(t, ccfg, "key", keyValue)
 	expectPresentAndValue(t, ccfg, "otherkey", otherKeyValue)

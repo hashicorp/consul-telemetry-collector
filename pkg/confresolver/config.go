@@ -20,17 +20,19 @@ type Config struct {
 type telemetryComponents map[component.ID]interface{}
 type componentConfig map[string]interface{}
 
+var _ ComponentConfig = (*componentConfig)(nil)
+
 // ComponentConfig is an interface that lets us set key/value entries or child maps on the component
 type ComponentConfig interface {
 	Set(k, v string)
-	Map(k string) ComponentConfig
+	SetMap(k string) ComponentConfig
 }
 
 func (t componentConfig) Set(k, v string) {
 	t[k] = v
 }
 
-func (t componentConfig) Map(k string) ComponentConfig {
+func (t componentConfig) SetMap(k string) ComponentConfig {
 	tc := make(componentConfig)
 	t[k] = tc
 	return tc
