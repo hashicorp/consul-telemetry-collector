@@ -2,4 +2,8 @@
 *envrc
 *roam.yaml
 *roam.lock.yaml
+
+# IntelliJ
 .idea
+
+dist*

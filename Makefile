@@ -39,7 +39,7 @@ dev: bin
 
 .PHONY: tests
 tests:
-	go test ./...
+	go test --tags=integration ./...
 
 .PHONY: lint
 lint:

@@ -10,18 +10,20 @@ import (
 	"syscall"
 
 	"github.com/hashicorp/go-hclog"
+	"github.com/imdario/mergo"
 	"github.com/mitchellh/cli"
+
+	"github.com/hashicorp/consul-telemetry-collector/pkg/flags"
 )
 
 const (
-	// HCPClientID is the environment variable for the hcpClientID
-	HCPClientID = "HCP_CLIENT_ID"
-	// HCPClientSecret is the environment variable for the hcpClientSecret
-	HCPClientSecret = "HCP_CLIENT_SECRET"
-	// HCPResourceID is the environment variable for the hcpResourceID
-	HCPResourceID = "HCP_RESOURCE_ID"
-	// COOtelHTTPEndpoint is the environment variable for the OpenTelemetry HTTP Endpoint we forward metrics metrics to
-	COOtelHTTPEndpoint = "CO_OTEL_HTTP_ENDPOINT"
+	synopsis = "Runs telemetry collector in agent mode"
+	help     = `
+Usage: consul-telemetry-collector agent [options]
+
+	Starts the Consul agent and runs until an interrupt is received. The
+	agent represents a single node in a cluster.
+`
 )
 
 // Command is the interface for running the collector
@@ -29,87 +31,134 @@ type Command struct {
 	// ui is used for output. It should only be used if the logger has yet to
 	// initialize. Otherwise always prefer the logger.
 	ui cli.Ui
+
+	flags *flag.FlagSet
+	help  string
+	cfg   *Config
 }
 
-// NewCollectorCmd returns a new Agent command
-func NewCollectorCmd(ui cli.Ui) *Command {
-	return &Command{
+// NewAgentCmd returns a new Agent command
+func NewAgentCmd(ui cli.Ui) (*Command, error) {
+	c := &Command{
 		ui: ui,
 	}
+
+	var (
+		configFilePath, hcpClientID, hcpClientSecret, hcpResourceID, httpCollectorEndpoint string
+	)
+
+	// Setup Flags
+	c.flags = flag.NewFlagSet("", flag.ContinueOnError)
+
+	c.flags.StringVar(&configFilePath, COOConfigPathOpt, "", "Load configuration from a config file.")
+	c.flags.StringVar(&hcpClientID, HCPClientIDOpt, "", fmt.Sprintf("HCP Service Principal Client ID Environment variable %s", "HCP_CLIENT_ID"))
+	c.flags.StringVar(&hcpClientSecret, HCPClientSecretOpt, "", fmt.Sprintf("HCP Service Principal Client Secret Environment variable %s", "HCP_CLIENT_SECRET"))
+	c.flags.StringVar(&hcpResourceID, HCPResourceIDOpt, "", fmt.Sprintf("HCP Resource ID Environment variable %s", "HCP_RESOURCE_ID"))
+	c.flags.StringVar(&httpCollectorEndpoint, COOtelHTTPEndpointOpt, "", fmt.Sprintf("OTLP HTTP endpoint to forward telemetry to Environment variable %s", "CO_OTEL_HTTP_ENDPOINT"))
+
+	defaultToEnv(&configFilePath, COOConfigPath)
+	defaultToEnv(&hcpClientID, HCPClientID)
+	defaultToEnv(&hcpClientSecret, HCPClientSecret)
+	defaultToEnv(&hcpResourceID, HCPResourceID)
+	defaultToEnv(&httpCollectorEndpoint, COOtelHTTPEndpoint)
+
+	c.cfg = &Config{
+		HTTPCollectorEndpoint: &httpCollectorEndpoint,
+		ConfigFile:            &configFilePath,
+		Cloud: &Cloud{
+			ClientSecret: &hcpClientSecret,
+			ClientID:     &hcpClientID,
+			ResourceID:   &hcpResourceID,
+		},
+	}
+	c.help = flags.Usage(help, c.flags)
+
+	return c, nil
+}
+
+func defaultToEnv(param *string, envKey string) {
+	if v, ok := os.LookupEnv(envKey); ok {
+		*param = v
+	}
+}
+
+// loadConfiguration loads configuration in precdence order of 1. CLI flag options 2. OS env variables 3. file configuration
+// This may or may not return a valid configuration. The function only parses the config from the values above.
+// Validation is done in config.
+func (c *Command) loadConfiguration(ctx context.Context, args []string, fileParser parser) (*Config, error) {
+	logger := hclog.FromContext(ctx)
+	logger.Debug("cli args passed to agent", "args", args)
+
+	if err := c.flags.Parse(args); err != nil {
+		logger.Debug("error parsing flags")
+		return nil, err
+	}
+
+	// this controls for args like :
+	// 		$collector agent foobar -hcp-client-id
+	//		$collector agent -hcp-client-id foobar
+	remainingArgs := c.flags.Args()
+	if len(remainingArgs) > 0 {
+		return nil, fmt.Errorf("unexpected subcommands passed to command: %v", remainingArgs)
+	}
+
+	if *c.cfg.ConfigFile != "" {
+		fileConfig, err := fileParser(c.cfg.ConfigFile)
+		if err != nil {
+			return nil, err
+		}
+
+		// Precedence
+		// 1. command line opts if specified
+		// 2. env variables if specified
+		// 3. file config
+		if err = mergo.Merge(fileConfig, c.cfg, mergo.WithOverride); err != nil {
+			return nil, err
+		}
+		return fileConfig, nil
+	}
+
+	return c.cfg, nil
 }
 
 // Synopsis gives details on how the collector runs
 func (c *Command) Synopsis() string {
-	return ""
+	return synopsis
 }
 
 // Help provides specifications on how to run the collector
 func (c *Command) Help() string {
-	return ""
+	return c.help
 }
 
-// Run takes in args
+// Run takes in args and runs the collector agent as an OTEL collector
 func (c *Command) Run(args []string) int {
-
-	ctx, cancel := context.WithCancel(context.Background())
-
+	logger := hclog.Default().Named("consul-collector")
+	ctx, cancel := context.WithCancel(hclog.WithContext(context.Background(), logger))
+	logger.Info("debugging args", "args", args)
 	sigCh := make(chan os.Signal, 1)
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
 
 	go handleSignal(sigCh, cancel)
 
-	flags := flag.NewFlagSet("agent", flag.ContinueOnError)
-	flags.Usage = func() { c.ui.Error(c.Help()) }
-
-	logger := hclog.Default()
-	var (
-		configFile string
-
-		// These are loaded from the environment or flags
-		hcpClientID           string
-		hcpClientSecret       string
-		hcpResourceID         string
-		httpCollectorEndpoint string
-	)
-
-	cfg := Config{
-		HTTPCollectorEndpoint: httpCollectorEndpoint,
-		ConfigFile:            configFile,
-		Cloud: &Cloud{
-			ClientSecret: hcpClientSecret,
-			ClientID:     hcpClientID,
-			ResourceID:   hcpResourceID,
-		},
-	}
-
-	envVarString(HCPClientID, &hcpClientID)
-	envVarString(HCPClientSecret, &hcpClientSecret)
-	envVarString(HCPResourceID, &hcpResourceID)
-	envVarString(COOtelHTTPEndpoint, &httpCollectorEndpoint)
-
-	flags.StringVar(&configFile, "config-file", "", "Load configuration from a config file. Overrides environment and flag values")
-	flags.StringVar(&hcpClientID, "hcp-client-id", "", fmt.Sprintf("HCP Service Principal Client ID \n\tEnvironment variable %s", "HCP_CLIENT_ID"))
-	flags.StringVar(&hcpClientSecret, "hcp-client-secret", "", fmt.Sprintf("HCP Service Principal Client Secret \n\tEnvironment variable %s", "HCP_CLIENT_SECRET"))
-	flags.StringVar(&hcpResourceID, "hcp-resource-id", "", fmt.Sprintf("HCP Resource ID \n\tEnvironment variable %s", "HCP_RESOURCE_ID"))
-	flags.StringVar(&httpCollectorEndpoint, "http-collector-endpoint", "", fmt.Sprintf("OTLP HTTP endpoint to forward telemetry to \n\tEnvironment variable %s", "CO_OTEL_HTTP_ENDPOINT"))
-
-	if err := flags.Parse(args); err != nil {
+	// load the configuration
+	cfg, err := c.loadConfiguration(ctx, args, parseFile)
+	if err != nil {
 		cancel()
-		logger.Error("error running collector", "error", err)
-		c.ui.Error("error running collector")
+		logger.Error("error loading configuration", "error", err)
 		return -1
 	}
 
-	if err := loadConfig(cfg.ConfigFile, &cfg); err != nil {
-		cancel()
-		logger.Error("error loading configuration for collector", "error", err)
-		c.ui.Error("error loading configuration for collector")
+	// validate the loaded configuration is valid
+	if err := cfg.validate(); err != nil {
+		logger.Error("configuration is invalid", "error", err)
 		return -1
 	}
 
+	// run the service
 	if err := runSvc(ctx, cfg); err != nil {
+		cancel()
 		logger.Error("error running collector", "error", err)
-		c.ui.Error("error running collector")
 		return -1
 	}
 
@@ -119,12 +168,5 @@ func (c *Command) Run(args []string) int {
 func handleSignal(sigCh <-chan os.Signal, cancel func()) {
 	sig := <-sigCh
 	log.Println("Caught signal", sig.String(), ". Exiting")
-
 	cancel()
-}
-
-func envVarString(envKey string, value *string) {
-	if v, ok := os.LookupEnv(envKey); ok {
-		*value = v
-	}
 }

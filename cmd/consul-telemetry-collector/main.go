@@ -21,8 +21,8 @@ func main() {
 	}
 
 	commands := map[string]cli.CommandFactory{
-		"": func() (cli.Command, error) {
-			return collector.NewCollectorCmd(ui), nil
+		"agent": func() (cli.Command, error) {
+			return collector.NewAgentCmd(ui)
 		},
 	}
 
