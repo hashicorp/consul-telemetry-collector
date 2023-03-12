@@ -79,6 +79,7 @@ jobs:
           make tests
       - name: Lint
         run: |
+          export PATH=$(go env GOPATH)/bin:$PATH
           make lint
 
 
