@@ -24,11 +24,11 @@ var _ ComponentConfig = (*componentConfig)(nil)
 
 // ComponentConfig is an interface that lets us set key/value entries or child maps on the component
 type ComponentConfig interface {
-	Set(k, v string)
+	Set(k string, v any)
 	SetMap(k string) ComponentConfig
 }
 
-func (t componentConfig) Set(k, v string) {
+func (t componentConfig) Set(k string, v any) {
 	t[k] = v
 }
 

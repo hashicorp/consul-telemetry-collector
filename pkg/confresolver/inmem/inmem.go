@@ -22,10 +22,17 @@ func (m *inmemProvider) Retrieve(_ context.Context, _ string, _ confmap.WatcherF
 	error) {
 
 	c := &confresolver.Config{}
-	pipeline := c.NewPipeline(component.DataTypeTraces)
+	pipeline := c.NewPipeline(component.DataTypeMetrics)
 	receiver := c.NewReceiver(pipeline, component.NewID("otlp"))
 	receiver.SetMap("protocols").SetMap("http")
 	c.NewExporter(pipeline, component.NewID("logging"))
+
+	limiter := c.NewProcessor(pipeline, component.NewID("memory_limiter"))
+	limiter.Set("check_interval", "1s")
+	limiter.Set("limit_percentage", "50")
+	limiter.Set("spike_limit_percentage", "30")
+	c.NewProcessor(pipeline, component.NewID("batch"))
+
 	c.Service.Telemetry = confresolver.Telemetry()
 
 	conf := confmap.New()
