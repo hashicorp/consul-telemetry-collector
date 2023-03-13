@@ -9,13 +9,17 @@ import (
 	"github.com/hashicorp/consul-telemetry-collector/pkg/confresolver"
 )
 
-type inmemProvider struct{}
+type inmemProvider struct {
+	otlpHTTPEndpoint string
+}
 
 var _ confmap.Provider = (*inmemProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider
-func NewProvider() confmap.Provider {
-	return new(inmemProvider)
+func NewProvider(forwarderEndpoint string) confmap.Provider {
+	return &inmemProvider{
+		otlpHTTPEndpoint: forwarderEndpoint,
+	}
 }
 
 func (m *inmemProvider) Retrieve(_ context.Context, _ string, _ confmap.WatcherFunc) (*confmap.Retrieved,
@@ -34,6 +38,11 @@ func (m *inmemProvider) Retrieve(_ context.Context, _ string, _ confmap.WatcherF
 	c.NewProcessor(pipeline, component.NewID("batch"))
 
 	c.Service.Telemetry = confresolver.Telemetry()
+
+	if m.otlpHTTPEndpoint != "" {
+		otlphttp := c.NewExporter(pipeline, component.NewID("otlphttp"))
+		otlphttp.Set("endpoint", m.otlpHTTPEndpoint)
+	}
 
 	conf := confmap.New()
 	err := conf.Marshal(c)

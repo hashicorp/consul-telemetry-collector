@@ -8,7 +8,7 @@ import (
 )
 
 func Test_newConfigProvider(t *testing.T) {
-	provider, err := newConfigProvider()
+	provider, err := newConfigProvider("https://localhost:4138")
 	test.NoError(t, err)
 
 	ctx := context.Background()
@@ -21,5 +21,6 @@ func Test_newConfigProvider(t *testing.T) {
 	cfg, err := provider.Get(ctx, factories)
 
 	test.NoError(t, err)
-	_ = cfg
+	test.NoError(t, cfg.Validate())
+
 }

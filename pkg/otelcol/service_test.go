@@ -13,7 +13,7 @@ import (
 
 func Test_New(t *testing.T) {
 	ctx := context.Background()
-	svc, err := New(ctx)
+	svc, err := New(ctx, "https://localhost:4138")
 	test.NoError(t, err)
 	go func() {
 		err := svc.Run(ctx)
