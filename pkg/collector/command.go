@@ -21,8 +21,7 @@ const (
 	help     = `
 Usage: consul-telemetry-collector agent [options]
 
-	Starts the Consul agent and runs until an interrupt is received. The
-	agent represents a single node in a cluster.
+	Starts the consul-telemetry collector and runs until an interrupt is received.
 `
 )
 
