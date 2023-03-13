@@ -25,7 +25,7 @@ REVISION = $(shell git rev-parse HEAD)
 
 .PHONY: goversion
 goversion:
-	go version
+	@go version
 
 .PHONY: version
 version:
