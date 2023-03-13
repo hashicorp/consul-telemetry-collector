@@ -35,7 +35,14 @@ func (m *inmemProvider) Retrieve(_ context.Context, _ string, _ confmap.WatcherF
 	limiter.Set("check_interval", "1s")
 	limiter.Set("limit_percentage", "50")
 	limiter.Set("spike_limit_percentage", "30")
+
+	// put other processors here
+	// follow recommended practices: https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor#recommended-processors
+
 	c.NewProcessor(pipeline, component.NewID("batch"))
+
+	ballast := c.NewExtensions(component.NewID("memory_ballast"))
+	ballast.Set("size_in_percentage", 10)
 
 	c.Service.Telemetry = confresolver.Telemetry()
 

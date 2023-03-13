@@ -2,7 +2,7 @@ package confresolver
 
 import "go.opentelemetry.io/collector/component"
 
-// Processor adds a new processor component to the overall configuration and
+// NewProcessor adds a new processor component to the overall configuration and
 // adds the component to the specified pipeline. It returns the component's
 // configuration for further configuring. The PipelineIDer parameter is the reference
 // returned from NewPipeline

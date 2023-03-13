@@ -678,6 +678,8 @@ go.opentelemetry.io/collector/exporter/loggingexporter v0.72.0 h1:Ye8fB6pAbncYpf
 go.opentelemetry.io/collector/exporter/loggingexporter v0.72.0/go.mod h1:VLNNvVrGA4UBEn26i0jM4lQv80Cw9+EDElqD15v2FU4=
 go.opentelemetry.io/collector/exporter/otlphttpexporter v0.72.0 h1:dG29bqRqcUEyu5BvUfVzvjGvDp0H1bdi66YYMEfXohU=
 go.opentelemetry.io/collector/exporter/otlphttpexporter v0.72.0/go.mod h1:N4BAdmBOetEABxgGPbUa7hrMjm3pz/HOh2bsR7w1Cc4=
+go.opentelemetry.io/collector/extension/ballastextension v0.73.0 h1:xHTJ+kNUyweLGhpM+AWEv+W0ULN66VQCGQ+S4ASQ7nA=
+go.opentelemetry.io/collector/extension/ballastextension v0.73.0/go.mod h1:2No5Lw69ztAscYq6erri64k+y9wcMmZwOMs98ZAKPqo=
 go.opentelemetry.io/collector/extension/zpagesextension v0.73.0 h1:dNL115FwfXMh9ivF4COKAXfwZ3Yl/XDqTwFmnzoHdZI=
 go.opentelemetry.io/collector/featuregate v0.73.0 h1:hpHKXmRiJqMLefIzXwIuqDo9df2HcI/66IAKLo+g7nc=
 go.opentelemetry.io/collector/featuregate v0.73.0/go.mod h1:oIrO4ysPfThwkYKoNlgpHjDU/TgS9kIv2OI74pDUkp4=

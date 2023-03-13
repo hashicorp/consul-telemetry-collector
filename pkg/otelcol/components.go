@@ -10,6 +10,7 @@ import (
 	"go.opentelemetry.io/collector/exporter/loggingexporter"
 	"go.opentelemetry.io/collector/exporter/otlphttpexporter"
 	"go.opentelemetry.io/collector/extension"
+	"go.opentelemetry.io/collector/extension/ballastextension"
 	"go.opentelemetry.io/collector/otelcol"
 	"go.opentelemetry.io/collector/processor"
 	"go.opentelemetry.io/collector/processor/batchprocessor"
@@ -43,6 +44,7 @@ func components() (otelcol.Factories, error) {
 
 	factories.Extensions, err = extension.MakeFactoryMap(
 		oauth2clientauthextension.NewFactory(),
+		ballastextension.NewFactory(),
 	)
 	if err != nil {
 		return otelcol.Factories{}, err
