@@ -33,7 +33,7 @@ func New(ctx context.Context) (Collector, error) {
 		Factories: factories,
 		BuildInfo: component.BuildInfo{
 			Command:     "consul-telemetry-collector",
-			Description: "Description",
+			Description: "consul-telemetry-collector is a Consul specific build of the open-telemetry collector",
 			Version:     version.Version,
 		},
 		DisableGracefulShutdown: true,
