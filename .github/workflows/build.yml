@@ -68,6 +68,9 @@ jobs:
       - get-go-version
     steps:
       - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go_version: ${{ needs.get-go-version.outputs.go-version }}
       - name: Deps
         run: |
           make deps
@@ -76,6 +79,7 @@ jobs:
           make tests
       - name: Lint
         run: |
+          export PATH=$(go env GOPATH)/bin:$PATH
           make lint
 
 
