@@ -26,7 +26,7 @@ func runSvc(ctx context.Context, cfg *Config) error {
 		logger.Info("Setting up HCP Cloud SDK")
 	}
 
-	if *cfg.HTTPCollectorEndpoint != "" {
+	if cfg.HTTPCollectorEndpoint != "" {
 		logger.Info("Forwarding telemetry to collector", "addr", cfg.HTTPCollectorEndpoint)
 	}
 

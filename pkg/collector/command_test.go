@@ -24,15 +24,8 @@ func setupEnv(t *testing.T, env map[string]string) {
 }
 
 func testConfig() *Config {
-	id, secret, endpoint, fp, rID := "", "", "", "", ""
 	return &Config{
-		Cloud: &Cloud{
-			ClientID:     &id,
-			ClientSecret: &secret,
-			ResourceID:   &rID,
-		},
-		HTTPCollectorEndpoint: &endpoint,
-		ConfigFile:            &fp,
+		Cloud: &Cloud{},
 	}
 }
 
@@ -85,12 +78,11 @@ func Test_loadConfiguration(t *testing.T) {
 				COOConfigPath:      "fp",
 			},
 			mutateExpected: func(c *Config) {
-				id, sec, rID, ep, fp := "id", "sec", "rid", "ep", "fp"
-				c.Cloud.ClientID = &id
-				c.Cloud.ClientSecret = &sec
-				c.Cloud.ResourceID = &rID
-				c.HTTPCollectorEndpoint = &ep
-				c.ConfigFile = &fp
+				c.Cloud.ClientID = "id"
+				c.Cloud.ClientSecret = "sec"
+				c.Cloud.ResourceID = "rid"
+				c.HTTPCollectorEndpoint = "ep"
+				c.ConfigFile = "fp"
 			},
 		},
 		"SuccessWithCliOptsPrecedenceOverEnvVariables": {
@@ -114,12 +106,11 @@ func Test_loadConfiguration(t *testing.T) {
 				COOConfigPath:      "fp",
 			},
 			mutateExpected: func(c *Config) {
-				id, sec, rID, ep, fp := "cliid", "clisec", "clirid", "cliep", "clifp"
-				c.Cloud.ClientID = &id
-				c.Cloud.ClientSecret = &sec
-				c.Cloud.ResourceID = &rID
-				c.HTTPCollectorEndpoint = &ep
-				c.ConfigFile = &fp
+				c.Cloud.ClientID = "cliid"
+				c.Cloud.ClientSecret = "clisec"
+				c.Cloud.ResourceID = "clirid"
+				c.HTTPCollectorEndpoint = "cliep"
+				c.ConfigFile = "clifp"
 			},
 		},
 		"SuccessWithEnvVariablePrecedenceOverFileCfg": {
@@ -131,20 +122,18 @@ func Test_loadConfiguration(t *testing.T) {
 				COOConfigPath:      "fp",
 			},
 			mutateFileConfig: func(c *Config) {
-				id, sec, rID, ep, fp := "fid", "fsec", "fid", "fep", "fp"
-				c.Cloud.ClientID = &id
-				c.Cloud.ClientSecret = &sec
-				c.Cloud.ResourceID = &rID
-				c.HTTPCollectorEndpoint = &ep
-				c.ConfigFile = &fp
+				c.Cloud.ClientID = "fid"
+				c.Cloud.ClientSecret = "fsec"
+				c.Cloud.ResourceID = "fid"
+				c.HTTPCollectorEndpoint = "fep"
+				c.ConfigFile = "fp"
 			},
 			mutateExpected: func(c *Config) {
-				id, sec, rID, ep, fp := "id", "sec", "rid", "ep", "fp"
-				c.Cloud.ClientID = &id
-				c.Cloud.ClientSecret = &sec
-				c.Cloud.ResourceID = &rID
-				c.HTTPCollectorEndpoint = &ep
-				c.ConfigFile = &fp
+				c.Cloud.ClientID = "id"
+				c.Cloud.ClientSecret = "sec"
+				c.Cloud.ResourceID = "rid"
+				c.HTTPCollectorEndpoint = "ep"
+				c.ConfigFile = "fp"
 			},
 		},
 		"SuccessWithCliOptsPrecedenceOverEnvVariablesOverFileCfg": {
@@ -168,20 +157,18 @@ func Test_loadConfiguration(t *testing.T) {
 				COOConfigPath:      "fp",
 			},
 			mutateFileConfig: func(c *Config) {
-				id, sec, rID, ep, fp := "fid", "fsec", "fid", "fep", "fp"
-				c.Cloud.ClientID = &id
-				c.Cloud.ClientSecret = &sec
-				c.Cloud.ResourceID = &rID
-				c.HTTPCollectorEndpoint = &ep
-				c.ConfigFile = &fp
+				c.Cloud.ClientID = "fid"
+				c.Cloud.ClientSecret = "fsec"
+				c.Cloud.ResourceID = "frid"
+				c.HTTPCollectorEndpoint = "fep"
+				c.ConfigFile = "ffp"
 			},
 			mutateExpected: func(c *Config) {
-				id, sec, rID, ep, fp := "cliid", "clisec", "clirid", "cliep", "clifp"
-				c.Cloud.ClientID = &id
-				c.Cloud.ClientSecret = &sec
-				c.Cloud.ResourceID = &rID
-				c.HTTPCollectorEndpoint = &ep
-				c.ConfigFile = &fp
+				c.Cloud.ClientID = "cliid"
+				c.Cloud.ClientSecret = "clisec"
+				c.Cloud.ResourceID = "clirid"
+				c.HTTPCollectorEndpoint = "cliep"
+				c.ConfigFile = "clifp"
 			},
 		},
 	} {
@@ -193,7 +180,7 @@ func Test_loadConfiguration(t *testing.T) {
 			if tc.mutateFileConfig != nil {
 				tc.mutateFileConfig(fileConfig)
 			}
-			parser := func(*string) (*Config, error) {
+			parser := func(string) (*Config, error) {
 				return fileConfig, tc.err
 			}
 			args := []string{}

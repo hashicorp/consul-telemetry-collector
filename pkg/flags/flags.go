@@ -12,7 +12,8 @@ import (
 )
 
 // Usage takes a help string and a flag set and appends the flags
-// and their descriptions below the help string and returns it
+// and their descriptions below the help string and returns it.
+// This is to standardize the usage function across the different environments
 func Usage(help string, flags *flag.FlagSet) string {
 	out := new(bytes.Buffer)
 	out.WriteString(strings.TrimSpace(help))
