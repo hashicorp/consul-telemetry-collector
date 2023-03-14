@@ -3,14 +3,9 @@
 package collector
 
 import (
-	"bytes"
 	"context"
-	"fmt"
-	"io"
-	"os"
 
 	"github.com/hashicorp/go-hclog"
-	"github.com/hashicorp/hcl/v2/hclsimple"
 
 	"github.com/hashicorp/consul-telemetry-collector/pkg/otelcol"
 )
@@ -23,14 +18,9 @@ type Service struct {
 	collector otelcol.Collector
 }
 
-// Run will initialize and Start the consul-telemetry-collector Service
-func Run(ctx context.Context, cfg Config) error {
+// runSvc will initialize and Start the consul-telemetry-collector Service
+func runSvc(ctx context.Context, cfg *Config) error {
 	logger := hclog.Default()
-
-	if err := LoadConfig(cfg.ConfigFile, &cfg); err != nil {
-		return err
-	}
-
 	if cfg.Cloud.IsEnabled() {
 		// Set up the HCP SDK here
 		logger.Info("Setting up HCP Cloud SDK")
@@ -51,11 +41,11 @@ func Run(ctx context.Context, cfg Config) error {
 		collector: collector,
 	}
 
-	return svc.Start(ctx)
+	return svc.start(ctx)
 }
 
 // Start starts the initialized Service
-func (s *Service) Start(ctx context.Context) error {
+func (s *Service) start(ctx context.Context) error {
 	// We would start the otel collector here
 	ctx, cancel := context.WithCancel(ctx)
 	go func() {
@@ -66,33 +56,11 @@ func (s *Service) Start(ctx context.Context) error {
 	<-ctx.Done()
 	logger := hclog.FromContext(s.ctx)
 	logger.Info("Shutting down service")
-	s.Stop()
+	s.stop()
 	return nil
 }
 
-// Stop stops a started Service
-func (s *Service) Stop() {
+// stop stops a started Service
+func (s *Service) stop() {
 	s.collector.Shutdown()
-}
-
-// LoadConfig will read, and marshal a configuration file with hclsimple and merge it with the provided Config
-func LoadConfig(configFile string, cfg *Config) error {
-	if configFile == "" {
-		return nil
-	}
-	f, err := os.Open(configFile)
-	if err != nil {
-		return fmt.Errorf("failed to open file %s: %w", configFile, err)
-	}
-
-	// wrap our file in a 1mb limit reader
-	mb := int64(1024 * 1024 * 1024)
-	r := io.LimitReader(f, mb)
-	buffer := bytes.NewBuffer(make([]byte, 0, mb))
-	_, err = io.Copy(buffer, r)
-	if err != nil {
-		return fmt.Errorf("failed to read file %s: %w", configFile, err)
-	}
-
-	return hclsimple.Decode(configFile, buffer.Bytes(), nil, cfg)
 }

@@ -1,1 +1,9 @@
+# Don't commit roam config
+*envrc
+*roam.yaml
+*roam.lock.yaml
+
+# IntelliJ
 .idea
+
+dist*
