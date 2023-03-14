@@ -15,19 +15,14 @@ var (
 )
 
 func configFromEnvVars() *Config {
-	configFilePath := os.Getenv(COOConfigPath)
-	hcpClientID := os.Getenv(HCPClientID)
-	hcpClientSecret := os.Getenv(HCPClientSecret)
-	hcpResourceID := os.Getenv(HCPResourceID)
-	httpCollectorEndpoint := os.Getenv(COOtelHTTPEndpoint)
 	return &Config{
 		Cloud: &Cloud{
-			ClientID:     hcpClientID,
-			ClientSecret: hcpClientSecret,
-			ResourceID:   hcpResourceID,
+			ClientID:     os.Getenv(HCPClientID),
+			ClientSecret: os.Getenv(HCPClientSecret),
+			ResourceID:   os.Getenv(HCPResourceID),
 		},
-		ConfigFile:            configFilePath,
-		HTTPCollectorEndpoint: httpCollectorEndpoint,
+		ConfigFile:            os.Getenv(COOConfigPath),
+		HTTPCollectorEndpoint: os.Getenv(COOtelHTTPEndpoint),
 	}
 
 }
