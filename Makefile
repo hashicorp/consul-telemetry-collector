@@ -21,6 +21,10 @@ GOLDFLAGS=-X github.com/hashicorp/consul-telemetry-collector/pkg/version.GitComm
 # Get latest revision (no dirty check for now).
 REVISION = $(shell git rev-parse HEAD)
 
+.PHONY: goversion
+goversion:
+	@go version
+
 .PHONY: version
 version:
 	@echo $(VERSION)
@@ -30,7 +34,7 @@ dist:
 	echo '*' > dist/.gitignore
 
 .PHONY: bin
-bin: dist
+bin: goversion dist
 	GOARCH=$(ARCH) GOOS=$(OS) CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="$(GOLDFLAGS)" -o $(BIN) ./cmd/$(BIN_NAME)
 
 .PHONY: dev
@@ -38,7 +42,7 @@ dev: bin
 	cp $(BIN) $(GOBIN)/$(BIN_NAME)
 
 .PHONY: tests
-tests:
+tests: goversion
 	go test ./...
 
 .PHONY: lint

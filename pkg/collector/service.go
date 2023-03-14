@@ -32,7 +32,7 @@ func runSvc(ctx context.Context, cfg *Config) error {
 
 	ctx = hclog.WithContext(ctx, logger)
 
-	collector, err := otelcol.New(ctx)
+	collector, err := otelcol.New(ctx, cfg.HTTPCollectorEndpoint)
 	if err != nil {
 		return err
 	}
