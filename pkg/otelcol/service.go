@@ -13,7 +13,7 @@ import (
 const otelFeatureGate = "telemetry.useOtelForInternalMetrics"
 
 // New will create a new open-telemetry collector service and configuration based on the provided values
-func New(ctx context.Context) (Collector, error) {
+func New(ctx context.Context, forwarderEndpoint string) (Collector, error) {
 	// enable otel for collector internal metrics
 	if err := featuregate.GlobalRegistry().Set(otelFeatureGate, true); err != nil {
 		return nil, err
@@ -24,7 +24,7 @@ func New(ctx context.Context) (Collector, error) {
 		return nil, err
 	}
 
-	provider, err := newConfigProvider()
+	provider, err := newConfigProvider(forwarderEndpoint)
 	if err != nil {
 		return nil, err
 	}
@@ -33,7 +33,7 @@ func New(ctx context.Context) (Collector, error) {
 		Factories: factories,
 		BuildInfo: component.BuildInfo{
 			Command:     "consul-telemetry-collector",
-			Description: "Description",
+			Description: "consul-telemetry-collector is a Consul specific build of the open-telemetry collector",
 			Version:     version.Version,
 		},
 		DisableGracefulShutdown: true,
