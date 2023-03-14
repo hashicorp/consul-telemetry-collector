@@ -27,10 +27,6 @@ Usage: consul-telemetry-collector agent [options]
 `
 )
 
-type flagValues struct {
-	configFilePath, hcpClientID, hcpClientSecret, hcpResourceID, httpCollectorEndpoint string
-}
-
 // Command is the interface for running the collector
 type Command struct {
 	// ui is used for output. It should only be used if the logger has yet to
@@ -38,7 +34,7 @@ type Command struct {
 	ui cli.Ui
 
 	// these are the initial flag values read in by the flag parser
-	flagValues flagValues
+	flagConfig *Config
 
 	flags *flag.FlagSet
 	help  string
@@ -52,14 +48,14 @@ func NewAgentCmd(ui cli.Ui) (*Command, error) {
 		ui: ui,
 	}
 
-	c.flagValues = flagValues{}
+	c.flagConfig = &Config{Cloud: &Cloud{}}
 	// Setup Flags
 	c.flags = flag.NewFlagSet("", flag.ContinueOnError)
-	c.flags.StringVar(&c.flagValues.configFilePath, COOConfigPathOpt, "", "Load configuration from a config file.")
-	c.flags.StringVar(&c.flagValues.hcpClientID, HCPClientIDOpt, "", fmt.Sprintf("HCP Service Principal Client ID Environment variable %s", "HCP_CLIENT_ID"))
-	c.flags.StringVar(&c.flagValues.hcpClientSecret, HCPClientSecretOpt, "", fmt.Sprintf("HCP Service Principal Client Secret Environment variable %s", "HCP_CLIENT_SECRET"))
-	c.flags.StringVar(&c.flagValues.hcpResourceID, HCPResourceIDOpt, "", fmt.Sprintf("HCP Resource ID Environment variable %s", "HCP_RESOURCE_ID"))
-	c.flags.StringVar(&c.flagValues.httpCollectorEndpoint, COOtelHTTPEndpointOpt, "", fmt.Sprintf("OTLP HTTP endpoint to forward telemetry to Environment variable %s", "CO_OTEL_HTTP_ENDPOINT"))
+	c.flags.StringVar(&c.flagConfig.ConfigFile, COOConfigPathOpt, "", "Load configuration from a config file.")
+	c.flags.StringVar(&c.flagConfig.Cloud.ClientID, HCPClientIDOpt, "", fmt.Sprintf("HCP Service Principal Client ID Environment variable %s", "HCP_CLIENT_ID"))
+	c.flags.StringVar(&c.flagConfig.Cloud.ClientSecret, HCPClientSecretOpt, "", fmt.Sprintf("HCP Service Principal Client Secret Environment variable %s", "HCP_CLIENT_SECRET"))
+	c.flags.StringVar(&c.flagConfig.Cloud.ResourceID, HCPResourceIDOpt, "", fmt.Sprintf("HCP Resource ID Environment variable %s", "HCP_RESOURCE_ID"))
+	c.flags.StringVar(&c.flagConfig.HTTPCollectorEndpoint, COOtelHTTPEndpointOpt, "", fmt.Sprintf("OTLP HTTP endpoint to forward telemetry to Environment variable %s", "CO_OTEL_HTTP_ENDPOINT"))
 	c.help = flags.Usage(help, c.flags)
 
 	return c, nil
@@ -75,10 +71,11 @@ func NewAgentCmd(ui cli.Ui) (*Command, error) {
 // Validation is done in config.
 func (c *Command) loadConfiguration(ctx context.Context, args []string, fileParser parser) (*Config, error) {
 	logger := hclog.FromContext(ctx)
-	logger.Debug("cli args passed to agent", "args", args)
+	logger.Debug("flag args passed to agent", "args", args)
 
 	cfg := configFromEnvVars()
 
+	// this parses the flags into c.flagConfig
 	if err := c.flags.Parse(args); err != nil {
 		logger.Debug("error parsing flags")
 		return nil, err
@@ -92,18 +89,8 @@ func (c *Command) loadConfiguration(ctx context.Context, args []string, filePars
 		return nil, fmt.Errorf("unexpected subcommands passed to command: %v", remainingArgs)
 	}
 
-	cliConfig := &Config{
-		Cloud: &Cloud{
-			ClientID:     c.flagValues.hcpClientID,
-			ClientSecret: c.flagValues.hcpClientSecret,
-			ResourceID:   c.flagValues.hcpResourceID,
-		},
-		ConfigFile:            c.flagValues.configFilePath,
-		HTTPCollectorEndpoint: c.flagValues.httpCollectorEndpoint,
-	}
-
-	// cliConfig will override environment variable configuration
-	if err := mergo.Merge(cfg, cliConfig, mergo.WithOverride); err != nil {
+	// c.flagConfig will override environment variable configuration
+	if err := mergo.Merge(cfg, c.flagConfig, mergo.WithOverride); err != nil {
 		return nil, err
 	}
 
@@ -113,7 +100,7 @@ func (c *Command) loadConfiguration(ctx context.Context, args []string, filePars
 			return nil, err
 		}
 
-		// file configuration will be overridden by the cli+env variable config
+		// file configuration will be overridden by the f+env variable config
 		if err = mergo.Merge(fileConfig, cfg, mergo.WithOverride); err != nil {
 			return nil, err
 		}

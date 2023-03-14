@@ -39,7 +39,7 @@ func Test_loadConfiguration(t *testing.T) {
 		configPath string
 		// this is the file config returned from file parsing.
 		mutateFileConfig func(*Config)
-		// args will the flags passed in by the user
+		// args are the flags passed in by the user
 		args []string
 		// env is the os environment variables set by the user
 		env map[string]string
@@ -66,7 +66,7 @@ func Test_loadConfiguration(t *testing.T) {
 			err:  errors.New("flag: help requested"),
 		},
 		// Note that this isn't a valid set of config but we will split parsing configuration
-		// from validating config so it is considered a success to load config with 0 cli opts, 0 env var
+		// from validating config so it is considered a success to load config with 0 flag opts, 0 env var
 		// 0 file paths.
 		"Success": {},
 		"SuccessWithAllEnv": {
@@ -88,15 +88,15 @@ func Test_loadConfiguration(t *testing.T) {
 		"SuccessWithCliOptsPrecedenceOverEnvVariables": {
 			args: []string{
 				wrapOpt(HCPClientIDOpt),
-				"cliid",
+				"flagid",
 				wrapOpt(HCPClientSecretOpt),
-				"clisec",
+				"flagsec",
 				wrapOpt(HCPResourceIDOpt),
-				"clirid",
+				"flagrid",
 				wrapOpt(COOtelHTTPEndpointOpt),
-				"cliep",
+				"flagep",
 				wrapOpt(COOConfigPathOpt),
-				"clifp",
+				"flagfp",
 			},
 			env: map[string]string{
 				HCPClientID:        "id",
@@ -106,11 +106,11 @@ func Test_loadConfiguration(t *testing.T) {
 				COOConfigPath:      "fp",
 			},
 			mutateExpected: func(c *Config) {
-				c.Cloud.ClientID = "cliid"
-				c.Cloud.ClientSecret = "clisec"
-				c.Cloud.ResourceID = "clirid"
-				c.HTTPCollectorEndpoint = "cliep"
-				c.ConfigFile = "clifp"
+				c.Cloud.ClientID = "flagid"
+				c.Cloud.ClientSecret = "flagsec"
+				c.Cloud.ResourceID = "flagrid"
+				c.HTTPCollectorEndpoint = "flagep"
+				c.ConfigFile = "flagfp"
 			},
 		},
 		"SuccessWithEnvVariablePrecedenceOverFileCfg": {
@@ -139,15 +139,15 @@ func Test_loadConfiguration(t *testing.T) {
 		"SuccessWithCliOptsPrecedenceOverEnvVariablesOverFileCfg": {
 			args: []string{
 				wrapOpt(HCPClientIDOpt),
-				"cliid",
+				"flagid",
 				wrapOpt(HCPClientSecretOpt),
-				"clisec",
+				"flagsec",
 				wrapOpt(HCPResourceIDOpt),
-				"clirid",
+				"flagrid",
 				wrapOpt(COOtelHTTPEndpointOpt),
-				"cliep",
+				"flagep",
 				wrapOpt(COOConfigPathOpt),
-				"clifp",
+				"flagfp",
 			},
 			env: map[string]string{
 				HCPClientID:        "id",
@@ -164,11 +164,11 @@ func Test_loadConfiguration(t *testing.T) {
 				c.ConfigFile = "ffp"
 			},
 			mutateExpected: func(c *Config) {
-				c.Cloud.ClientID = "cliid"
-				c.Cloud.ClientSecret = "clisec"
-				c.Cloud.ResourceID = "clirid"
-				c.HTTPCollectorEndpoint = "cliep"
-				c.ConfigFile = "clifp"
+				c.Cloud.ClientID = "flagid"
+				c.Cloud.ClientSecret = "flagsec"
+				c.Cloud.ResourceID = "flagrid"
+				c.HTTPCollectorEndpoint = "flagep"
+				c.ConfigFile = "flagfp"
 			},
 		},
 	} {
