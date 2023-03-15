@@ -4,9 +4,11 @@ package collector
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/hashicorp/go-hclog"
 
+	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/pkg/otelcol"
 )
 
@@ -16,14 +18,23 @@ type Service struct {
 	// All other lifecycle context cancelers should come from this context
 	ctx       context.Context
 	collector otelcol.Collector
+	hcpClient *hcp.Client
 }
 
 // runSvc will initialize and Start the consul-telemetry-collector Service
 func runSvc(ctx context.Context, cfg *Config) error {
 	logger := hclog.Default()
+
+	svc := &Service{}
+
 	if cfg.Cloud.IsEnabled() {
 		// Set up the HCP SDK here
 		logger.Info("Setting up HCP Cloud SDK")
+		hcpClient, err := hcp.New(cfg.Cloud.ClientID, cfg.Cloud.ClientSecret, cfg.Cloud.ResourceURL)
+		if err != nil {
+			return fmt.Errorf("failed to create hcp client %w", err)
+		}
+		svc.hcpClient = hcpClient
 	}
 
 	if cfg.HTTPCollectorEndpoint != "" {
@@ -36,10 +47,9 @@ func runSvc(ctx context.Context, cfg *Config) error {
 	if err != nil {
 		return err
 	}
-	svc := &Service{
-		ctx:       ctx,
-		collector: collector,
-	}
+
+	svc.collector = collector
+	svc.ctx = ctx
 
 	return svc.start(ctx)
 }
