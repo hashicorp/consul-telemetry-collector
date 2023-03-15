@@ -27,11 +27,11 @@ func (m *inmemProvider) Retrieve(_ context.Context, _ string, _ confmap.WatcherF
 
 	c := &confresolver.Config{}
 	pipeline := c.NewPipeline(component.DataTypeMetrics)
-	receiver := c.NewReceiver(pipeline, component.NewID("otlp"))
+	receiver := c.NewReceiver(component.NewID("otlp"), pipeline)
 	receiver.SetMap("protocols").SetMap("http")
-	c.NewExporter(pipeline, component.NewID("logging"))
+	c.NewExporter(component.NewID("logging"), pipeline)
 
-	limiter := c.NewProcessor(pipeline, component.NewID("memory_limiter"))
+	limiter := c.NewProcessor(component.NewID("memory_limiter"), pipeline)
 	limiter.Set("check_interval", "1s")
 	limiter.Set("limit_percentage", "50")
 	limiter.Set("spike_limit_percentage", "30")
@@ -39,7 +39,7 @@ func (m *inmemProvider) Retrieve(_ context.Context, _ string, _ confmap.WatcherF
 	// put other processors here
 	// follow recommended practices: https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor#recommended-processors
 
-	c.NewProcessor(pipeline, component.NewID("batch"))
+	c.NewProcessor(component.NewID("batch"), pipeline)
 
 	ballast := c.NewExtensions(component.NewID("memory_ballast"))
 	ballast.Set("size_in_percentage", 10)
@@ -47,7 +47,7 @@ func (m *inmemProvider) Retrieve(_ context.Context, _ string, _ confmap.WatcherF
 	c.Service.Telemetry = confresolver.Telemetry()
 
 	if m.otlpHTTPEndpoint != "" {
-		otlphttp := c.NewExporter(pipeline, component.NewID("otlphttp"))
+		otlphttp := c.NewExporter(component.NewID("otlphttp"), pipeline)
 		otlphttp.Set("endpoint", m.otlpHTTPEndpoint)
 	}
 
