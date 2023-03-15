@@ -37,7 +37,7 @@ func Test_Validation(t *testing.T) {
 		"FailCloudResourceIdOnlySpecified": {
 			input: &Config{
 				Cloud: &Cloud{
-					ResourceID: crid,
+					ResourceURL: crid,
 				},
 			},
 			err: errCloudConfigInvalid,
@@ -46,7 +46,7 @@ func Test_Validation(t *testing.T) {
 			input: &Config{
 				Cloud: &Cloud{
 					ClientSecret: csec,
-					ResourceID:   crid,
+					ResourceURL:  crid,
 				},
 			},
 			err: errCloudConfigInvalid,
@@ -63,8 +63,8 @@ func Test_Validation(t *testing.T) {
 		"FailCloudResourceMissingClientSecret": {
 			input: &Config{
 				Cloud: &Cloud{
-					ResourceID: crid,
-					ClientID:   cid,
+					ResourceURL: crid,
+					ClientID:    cid,
 				},
 			},
 			err: errCloudConfigInvalid,

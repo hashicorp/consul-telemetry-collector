@@ -19,7 +19,7 @@ func configFromEnvVars() *Config {
 		Cloud: &Cloud{
 			ClientID:     os.Getenv(HCPClientID),
 			ClientSecret: os.Getenv(HCPClientSecret),
-			ResourceID:   os.Getenv(HCPResourceID),
+			ResourceURL:  os.Getenv(HCPResourceURL),
 		},
 		ConfigFile:            os.Getenv(COOConfigPath),
 		HTTPCollectorEndpoint: os.Getenv(COOtelHTTPEndpoint),
@@ -76,16 +76,16 @@ type Config struct {
 type Cloud struct {
 	ClientID     string `hcl:"client_id,optional"`
 	ClientSecret string `hcl:"client_secret,optional"`
-	ResourceID   string `hcl:"resource_id,optional"`
+	ResourceURL  string `hcl:"resource_url,optional"`
 }
 
 // IsEnabled checks if the Cloud config is enabled. It returns false if the ClientID,
-// ClientSecret and ResourceID are all empty
+// ClientSecret and ResourceURL are all empty
 func (c *Cloud) IsEnabled() bool {
 	if c == nil {
 		return false
 	}
-	if c.ClientSecret != "" || c.ClientID != "" || c.ResourceID != "" {
+	if c.ClientSecret != "" || c.ClientID != "" || c.ResourceURL != "" {
 		return true
 	}
 	return false
@@ -95,7 +95,7 @@ func (c *Cloud) validate() error {
 	if c == nil {
 		return nil
 	}
-	if c.IsEnabled() && (c.ClientID == "" || c.ClientSecret == "" || c.ResourceID == "") {
+	if c.IsEnabled() && (c.ClientID == "" || c.ClientSecret == "" || c.ResourceURL == "") {
 		return errCloudConfigInvalid
 	}
 	return nil

@@ -13,10 +13,10 @@ const (
 	// HCPClientSecretOpt is the cli opt for the hcp client secret
 	HCPClientSecretOpt = "hcp-client-secret"
 
-	// HCPResourceID is the environment variable for the hcp resource id
-	HCPResourceID = "HCP_RESOURCE_ID"
-	// HCPResourceIDOpt is the cli opt for the hcp resource id
-	HCPResourceIDOpt = "hcp-resource-id"
+	// HCPResourceURL is the environment variable for the hcp resource id
+	HCPResourceURL = "HCP_RESOURCE_URL"
+	// HCPResourceURLOpt is the cli opt for the hcp resource url
+	HCPResourceURLOpt = "hcp-resource-url"
 
 	// COOtelHTTPEndpoint is the environment variable for  OpenTelemetry HTTP Endpoints where metrics are forwarded
 	COOtelHTTPEndpoint = "CO_OTEL_HTTP_ENDPOINT"

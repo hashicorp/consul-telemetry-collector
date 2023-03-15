@@ -54,7 +54,8 @@ func NewAgentCmd(ui cli.Ui) (*Command, error) {
 	c.flags.StringVar(&c.flagConfig.ConfigFile, COOConfigPathOpt, "", "Load configuration from a config file.")
 	c.flags.StringVar(&c.flagConfig.Cloud.ClientID, HCPClientIDOpt, "", fmt.Sprintf("HCP Service Principal Client ID Environment variable %s", "HCP_CLIENT_ID"))
 	c.flags.StringVar(&c.flagConfig.Cloud.ClientSecret, HCPClientSecretOpt, "", fmt.Sprintf("HCP Service Principal Client Secret Environment variable %s", "HCP_CLIENT_SECRET"))
-	c.flags.StringVar(&c.flagConfig.Cloud.ResourceID, HCPResourceIDOpt, "", fmt.Sprintf("HCP Resource ID Environment variable %s", "HCP_RESOURCE_ID"))
+	c.flags.StringVar(&c.flagConfig.Cloud.ResourceURL, HCPResourceURLOpt, "",
+		fmt.Sprintf("HCP Resource URL Environment variable %s", "HCP_RESOURCE_URL"))
 	c.flags.StringVar(&c.flagConfig.HTTPCollectorEndpoint, COOtelHTTPEndpointOpt, "", fmt.Sprintf("OTLP HTTP endpoint to forward telemetry to Environment variable %s", "CO_OTEL_HTTP_ENDPOINT"))
 	c.help = flags.Usage(help, c.flags)
 

@@ -73,14 +73,14 @@ func Test_loadConfiguration(t *testing.T) {
 			env: map[string]string{
 				HCPClientID:        "id",
 				HCPClientSecret:    "sec",
-				HCPResourceID:      "rid",
+				HCPResourceURL:     "rid",
 				COOtelHTTPEndpoint: "ep",
 				COOConfigPath:      "fp",
 			},
 			mutateExpected: func(c *Config) {
 				c.Cloud.ClientID = "id"
 				c.Cloud.ClientSecret = "sec"
-				c.Cloud.ResourceID = "rid"
+				c.Cloud.ResourceURL = "rid"
 				c.HTTPCollectorEndpoint = "ep"
 				c.ConfigFile = "fp"
 			},
@@ -91,7 +91,7 @@ func Test_loadConfiguration(t *testing.T) {
 				"flagid",
 				wrapOpt(HCPClientSecretOpt),
 				"flagsec",
-				wrapOpt(HCPResourceIDOpt),
+				wrapOpt(HCPResourceURLOpt),
 				"flagrid",
 				wrapOpt(COOtelHTTPEndpointOpt),
 				"flagep",
@@ -101,14 +101,14 @@ func Test_loadConfiguration(t *testing.T) {
 			env: map[string]string{
 				HCPClientID:        "id",
 				HCPClientSecret:    "sec",
-				HCPResourceID:      "rid",
+				HCPResourceURL:     "rid",
 				COOtelHTTPEndpoint: "ep",
 				COOConfigPath:      "fp",
 			},
 			mutateExpected: func(c *Config) {
 				c.Cloud.ClientID = "flagid"
 				c.Cloud.ClientSecret = "flagsec"
-				c.Cloud.ResourceID = "flagrid"
+				c.Cloud.ResourceURL = "flagrid"
 				c.HTTPCollectorEndpoint = "flagep"
 				c.ConfigFile = "flagfp"
 			},
@@ -117,21 +117,21 @@ func Test_loadConfiguration(t *testing.T) {
 			env: map[string]string{
 				HCPClientID:        "id",
 				HCPClientSecret:    "sec",
-				HCPResourceID:      "rid",
+				HCPResourceURL:     "rid",
 				COOtelHTTPEndpoint: "ep",
 				COOConfigPath:      "fp",
 			},
 			mutateFileConfig: func(c *Config) {
 				c.Cloud.ClientID = "fid"
 				c.Cloud.ClientSecret = "fsec"
-				c.Cloud.ResourceID = "fid"
+				c.Cloud.ResourceURL = "fid"
 				c.HTTPCollectorEndpoint = "fep"
 				c.ConfigFile = "fp"
 			},
 			mutateExpected: func(c *Config) {
 				c.Cloud.ClientID = "id"
 				c.Cloud.ClientSecret = "sec"
-				c.Cloud.ResourceID = "rid"
+				c.Cloud.ResourceURL = "rid"
 				c.HTTPCollectorEndpoint = "ep"
 				c.ConfigFile = "fp"
 			},
@@ -142,7 +142,7 @@ func Test_loadConfiguration(t *testing.T) {
 				"flagid",
 				wrapOpt(HCPClientSecretOpt),
 				"flagsec",
-				wrapOpt(HCPResourceIDOpt),
+				wrapOpt(HCPResourceURLOpt),
 				"flagrid",
 				wrapOpt(COOtelHTTPEndpointOpt),
 				"flagep",
@@ -152,21 +152,21 @@ func Test_loadConfiguration(t *testing.T) {
 			env: map[string]string{
 				HCPClientID:        "id",
 				HCPClientSecret:    "sec",
-				HCPResourceID:      "rid",
+				HCPResourceURL:     "rid",
 				COOtelHTTPEndpoint: "ep",
 				COOConfigPath:      "fp",
 			},
 			mutateFileConfig: func(c *Config) {
 				c.Cloud.ClientID = "fid"
 				c.Cloud.ClientSecret = "fsec"
-				c.Cloud.ResourceID = "frid"
+				c.Cloud.ResourceURL = "frid"
 				c.HTTPCollectorEndpoint = "fep"
 				c.ConfigFile = "ffp"
 			},
 			mutateExpected: func(c *Config) {
 				c.Cloud.ClientID = "flagid"
 				c.Cloud.ClientSecret = "flagsec"
-				c.Cloud.ResourceID = "flagrid"
+				c.Cloud.ResourceURL = "flagrid"
 				c.HTTPCollectorEndpoint = "flagep"
 				c.ConfigFile = "flagfp"
 			},
