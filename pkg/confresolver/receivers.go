@@ -23,21 +23,3 @@ func (c *Config) NewReceiver(id component.ID, pipelineIDer PipelineIDer, pipelin
 
 	return ccfg
 }
-
-func (c *Config) NewReceivers(id component.ID, pipeline PipelineIDer, p ...PipelineIDer) ComponentConfig {
-	if c.Receivers == nil {
-		c.Receivers = make(telemetryComponents)
-	}
-
-	var ccfg = make(componentConfig)
-	c.Receivers[id] = ccfg
-
-	for _, pipelineID := range p {
-		pipeline := c.Service.Pipelines[pipelineID.id()]
-		if pipeline.Receivers == nil {
-			pipeline.Receivers = make([]component.ID, 0)
-		}
-		pipeline.Receivers = append(pipeline.Receivers, id)
-	}
-	return ccfg
-}
