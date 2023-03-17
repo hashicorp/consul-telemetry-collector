@@ -1,11 +1,16 @@
 package hcp
 
 type MockClient struct {
-	HCPMetricsEndpoint string
+	MetricsEndpoint_ string
+	MetricFilters_   []string
 }
 
 var _ TelemetryClient = (*MockClient)(nil)
 
 func (m *MockClient) MetricsEndpoint() string {
-	return m.HCPMetricsEndpoint
+	return m.MetricsEndpoint_
+}
+
+func (m *MockClient) MetricFilters() []string {
+	return m.MetricFilters_
 }
