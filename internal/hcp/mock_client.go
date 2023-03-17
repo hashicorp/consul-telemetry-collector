@@ -7,10 +7,10 @@ type MockClient struct {
 
 var _ TelemetryClient = (*MockClient)(nil)
 
-func (m *MockClient) MetricsEndpoint() string {
-	return m.MetricsEndpoint_
+func (m *MockClient) MetricsEndpoint() (string, error) {
+	return m.MetricsEndpoint_, nil
 }
 
-func (m *MockClient) MetricFilters() []string {
-	return m.MetricFilters_
+func (m *MockClient) MetricFilters() ([]string, error) {
+	return m.MetricFilters_, nil
 }
