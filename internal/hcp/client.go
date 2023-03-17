@@ -52,3 +52,7 @@ func New(clientID, clientSecret, resourceURL string) (*Client, error) {
 func (c *Client) MetricsEndpoint() string {
 	return ""
 }
+
+func (c *Client) MetricFilters() []string {
+	return []string{}
+}

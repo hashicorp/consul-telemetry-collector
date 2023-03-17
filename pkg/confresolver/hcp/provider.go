@@ -63,8 +63,9 @@ func (m *hcpProvider) Retrieve(ctx context.Context, uri string, change confmap.W
 	// put other processors here
 	// follow recommended practices: https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor#recommended-processors
 
-	// get filtered from hcp
-	// c.NewProcessor(component.NewID("filterprocessor", hcpPipeline)
+	// get filtered metrics from hcp
+	filters := m.client.MetricFilters()
+	confhelper.Filter(c, filters, hcpPipeline)
 
 	c.NewProcessor(component.NewID("batch"), pipeline, hcpPipeline)
 

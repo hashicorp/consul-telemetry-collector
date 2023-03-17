@@ -9,6 +9,13 @@ processors:
     limit_percentage: 50
     spike_limit_percentage: 30
   batch:
+  filter:
+    metrics:
+      include:
+        match_type: regexp
+        metric_names:
+          - consul.metric.a
+          - consul.metric.b
 
 extensions:
   oauth2client/hcp:
@@ -51,5 +58,5 @@ service:
       exporters: [logging,otlphttp]
     metrics/hcp:
       receivers: [otlp]
-      processors: [memory_limiter,batch]
+      processors: [memory_limiter,filter,batch]
       exporters: [logging,otlphttp/hcp]
