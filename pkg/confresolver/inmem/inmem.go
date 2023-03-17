@@ -7,6 +7,7 @@ import (
 	"go.opentelemetry.io/collector/confmap"
 
 	"github.com/hashicorp/consul-telemetry-collector/pkg/confresolver"
+	"github.com/hashicorp/consul-telemetry-collector/pkg/confresolver/confhelper"
 )
 
 type inmemProvider struct {
@@ -27,22 +28,18 @@ func (m *inmemProvider) Retrieve(_ context.Context, _ string, _ confmap.WatcherF
 
 	c := &confresolver.Config{}
 	pipeline := c.NewPipeline(component.DataTypeMetrics)
-	receiver := c.NewReceiver(component.NewID("otlp"), pipeline)
-	receiver.SetMap("protocols").SetMap("http")
+	confhelper.OTLPReceiver(c, pipeline)
+
 	c.NewExporter(component.NewID("logging"), pipeline)
 
-	limiter := c.NewProcessor(component.NewID("memory_limiter"), pipeline)
-	limiter.Set("check_interval", "1s")
-	limiter.Set("limit_percentage", "50")
-	limiter.Set("spike_limit_percentage", "30")
+	confhelper.MemoryLimiter(c, pipeline)
 
 	// put other processors here
 	// follow recommended practices: https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor#recommended-processors
 
 	c.NewProcessor(component.NewID("batch"), pipeline)
 
-	ballast := c.NewExtensions(component.NewID("memory_ballast"))
-	ballast.Set("size_in_percentage", 10)
+	confhelper.Ballast(c)
 
 	c.Service.Telemetry = confresolver.Telemetry()
 
