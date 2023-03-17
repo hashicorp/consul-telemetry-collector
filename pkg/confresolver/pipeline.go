@@ -39,3 +39,15 @@ func (c *Config) NewPipelineWithName(pipeline component.DataType, name string) P
 	c.Service.Pipelines[id] = &service.PipelineConfig{}
 	return pipelineRef(id)
 }
+
+func (c *Config) PushExporterOnPipeline(p PipelineIDer, id ...component.ID) {
+	c.Service.Pipelines[p.id()].Exporters = append(c.Service.Pipelines[p.id()].Exporters, id...)
+}
+
+func (c *Config) PushProcessorOnPipeline(p PipelineIDer, id ...component.ID) {
+	c.Service.Pipelines[p.id()].Processors = append(c.Service.Pipelines[p.id()].Processors, id...)
+}
+
+func (c *Config) PushReceiverOnPipeline(p PipelineIDer, id ...component.ID) {
+	c.Service.Pipelines[p.id()].Receivers = append(c.Service.Pipelines[p.id()].Receivers, id...)
+}

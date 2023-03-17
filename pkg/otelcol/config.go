@@ -12,21 +12,30 @@ import (
 )
 
 func newConfigProvider(forwarderEndpoint string, resourceURL string,
-	client internalhcp.TelemetryClient) (otelcol.ConfigProvider, error) {
+	clientID string, clientSecret string, client internalhcp.TelemetryClient) (otelcol.ConfigProvider, error) {
 	uris := []string{"inmem:"}
 	if resourceURL != "" {
 		uris = append(uris, fmt.Sprintf("hcp:%s", resourceURL))
 	}
 	resolver := confmap.ResolverSettings{
 		URIs: uris,
-		Providers: map[string]confmap.Provider{
-			"inmem": inmem.NewProvider(forwarderEndpoint),
-			"hcp":   hcp.NewProvider(forwarderEndpoint, client),
-		},
+		Providers: makeMapProvidersMap(
+			inmem.NewProvider(forwarderEndpoint),
+			hcp.NewProvider(forwarderEndpoint, client, clientID, clientSecret),
+		),
+
 		Converters: []confmap.Converter{},
 	}
 
 	return otelcol.NewConfigProvider(otelcol.ConfigProviderSettings{
 		ResolverSettings: resolver,
 	})
+}
+
+func makeMapProvidersMap(providers ...confmap.Provider) map[string]confmap.Provider {
+	ret := make(map[string]confmap.Provider, len(providers))
+	for _, provider := range providers {
+		ret[provider.Scheme()] = provider
+	}
+	return ret
 }

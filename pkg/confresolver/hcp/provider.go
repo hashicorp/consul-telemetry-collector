@@ -16,6 +16,8 @@ import (
 type hcpProvider struct {
 	otlpHTTPEndpoint string
 	client           hcp.TelemetryClient
+	clientID         string
+	clientSecret     string
 }
 
 const scheme = "hcp"
@@ -24,10 +26,13 @@ const schemePrefix = scheme + ":"
 var _ confmap.Provider = (*hcpProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider
-func NewProvider(forwarderEndpoint string, client hcp.TelemetryClient) confmap.Provider {
+func NewProvider(forwarderEndpoint string, client hcp.TelemetryClient, clientID,
+	clientSecret string) confmap.Provider {
 	return &hcpProvider{
 		otlpHTTPEndpoint: forwarderEndpoint,
 		client:           client,
+		clientID:         clientID,
+		clientSecret:     clientSecret,
 	}
 }
 
@@ -67,22 +72,14 @@ func (m *hcpProvider) Retrieve(ctx context.Context, uri string, change confmap.W
 	c.Service.Telemetry = confresolver.Telemetry()
 
 	// Set oauth2client extension
-	// oauth2auth := c.NewExtensions(component.NewIDWithName("oauth2client", "hcp"))
-	// oauth2auth.Set("issuer_url", "https://auth.idp.hashicorp.cloud")
-	// oauth2auth.Set("audience", "https://api.hashicorp.com")
-	// oauth2auth.Set("client_id", "")
-	// oauth2auth.Set("client_secret", "")
-	// oauth2auth.Set("token_url", "")
-	// endpointParams := oauth2auth.SetMap("endpoint_params")
-	// endpointParams.Set("audience", "")
+	confhelper.OauthClient(c, m.clientID, m.clientSecret)
 
 	// fetch otlp endpoint from the HCP client here
 	metricsEndpoint := m.client.MetricsEndpoint()
-
 	c.NewExporter(component.NewID("logging"), pipeline, hcpPipeline)
-	otlphttp := c.NewExporter(component.NewIDWithName("otlphttp", "hcp"), hcpPipeline)
-	otlphttp.Set("endpoint", metricsEndpoint)
-	// otlphttp.SetMap("auth").Set("authenticator", component.NewID("oidc/hcp"))
+	otlphttpHCP := c.NewExporter(component.NewIDWithName("otlphttp", "hcp"), hcpPipeline)
+	otlphttpHCP.Set("endpoint", metricsEndpoint)
+	otlphttpHCP.SetMap("auth").Set("authenticator", component.NewIDWithName("oauth2client", "hcp"))
 
 	if m.otlpHTTPEndpoint != "" {
 		c.PushExporterOnPipeline(pipeline, component.NewID("otlphttp"))

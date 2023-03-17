@@ -61,7 +61,7 @@ func Test_newConfigProvider(t *testing.T) {
 				}
 			}
 
-			provider, err := newConfigProvider(tc.forwarder, resourceURL, mockClient)
+			provider, err := newConfigProvider(tc.forwarder, resourceURL, "cid", "csec", mockClient)
 			test.NoError(t, err)
 
 			ctx := context.Background()
@@ -123,14 +123,6 @@ func testConfigProvider(t *testing.T, uris []string) otelcol.ConfigProvider {
 	})
 	must.NoError(t, err)
 	return provider
-}
-
-func makeMapProvidersMap(providers ...confmap.Provider) map[string]confmap.Provider {
-	ret := make(map[string]confmap.Provider, len(providers))
-	for _, provider := range providers {
-		ret[provider.Scheme()] = provider
-	}
-	return ret
 }
 
 func makeURIs(t *testing.T, files []string) []string {

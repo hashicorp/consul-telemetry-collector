@@ -11,6 +11,12 @@ processors:
   batch:
 
 extensions:
+  oauth2client/hcp:
+    client_id: cid
+    client_secret: csec
+    endpoint_params:
+      audience: https://api.hashicorp.com
+    token_url: https://auth.idp.hashicorp.com/oauth2/token
   memory_ballast:
     size_in_percentage: 10
 
@@ -22,9 +28,11 @@ exporters:
     endpoint: https://test-forwarder-endpoint:4138
   otlphttp/hcp:
     endpoint: https://hcp-metrics-endpoint
+    auth:
+      authenticator: oauth2client/hcp
 
 service:
-  extensions: [memory_ballast]
+  extensions: [memory_ballast, oauth2client/hcp]
   telemetry:
     resource: {}
     logs:
