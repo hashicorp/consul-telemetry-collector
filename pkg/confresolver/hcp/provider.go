@@ -15,7 +15,7 @@ import (
 
 type hcpProvider struct {
 	otlpHTTPEndpoint string
-	client           *hcp.Client
+	client           hcp.TelemetryClient
 }
 
 const scheme = "hcp"
@@ -24,9 +24,10 @@ const schemePrefix = scheme + ":"
 var _ confmap.Provider = (*hcpProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider
-func NewProvider(forwarderEndpoint string) confmap.Provider {
+func NewProvider(forwarderEndpoint string, client hcp.TelemetryClient) confmap.Provider {
 	return &hcpProvider{
 		otlpHTTPEndpoint: forwarderEndpoint,
+		client:           client,
 	}
 }
 
@@ -76,12 +77,11 @@ func (m *hcpProvider) Retrieve(ctx context.Context, uri string, change confmap.W
 	// endpointParams.Set("audience", "")
 
 	// fetch otlp endpoint from the HCP client here
-	// telemetryEndpoint := m.client.Telemetry()
+	metricsEndpoint := m.client.MetricsEndpoint()
 
-	telemetryEndpoint := "https://hcp-metrics-endpoint"
 	c.NewExporter(component.NewID("logging"), pipeline, hcpPipeline)
 	otlphttp := c.NewExporter(component.NewIDWithName("otlphttp", "hcp"), hcpPipeline)
-	otlphttp.Set("endpoint", telemetryEndpoint)
+	otlphttp.Set("endpoint", metricsEndpoint)
 	// otlphttp.SetMap("auth").Set("authenticator", component.NewID("oidc/hcp"))
 
 	if m.otlpHTTPEndpoint != "" {
