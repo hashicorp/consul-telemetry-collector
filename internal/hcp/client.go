@@ -16,6 +16,8 @@ type Client struct {
 	runtime *client.Runtime
 }
 
+var _ TelemetryClient = (*Client)(nil)
+
 func New(clientID, clientSecret, resourceURL string) (*Client, error) {
 	r, err := resource.FromString(resourceURL)
 	if err != nil {
@@ -45,4 +47,8 @@ func New(clientID, clientSecret, resourceURL string) (*Client, error) {
 	return &Client{
 		runtime: runtime,
 	}, nil
+}
+
+func (c *Client) MetricsEndpoint() string {
+	return ""
 }
