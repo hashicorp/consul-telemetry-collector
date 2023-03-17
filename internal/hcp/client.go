@@ -13,6 +13,8 @@ import (
 
 const sourceChannel = "consul-telemetry"
 
+// Client provides a TelemetryClient that lazily retrieves configuration from HCP.
+// TelemtryConfiguration can be loaded on-demand using the ReloadConfig() function
 type Client struct {
 	runtime     *client.Runtime
 	metricCfg   *telemetryConfig
@@ -27,6 +29,7 @@ type telemetryConfig struct {
 
 var _ TelemetryClient = (*Client)(nil)
 
+// New creates a new telemetry client for the provided resource using the credentials.
 func New(clientID, clientSecret, resourceURL string) (*Client, error) {
 	r, err := resource.FromString(resourceURL)
 	if err != nil {
@@ -58,8 +61,10 @@ func New(clientID, clientSecret, resourceURL string) (*Client, error) {
 	}, nil
 }
 
+// LoadTelemetryConfig will load the telemetry configuration from the provided ClientService configuration.
+// Generally used for testing. Most users should use ReloadConfig().
 func (c *Client) LoadTelemetryConfig(gnm ClientService) error {
-	metricsCfg, err := GetTelemetryConfig(gnm, c.hcpResource.ID)
+	metricsCfg, err := getTelemetryConfig(gnm, c.hcpResource.ID)
 	if err != nil {
 		return err
 	}
@@ -67,12 +72,13 @@ func (c *Client) LoadTelemetryConfig(gnm ClientService) error {
 	return nil
 }
 
-func (c *Client) reloadConfig() error {
+// ReloadConfig will retrieve the telemetry configuration from HCP using the initially configured runtime.
+func (c *Client) ReloadConfig() error {
 	gnmClient := global_network_manager_service.New(c.runtime, nil)
 	return c.LoadTelemetryConfig(gnmClient)
 }
 
-func GetTelemetryConfig(gnm ClientService, clusterID string) (telemetryConfig, error) {
+func getTelemetryConfig(gnm ClientService, clusterID string) (telemetryConfig, error) {
 	params := global_network_manager_service.NewAgentTelemetryConfigParams()
 	params.SetClusterID(clusterID)
 	result, err := gnm.AgentTelemetryConfig(params, nil)
@@ -93,18 +99,20 @@ func GetTelemetryConfig(gnm ClientService, clusterID string) (telemetryConfig, e
 	return metricCfg, nil
 }
 
+// MetricsEndpoint returns the metrics endpoint from the TelemetryConfig
 func (c *Client) MetricsEndpoint() (string, error) {
 	if c.metricCfg == nil {
-		if err := c.reloadConfig(); err != nil {
+		if err := c.ReloadConfig(); err != nil {
 			return "", err
 		}
 	}
 	return c.metricCfg.endpoint, nil
 }
 
+// MetricFilters returns the metric inclusion filters from the TelemetryConfig
 func (c *Client) MetricFilters() ([]string, error) {
 	if c.metricCfg == nil {
-		if err := c.reloadConfig(); err != nil {
+		if err := c.ReloadConfig(); err != nil {
 			return nil, err
 		}
 	}
