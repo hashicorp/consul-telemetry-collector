@@ -4,7 +4,6 @@ go 1.19
 
 require (
 	github.com/go-openapi/runtime v0.25.0
-	github.com/google/uuid v1.3.0
 	github.com/hashicorp/go-hclog v1.4.0
 	github.com/hashicorp/hcl/v2 v2.16.1
 	github.com/hashicorp/hcp-sdk-go v0.38.0
@@ -75,6 +74,7 @@ require (
 	github.com/google/gnostic v0.5.7-v3refs // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
+	github.com/google/uuid v1.3.0 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
 	github.com/hashicorp/go-multierror v1.1.0 // indirect
@@ -170,4 +170,4 @@ require (
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
 
-replace github.com/hashicorp/hcp-sdk-go => github.com/hashicorp/hcp-sdk-go-internal v0.0.0-20230317182423-8d77dfd52b4c
+//replace github.com/hashicorp/hcp-sdk-go => github.com/hashicorp/hcp-sdk-go-internal v0.0.0-20230317182423-8d77dfd52b4c
