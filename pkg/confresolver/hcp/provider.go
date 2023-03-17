@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"strings"
 
+	"github.com/hashicorp/hcp-sdk-go/resource"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/confmap"
 
@@ -42,10 +43,10 @@ func (m *hcpProvider) Retrieve(ctx context.Context, uri string, change confmap.W
 		return nil, fmt.Errorf("%q uri is not supported by %q provider", uri, m.Scheme())
 	}
 
-	// resource, err := resource.FromString(strings.TrimLeft(uri, schemePrefix))
-	// if err != nil {
-	// 	return nil, fmt.Errorf("unable to parse %q uri as HCP resource URL %w", uri, err)
-	// }
+	_, err := resource.FromString(strings.TrimLeft(uri, schemePrefix))
+	if err != nil {
+		return nil, fmt.Errorf("unable to parse %q uri as HCP resource URL %w", uri, err)
+	}
 
 	// _ = resource
 
@@ -98,7 +99,7 @@ func (m *hcpProvider) Retrieve(ctx context.Context, uri string, change confmap.W
 	}()
 
 	conf := confmap.New()
-	err := conf.Marshal(c)
+	err = conf.Marshal(c)
 	if err != nil {
 		return nil, err
 	}
