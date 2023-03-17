@@ -24,7 +24,7 @@ func New(ctx context.Context, forwarderEndpoint string) (Collector, error) {
 		return nil, err
 	}
 
-	provider, err := newConfigProvider(forwarderEndpoint)
+	provider, err := newConfigProvider(forwarderEndpoint, "")
 	if err != nil {
 		return nil, err
 	}
