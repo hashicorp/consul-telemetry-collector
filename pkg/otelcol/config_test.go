@@ -13,6 +13,8 @@ import (
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/confmap/provider/fileprovider"
 	"go.opentelemetry.io/collector/otelcol"
+
+	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 )
 
 func Test_newConfigProvider(t *testing.T) {
@@ -51,10 +53,15 @@ func Test_newConfigProvider(t *testing.T) {
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
 			var resourceURL string
+			var mockClient *hcp.MockClient
 			if tc.hcpResource != nil {
 				resourceURL = tc.hcpResource.String()
+				mockClient = &hcp.MockClient{
+					HCPMetricsEndpoint: "https://hcp-metrics-endpoint",
+				}
 			}
-			provider, err := newConfigProvider(tc.forwarder, resourceURL)
+
+			provider, err := newConfigProvider(tc.forwarder, resourceURL, "cid", "csec", mockClient)
 			test.NoError(t, err)
 
 			ctx := context.Background()
@@ -116,14 +123,6 @@ func testConfigProvider(t *testing.T, uris []string) otelcol.ConfigProvider {
 	})
 	must.NoError(t, err)
 	return provider
-}
-
-func makeMapProvidersMap(providers ...confmap.Provider) map[string]confmap.Provider {
-	ret := make(map[string]confmap.Provider, len(providers))
-	for _, provider := range providers {
-		ret[provider.Scheme()] = provider
-	}
-	return ret
 }
 
 func makeURIs(t *testing.T, files []string) []string {
