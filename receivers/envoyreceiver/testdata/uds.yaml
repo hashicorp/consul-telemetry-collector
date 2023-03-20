@@ -1,0 +1,3 @@
+grpc:
+  transport: unix
+  endpoint: /tmp/grpc_otlp.sock

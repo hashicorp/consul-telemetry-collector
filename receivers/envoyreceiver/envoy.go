@@ -14,6 +14,8 @@ type envoyReceiver struct {
 
 var _ receiver.Metrics = (*envoyReceiver)(nil)
 
+var _ component.Config = (*Config)(nil)
+
 type Config struct {
 	GRPC *configgrpc.GRPCServerSettings `mapstructure:"grpc"`
 }
