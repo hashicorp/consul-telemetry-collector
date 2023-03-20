@@ -57,7 +57,7 @@ func Test_newConfigProvider(t *testing.T) {
 			if tc.hcpResource != nil {
 				resourceURL = tc.hcpResource.String()
 				mockClient = &hcp.MockClient{
-					HCPMetricsEndpoint: "https://hcp-metrics-endpoint",
+					MockMetricsEndpoint: "https://hcp-metrics-endpoint",
 				}
 			}
 

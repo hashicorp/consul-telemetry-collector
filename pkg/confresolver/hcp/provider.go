@@ -64,8 +64,8 @@ func (m *hcpProvider) Retrieve(ctx context.Context, uri string, change confmap.W
 	// follow recommended practices: https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor#recommended-processors
 
 	// get filtered metrics from hcp
-	filters := m.client.MetricFilters()
-	confhelper.Filter(c, filters, hcpPipeline)
+	// filters := m.client.MetricFilters()
+	// confhelper.Filter(c, filters, hcpPipeline)
 
 	c.NewProcessor(component.NewID("batch"), pipeline, hcpPipeline)
 
@@ -77,7 +77,10 @@ func (m *hcpProvider) Retrieve(ctx context.Context, uri string, change confmap.W
 	confhelper.OauthClient(c, m.clientID, m.clientSecret)
 
 	// fetch otlp endpoint from the HCP client here
-	metricsEndpoint := m.client.MetricsEndpoint()
+	metricsEndpoint, err := m.client.MetricsEndpoint()
+	if err != nil {
+		return nil, err
+	}
 	c.NewExporter(component.NewID("logging"), pipeline, hcpPipeline)
 	otlphttpHCP := c.NewExporter(component.NewIDWithName("otlphttp", "hcp"), hcpPipeline)
 	otlphttpHCP.Set("endpoint", metricsEndpoint)
