@@ -20,6 +20,7 @@ GOLDFLAGS=-X github.com/hashicorp/consul-telemetry-collector/pkg/version.GitComm
 
 # Get latest revision (no dirty check for now).
 REVISION = $(shell git rev-parse HEAD)
+GOLANGCI_CONFIG_DIR ?= $(CURDIR)
 
 .PHONY: goversion
 goversion:
@@ -47,7 +48,7 @@ tests: goversion
 
 .PHONY: lint
 lint:
-	golangci-lint run --config .golangci.yml
+	golangci-lint run --config $(GOLANGCI_CONFIG_DIR)/.golangci.yml
 
 .PHONY: deps
 deps:
