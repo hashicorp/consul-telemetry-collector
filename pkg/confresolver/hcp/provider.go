@@ -5,9 +5,10 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/hashicorp/hcp-sdk-go/resource"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/confmap"
+
+	"github.com/hashicorp/hcp-sdk-go/resource"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/pkg/confresolver"

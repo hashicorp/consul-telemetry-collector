@@ -6,6 +6,8 @@ import (
 	"github.com/hashicorp/consul-telemetry-collector/pkg/confresolver"
 )
 
+// MemoryLimiter creates a process that ensures that the memory utilization of the open-telemetry-collector doesn't
+// go above 50% of the total available memory with a 30% burst
 func MemoryLimiter(c *confresolver.Config, pipelineIDer confresolver.PipelineIDer,
 	pipelines ...confresolver.PipelineIDer) confresolver.ComponentConfig {
 

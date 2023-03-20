@@ -12,6 +12,7 @@ import (
 const defaultIssuerURL = "https://auth.idp.hashicorp.com"
 const audience = "https://api.hashicorp.com"
 
+// OauthClient helper creates an oauth2client authentication extension that authenticates to HCP.
 func OauthClient(c *confresolver.Config, clientID, clientSecret string) {
 	// this duplicates logic in hcp-sdk-go
 	var issuerURL string

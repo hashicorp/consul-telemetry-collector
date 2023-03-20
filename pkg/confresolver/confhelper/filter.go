@@ -9,6 +9,7 @@ import (
 	"github.com/hashicorp/consul-telemetry-collector/pkg/confresolver"
 )
 
+// Filter confhelper creates a regex based inclusion filter based on the provided list of filters
 func Filter(c *confresolver.Config, includeFilter []string, pipeline confresolver.PipelineIDer,
 	pipelines ...confresolver.PipelineIDer) error {
 	if len(includeFilter) == 0 {
