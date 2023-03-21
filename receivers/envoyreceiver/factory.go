@@ -21,10 +21,25 @@ func NewFactory() receiver.Factory {
 	return receiver.NewFactory(
 		typeStr,
 		createDefaultConfig,
-		receiver.WithMetrics(func(ctx context.Context, settings receiver.CreateSettings, config component.Config, metrics consumer.Metrics) (receiver.Metrics, error) {
-			return receiver.Metrics(&envoyReceiver{}), nil
-		}, component.StabilityLevelDevelopment),
+		receiver.WithMetrics(createMetrics, component.StabilityLevelDevelopment),
 	)
+}
+
+func createMetrics(ctx context.Context,
+	set receiver.CreateSettings,
+	cfg component.Config,
+	nextConsumer consumer.Metrics) (receiver.Metrics, error) {
+
+	if nextConsumer == nil {
+		return nil, component.ErrNilNextConsumer
+	}
+
+	envoyCfg := cfg.(*Config)
+	envoy := newEnvoyReceiver(set, envoyCfg)
+
+	envoy.registerMetrics(nextConsumer)
+
+	return receiver.Metrics(envoy), nil
 }
 
 // createDefaultConfig creates the default configuration for receiver.

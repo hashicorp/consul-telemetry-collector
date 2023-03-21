@@ -11,7 +11,6 @@ import (
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/component/componenttest"
 	"go.opentelemetry.io/collector/config/configgrpc"
-	"go.opentelemetry.io/collector/config/confighttp"
 	"go.opentelemetry.io/collector/config/confignet"
 	"go.opentelemetry.io/collector/consumer/consumertest"
 	"go.opentelemetry.io/collector/receiver/receivertest"
@@ -46,12 +45,6 @@ func TestCreateMetricReceiver(t *testing.T) {
 			Transport: "tcp",
 		},
 	}
-	defaultHTTPSettings := &confighttp.HTTPServerSettings{
-		Endpoint: localEndpoint(t),
-	}
-
-	_ = defaultHTTPSettings
-	_ = defaultGRPCSettings
 
 	tests := []struct {
 		name    string
@@ -60,11 +53,8 @@ func TestCreateMetricReceiver(t *testing.T) {
 	}{
 		{
 			name: "default",
-			cfg:  &Config{
-				// Protocols: Protocols{
-				// 	GRPC: defaultGRPCSettings,
-				// 	HTTP: defaultHTTPSettings,
-				// },
+			cfg: &Config{
+				GRPC: defaultGRPCSettings,
 			},
 		},
 		// {
