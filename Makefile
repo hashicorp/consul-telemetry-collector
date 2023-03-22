@@ -51,6 +51,7 @@ tests: goversion go/test/mod
 
 .PHONY: $(GO_MODULE_DIRS)
 $(GO_MODULE_DIRS):
+	@echo -e "Running $(TARGET) for $(@)\n"
 	make -C $@ $(TARGET)
 
 .PHONY: go/test/mod
