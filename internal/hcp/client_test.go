@@ -81,6 +81,7 @@ func TestLoadConfig(t *testing.T) {
 		r        resource.Resource
 		resp     *global_network_manager_service.AgentTelemetryConfigOK
 		endpoint string
+		filters  []string
 		err      error
 	}{
 		"GoodGlobalEndpoint": {
@@ -98,6 +99,7 @@ func TestLoadConfig(t *testing.T) {
 				},
 			},
 			endpoint: "https://global.metrics.com",
+			filters:  []string{"a", "b"},
 		},
 		"GoodMetricsEndpoint": {
 			resp: &global_network_manager_service.AgentTelemetryConfigOK{
@@ -114,6 +116,7 @@ func TestLoadConfig(t *testing.T) {
 				},
 			},
 			endpoint: "https://local.metrics.com",
+			filters:  []string{"a"},
 		},
 		"BadResponse": {
 			r:   resource.Resource{},
@@ -144,6 +147,10 @@ func TestLoadConfig(t *testing.T) {
 			endpoint, err := client.MetricsEndpoint()
 			must.NoError(t, err)
 			must.Eq(t, tc.endpoint, endpoint)
+
+			filters, err := client.MetricFilters()
+			must.NoError(t, err)
+			must.Eq(t, tc.filters, filters)
 		})
 	}
 }
