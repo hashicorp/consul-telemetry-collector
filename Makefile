@@ -49,6 +49,9 @@ dev: bin
 .PHONY: tests
 tests: goversion go/test/mod
 
+.PHONY: lint
+lint: go/lint/mod
+
 .PHONY: $(GO_MODULE_DIRS)
 $(GO_MODULE_DIRS):
 	@echo -e "Running $(TARGET) for $(@)\n"
@@ -58,12 +61,16 @@ $(GO_MODULE_DIRS):
 go/test/mod: TARGET=go/test
 go/test/mod: $(GO_MODULE_DIRS)
 
+.PHONY: go/lint/mod
+go/lint/mod: TARGET=go/lint
+go/lint/mod: $(GO_MODULE_DIRS)
+
 go/test:
 	@go test -timeout 10s ./...
 
-.PHONY: lint
-lint:
-	golangci-lint run --config $(GOLANGCI_CONFIG_DIR)/.golangci.yml
+go/lint:
+	@golangci-lint run --config $(GOLANGCI_CONFIG_DIR)/.golangci.yml
+
 
 .PHONY: deps
 deps:
