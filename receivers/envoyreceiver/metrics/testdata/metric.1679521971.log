@@ -1,0 +1,4376 @@
+[
+  {
+    "name": "cluster.update_attempt",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_rx_bytes_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 85447
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_xx",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.response_code_class",
+            "value": "2"
+          },
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_destroy_with_active_rq",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.external.upstream_rq_completed",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "dns.cares.resolve_total",
+    "type": 0,
+    "metric": [
+      {
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_destroy",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.external.upstream_rq",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.response_code",
+            "value": "200"
+          },
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.internal.upstream_rq_xx",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.response_code_class",
+            "value": "5"
+          },
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_destroy_remote",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_http2_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq_completed",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.http.downstream_rq_completed",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          },
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener_manager.listener_create_success",
+    "type": 0,
+    "metric": [
+      {
+        "counter": {
+          "value": 16
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_destroy_remote",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.worker_downstream_cx_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.worker_id",
+            "value": "8"
+          },
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster_manager.cluster_added",
+    "type": 0,
+    "metric": [
+      {
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_http1_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq_xx",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.response_code_class",
+            "value": "5"
+          },
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener_manager.listener_added",
+    "type": 0,
+    "metric": [
+      {
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.worker_downstream_cx_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.worker_id",
+            "value": "3"
+          },
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_destroy_local",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_completed",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_rx_reset",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.membership_change",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_tx_bytes_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 33378
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq_pending_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.admin.http.downstream_rq_xx",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.response_code_class",
+            "value": "2"
+          },
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_destroy_active_rq",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_tx_bytes_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 990
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.ssl.handshake",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_rx_bytes_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 395
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.ssl.session_reused",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "runtime.override_dir_not_exists",
+    "type": 0,
+    "metric": [
+      {
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.downstream_cx_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.admin.main_thread.downstream_cx_total",
+    "type": 0,
+    "metric": [
+      {
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.response_code",
+            "value": "503"
+          },
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.response_code",
+            "value": "200"
+          },
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.update_success",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_http1_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.external.upstream_rq_xx",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.response_code_class",
+            "value": "2"
+          },
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "runtime.load_success",
+    "type": 0,
+    "metric": [
+      {
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.ssl.ciphers",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "cipher_suite",
+            "value": "ECDHE-ECDSA-AES128-GCM-SHA256"
+          },
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_connect_fail",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.downstream_cx_destroy",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq_xx",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.response_code_class",
+            "value": "2"
+          },
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_xx",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.response_code_class",
+            "value": "2"
+          },
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq_pending_failure_eject",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.http.downstream_rq_xx",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.response_code_class",
+            "value": "2"
+          },
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          },
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_destroy_remote",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_http1_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.wip_protos",
+    "type": 0,
+    "metric": [
+      {
+        "counter": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_destroy",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.admin.downstream_cx_destroy",
+    "type": 0,
+    "metric": [
+      {
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_http1_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.membership_change",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_destroy",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_destroy",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.admin.http.downstream_rq_completed",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.dynamic_unknown_fields",
+    "type": 0,
+    "metric": [
+      {
+        "counter": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.rq_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.ssl.curves.X25519",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.default.total_match_count",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.default.total_match_count",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.static_unknown_fields",
+    "type": 0,
+    "metric": [
+      {
+        "counter": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_destroy_local_with_active_rq",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.admin.downstream_cx_total",
+    "type": 0,
+    "metric": [
+      {
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.ssl.sigalgs.ecdsa_secp256r1_sha256",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 5
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq_pending_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq_completed",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.ssl.versions.TLSv1.2",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_completed",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.rq_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "async-client"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_rx_bytes_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 156
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_http1_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.internal.upstream_rq_completed",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.internal.upstream_rq",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.response_code",
+            "value": "503"
+          },
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_destroy_remote_active_rq",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_tx_bytes_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 85616
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.worker_downstream_cx_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.worker_id",
+            "value": "15"
+          },
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "counter": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.worker_downstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.worker_id",
+            "value": "8"
+          },
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.circuit_breakers.default.cx_pool_open",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.state",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.circuit_breakers.default.cx_open",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.circuit_breakers.default.cx_open",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "runtime.num_layers",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.circuit_breakers.high.cx_pool_open",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq_pending_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "dns.cares.pending_resolutions",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_rx_bytes_buffered",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 19545
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.parent_connections",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.worker_downstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.worker_id",
+            "value": "15"
+          },
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.membership_total",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener_manager.total_listeners_active",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.version",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 14584368
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.memory_allocated",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 7766512
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.stats_recent_lookups",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 2333
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.total_connections",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 3
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.circuit_breakers.default.rq_open",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.circuit_breakers.default.rq_pending_open",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "runtime.num_keys",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_rx_bytes_buffered",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.membership_healthy",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.concurrency",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 16
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.downstream_pre_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.admin.main_thread.downstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.circuit_breakers.high.cx_pool_open",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_http1_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.live",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster_manager.active_clusters",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 2
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.membership_degraded",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.membership_total",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "gauge": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.memory_heap_size",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 14680064
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster_manager.warming_clusters",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.admin.downstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener_manager.total_listeners_warming",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.hot_restart_generation",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.membership_degraded",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.circuit_breakers.default.rq_pending_open",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.downstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.uptime",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 20
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_http1_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.memory_physical_size",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 23439714
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.hot_restart_epoch",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.admin.downstream_pre_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.worker_downstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.worker_id",
+            "value": "3"
+          },
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq_pending_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_rx_bytes_buffered",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.membership_excluded",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.membership_excluded",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.membership_healthy",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "gauge": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.days_until_first_cert_expiring",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 4294967295
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener_manager.workers_started",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.circuit_breakers.default.cx_pool_open",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_length_ms",
+    "type": 2,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "summary": {
+          "quantile": [
+            {
+              "quantile": 0,
+              "value": NaN
+            },
+            {
+              "quantile": 0.25,
+              "value": NaN
+            },
+            {
+              "quantile": 0.5,
+              "value": NaN
+            },
+            {
+              "quantile": 0.75,
+              "value": NaN
+            },
+            {
+              "quantile": 0.9,
+              "value": NaN
+            },
+            {
+              "quantile": 0.95,
+              "value": NaN
+            },
+            {
+              "quantile": 0.99,
+              "value": NaN
+            },
+            {
+              "quantile": 0.995,
+              "value": NaN
+            },
+            {
+              "quantile": 0.999,
+              "value": NaN
+            },
+            {
+              "quantile": 1,
+              "value": NaN
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_length_ms",
+    "type": 4,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "histogram": {
+          "sample_count": 0,
+          "sample_sum": 0,
+          "bucket": [
+            {
+              "cumulative_count": 0,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq_time",
+    "type": 2,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "summary": {
+          "quantile": [
+            {
+              "quantile": 0,
+              "value": 92
+            },
+            {
+              "quantile": 0.25,
+              "value": 92.75
+            },
+            {
+              "quantile": 0.5,
+              "value": 185
+            },
+            {
+              "quantile": 0.75,
+              "value": 272.5
+            },
+            {
+              "quantile": 0.9,
+              "value": 277
+            },
+            {
+              "quantile": 0.95,
+              "value": 278.5
+            },
+            {
+              "quantile": 0.99,
+              "value": 279.7
+            },
+            {
+              "quantile": 0.995,
+              "value": 279.85
+            },
+            {
+              "quantile": 0.999,
+              "value": 279.97
+            },
+            {
+              "quantile": 1,
+              "value": 280
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_rq_time",
+    "type": 4,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "histogram": {
+          "sample_count": 3,
+          "sample_sum": 552.5,
+          "bucket": [
+            {
+              "cumulative_count": 0,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.external.upstream_rq_time",
+    "type": 2,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "summary": {
+          "quantile": [
+            {
+              "quantile": 0,
+              "value": 92
+            },
+            {
+              "quantile": 0.25,
+              "value": 92.75
+            },
+            {
+              "quantile": 0.5,
+              "value": 185
+            },
+            {
+              "quantile": 0.75,
+              "value": 272.5
+            },
+            {
+              "quantile": 0.9,
+              "value": 277
+            },
+            {
+              "quantile": 0.95,
+              "value": 278.5
+            },
+            {
+              "quantile": 0.99,
+              "value": 279.7
+            },
+            {
+              "quantile": 0.995,
+              "value": 279.85
+            },
+            {
+              "quantile": 0.999,
+              "value": 279.97
+            },
+            {
+              "quantile": 1,
+              "value": 280
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.external.upstream_rq_time",
+    "type": 4,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "histogram": {
+          "sample_count": 3,
+          "sample_sum": 552.5,
+          "bucket": [
+            {
+              "cumulative_count": 0,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.initialization_time_ms",
+    "type": 2,
+    "metric": [
+      {
+        "summary": {
+          "quantile": [
+            {
+              "quantile": 0,
+              "value": NaN
+            },
+            {
+              "quantile": 0.25,
+              "value": NaN
+            },
+            {
+              "quantile": 0.5,
+              "value": NaN
+            },
+            {
+              "quantile": 0.75,
+              "value": NaN
+            },
+            {
+              "quantile": 0.9,
+              "value": NaN
+            },
+            {
+              "quantile": 0.95,
+              "value": NaN
+            },
+            {
+              "quantile": 0.99,
+              "value": NaN
+            },
+            {
+              "quantile": 0.995,
+              "value": NaN
+            },
+            {
+              "quantile": 0.999,
+              "value": NaN
+            },
+            {
+              "quantile": 1,
+              "value": NaN
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "server.initialization_time_ms",
+    "type": 4,
+    "metric": [
+      {
+        "histogram": {
+          "sample_count": 0,
+          "sample_sum": 0,
+          "bucket": [
+            {
+              "cumulative_count": 0,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_connect_ms",
+    "type": 2,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "summary": {
+          "quantile": [
+            {
+              "quantile": 0,
+              "value": 96
+            },
+            {
+              "quantile": 0.25,
+              "value": 96.5
+            },
+            {
+              "quantile": 0.5,
+              "value": 97
+            },
+            {
+              "quantile": 0.75,
+              "value": 135
+            },
+            {
+              "quantile": 0.9,
+              "value": 138
+            },
+            {
+              "quantile": 0.95,
+              "value": 139
+            },
+            {
+              "quantile": 0.99,
+              "value": 139.8
+            },
+            {
+              "quantile": 0.995,
+              "value": 139.9
+            },
+            {
+              "quantile": 0.999,
+              "value": 139.98
+            },
+            {
+              "quantile": 1,
+              "value": 140
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_connect_ms",
+    "type": 4,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "histogram": {
+          "sample_count": 2,
+          "sample_sum": 231.5,
+          "bucket": [
+            {
+              "cumulative_count": 0,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.admin.downstream_cx_length_ms",
+    "type": 2,
+    "metric": [
+      {
+        "summary": {
+          "quantile": [
+            {
+              "quantile": 0,
+              "value": NaN
+            },
+            {
+              "quantile": 0.25,
+              "value": NaN
+            },
+            {
+              "quantile": 0.5,
+              "value": NaN
+            },
+            {
+              "quantile": 0.75,
+              "value": NaN
+            },
+            {
+              "quantile": 0.9,
+              "value": NaN
+            },
+            {
+              "quantile": 0.95,
+              "value": NaN
+            },
+            {
+              "quantile": 0.99,
+              "value": NaN
+            },
+            {
+              "quantile": 0.995,
+              "value": NaN
+            },
+            {
+              "quantile": 0.999,
+              "value": NaN
+            },
+            {
+              "quantile": 1,
+              "value": NaN
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.admin.downstream_cx_length_ms",
+    "type": 4,
+    "metric": [
+      {
+        "histogram": {
+          "sample_count": 0,
+          "sample_sum": 0,
+          "bucket": [
+            {
+              "cumulative_count": 0,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_length_ms",
+    "type": 2,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "summary": {
+          "quantile": [
+            {
+              "quantile": 0,
+              "value": 0
+            },
+            {
+              "quantile": 0.25,
+              "value": 0
+            },
+            {
+              "quantile": 0.5,
+              "value": 0
+            },
+            {
+              "quantile": 0.75,
+              "value": 0
+            },
+            {
+              "quantile": 0.9,
+              "value": 0
+            },
+            {
+              "quantile": 0.95,
+              "value": 0
+            },
+            {
+              "quantile": 0.99,
+              "value": 0
+            },
+            {
+              "quantile": 0.995,
+              "value": 0
+            },
+            {
+              "quantile": 0.999,
+              "value": 0
+            },
+            {
+              "quantile": 1,
+              "value": 0
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_length_ms",
+    "type": 4,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "histogram": {
+          "sample_count": 1,
+          "sample_sum": 0,
+          "bucket": [
+            {
+              "cumulative_count": 1,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_length_ms",
+    "type": 2,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "summary": {
+          "quantile": [
+            {
+              "quantile": 0,
+              "value": 92
+            },
+            {
+              "quantile": 0.25,
+              "value": 92.75
+            },
+            {
+              "quantile": 0.5,
+              "value": 195
+            },
+            {
+              "quantile": 0.75,
+              "value": 272.5
+            },
+            {
+              "quantile": 0.9,
+              "value": 277
+            },
+            {
+              "quantile": 0.95,
+              "value": 278.5
+            },
+            {
+              "quantile": 0.99,
+              "value": 279.7
+            },
+            {
+              "quantile": 0.995,
+              "value": 279.85
+            },
+            {
+              "quantile": 0.999,
+              "value": 279.97
+            },
+            {
+              "quantile": 1,
+              "value": 280
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_length_ms",
+    "type": 4,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "histogram": {
+          "sample_count": 3,
+          "sample_sum": 562.5,
+          "bucket": [
+            {
+              "cumulative_count": 0,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_time",
+    "type": 2,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "summary": {
+          "quantile": [
+            {
+              "quantile": 0,
+              "value": 92
+            },
+            {
+              "quantile": 0.25,
+              "value": 92.75
+            },
+            {
+              "quantile": 0.5,
+              "value": 185
+            },
+            {
+              "quantile": 0.75,
+              "value": 272.5
+            },
+            {
+              "quantile": 0.9,
+              "value": 277
+            },
+            {
+              "quantile": 0.95,
+              "value": 278.5
+            },
+            {
+              "quantile": 0.99,
+              "value": 279.7
+            },
+            {
+              "quantile": 0.995,
+              "value": 279.85
+            },
+            {
+              "quantile": 0.999,
+              "value": 279.97
+            },
+            {
+              "quantile": 1,
+              "value": 280
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_time",
+    "type": 4,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "histogram": {
+          "sample_count": 3,
+          "sample_sum": 552.5,
+          "bucket": [
+            {
+              "cumulative_count": 0,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.downstream_cx_length_ms",
+    "type": 2,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "summary": {
+          "quantile": [
+            {
+              "quantile": 0,
+              "value": 92
+            },
+            {
+              "quantile": 0.25,
+              "value": 92.75
+            },
+            {
+              "quantile": 0.5,
+              "value": 185
+            },
+            {
+              "quantile": 0.75,
+              "value": 272.5
+            },
+            {
+              "quantile": 0.9,
+              "value": 277
+            },
+            {
+              "quantile": 0.95,
+              "value": 278.5
+            },
+            {
+              "quantile": 0.99,
+              "value": 279.7
+            },
+            {
+              "quantile": 0.995,
+              "value": 279.85
+            },
+            {
+              "quantile": 0.999,
+              "value": 279.97
+            },
+            {
+              "quantile": 1,
+              "value": 280
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener.downstream_cx_length_ms",
+    "type": 4,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.listener_address",
+            "value": "0.0.0.0_10000"
+          }
+        ],
+        "histogram": {
+          "sample_count": 3,
+          "sample_sum": 552.5,
+          "bucket": [
+            {
+              "cumulative_count": 0,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_time",
+    "type": 2,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "summary": {
+          "quantile": [
+            {
+              "quantile": 0,
+              "value": NaN
+            },
+            {
+              "quantile": 0.25,
+              "value": NaN
+            },
+            {
+              "quantile": 0.5,
+              "value": NaN
+            },
+            {
+              "quantile": 0.75,
+              "value": NaN
+            },
+            {
+              "quantile": 0.9,
+              "value": NaN
+            },
+            {
+              "quantile": 0.95,
+              "value": NaN
+            },
+            {
+              "quantile": 0.99,
+              "value": NaN
+            },
+            {
+              "quantile": 0.995,
+              "value": NaN
+            },
+            {
+              "quantile": 0.999,
+              "value": NaN
+            },
+            {
+              "quantile": 1,
+              "value": NaN
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_time",
+    "type": 4,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "histogram": {
+          "sample_count": 0,
+          "sample_sum": 0,
+          "bucket": [
+            {
+              "cumulative_count": 0,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_length_ms",
+    "type": 2,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "summary": {
+          "quantile": [
+            {
+              "quantile": 0,
+              "value": NaN
+            },
+            {
+              "quantile": 0.25,
+              "value": NaN
+            },
+            {
+              "quantile": 0.5,
+              "value": NaN
+            },
+            {
+              "quantile": 0.75,
+              "value": NaN
+            },
+            {
+              "quantile": 0.9,
+              "value": NaN
+            },
+            {
+              "quantile": 0.95,
+              "value": NaN
+            },
+            {
+              "quantile": 0.99,
+              "value": NaN
+            },
+            {
+              "quantile": 0.995,
+              "value": NaN
+            },
+            {
+              "quantile": 0.999,
+              "value": NaN
+            },
+            {
+              "quantile": 1,
+              "value": NaN
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_length_ms",
+    "type": 4,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "histogram": {
+          "sample_count": 0,
+          "sample_sum": 0,
+          "bucket": [
+            {
+              "cumulative_count": 0,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  }
+]

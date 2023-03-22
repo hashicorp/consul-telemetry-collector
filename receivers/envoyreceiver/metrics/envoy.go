@@ -5,14 +5,12 @@ import (
 
 	metricsv3 "github.com/envoyproxy/go-control-plane/envoy/service/metrics/v3"
 	"go.opentelemetry.io/collector/consumer"
-	"go.opentelemetry.io/collector/obsreport"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
 )
 
 type Receiver struct {
 	nextConsumer consumer.Metrics
-	obsrecv      *obsreport.Receiver
 	logger       *zap.Logger
 }
 
