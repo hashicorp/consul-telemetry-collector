@@ -26,16 +26,39 @@ func Test_New(t *testing.T) {
 				Project:      uuid.NewString(),
 			},
 		},
-		// "NoClientID": {
-		// 	cid:  "",
-		// 	csec: uuid.NewString(),
-		// 	res: resource.Resource{
-		// 		ID:           uuid.NewString(),
-		// 		Type:         "type",
-		// 		Organization: uuid.NewString(),
-		// 		Project:      uuid.NewString(),
-		// 	},
-		// },
+		"NoClientID": {
+			cid:  "",
+			csec: uuid.NewString(),
+			res: resource.Resource{
+				ID:           uuid.NewString(),
+				Type:         "type",
+				Organization: uuid.NewString(),
+				Project:      uuid.NewString(),
+			},
+			wantErr: true,
+		},
+		"NoClientSecret": {
+			cid:  uuid.NewString(),
+			csec: "",
+			res: resource.Resource{
+				ID:           uuid.NewString(),
+				Type:         "type",
+				Organization: uuid.NewString(),
+				Project:      uuid.NewString(),
+			},
+			wantErr: true,
+		},
+		"InvalidResource": {
+			cid:  uuid.NewString(),
+			csec: uuid.NewString(),
+			res: resource.Resource{
+				ID:           "",
+				Type:         "type",
+				Organization: "",
+				Project:      uuid.NewString(),
+			},
+			wantErr: true,
+		},
 	}
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {

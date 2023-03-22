@@ -1,6 +1,7 @@
 package hcp
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/go-openapi/runtime/client"
@@ -36,6 +37,10 @@ func New(clientID, clientSecret, resourceURL string) (*Client, error) {
 	r, err := resource.FromString(resourceURL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse resource_url %w", err)
+	}
+
+	if clientID == "" || clientSecret == "" {
+		return nil, errors.New("client credentials are empty")
 	}
 
 	hcpConfig, err := hcpconfig.NewHCPConfig(
