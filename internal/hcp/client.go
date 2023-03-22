@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"github.com/go-openapi/runtime/client"
+
 	"github.com/hashicorp/hcp-sdk-go/clients/cloud-global-network-manager-service/preview/2022-02-15/client/global_network_manager_service"
 	hcpconfig "github.com/hashicorp/hcp-sdk-go/config"
 	"github.com/hashicorp/hcp-sdk-go/httpclient"
@@ -19,6 +20,7 @@ type Client struct {
 	runtime     *client.Runtime
 	metricCfg   *telemetryConfig
 	hcpResource resource.Resource
+	ccmClient   ClientService
 }
 
 type telemetryConfig struct {
@@ -61,21 +63,40 @@ func New(clientID, clientSecret, resourceURL string) (*Client, error) {
 	}, nil
 }
 
-// LoadTelemetryConfig will load the telemetry configuration from the provided ClientService configuration.
-// Generally used for testing. Most users should use ReloadConfig().
-func (c *Client) LoadTelemetryConfig(gnm ClientService) error {
-	metricsCfg, err := getTelemetryConfig(gnm, c.hcpResource.ID)
+type clientOpt func(*Client)
+
+// NewWithDeps creates a new client while also providing client modification via client
+func NewWithDeps(clientID, clientSecret, resourceURL string, opts ...clientOpt) (*Client, error) {
+	client, err := New(clientID, clientSecret, resourceURL)
+	if err != nil {
+		return nil, err
+	}
+	for _, opt := range opts {
+		opt(client)
+	}
+
+	return client, nil
+}
+
+// WithClientService sets the provided ClientService on the Client
+//
+//revive:disable:unexported-return
+func WithClientService(cs ClientService) clientOpt {
+	return clientOpt(func(c *Client) {
+		c.ccmClient = cs
+	})
+}
+
+//revive:enable:unexported-return
+
+// ReloadConfig will retrieve the telemetry configuration from HCP using the initially configured runtime.
+func (c *Client) ReloadConfig() error {
+	metricsCfg, err := getTelemetryConfig(c.ccmClient, c.hcpResource.ID)
 	if err != nil {
 		return err
 	}
 	c.metricCfg = &metricsCfg
 	return nil
-}
-
-// ReloadConfig will retrieve the telemetry configuration from HCP using the initially configured runtime.
-func (c *Client) ReloadConfig() error {
-	gnmClient := global_network_manager_service.New(c.runtime, nil)
-	return c.LoadTelemetryConfig(gnmClient)
 }
 
 func getTelemetryConfig(gnm ClientService, clusterID string) (telemetryConfig, error) {
