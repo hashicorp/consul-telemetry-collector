@@ -24,6 +24,8 @@ GOLDFLAGS=-X github.com/hashicorp/consul-telemetry-collector/pkg/version.GitComm
 REVISION = $(shell git rev-parse HEAD)
 GOLANGCI_CONFIG_DIR ?= $(CURDIR)
 
+GO_MODULE_DIRS ?= $(shell go list -m -f "{{ .Dir }}")
+
 .PHONY: goversion
 goversion:
 	@go version
@@ -45,8 +47,18 @@ dev: bin
 	cp $(BIN) $(GOBIN)/$(BIN_NAME)
 
 .PHONY: tests
-tests: goversion
-	go test -timeout 10s ./...
+tests: goversion go/test/mod
+
+.PHONY: $(GO_MODULE_DIRS)
+$(GO_MODULE_DIRS):
+	make -C $@ $(TARGET)
+
+.PHONY: go/test/mod
+go/test/mod: TARGET=go/test
+go/test/mod: $(GO_MODULE_DIRS)
+
+go/test:
+	@go test -timeout 10s ./...
 
 .PHONY: lint
 lint:
