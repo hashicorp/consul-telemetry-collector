@@ -27,6 +27,7 @@ func runSvc(ctx context.Context, cfg *Config) error {
 
 	svc := &Service{}
 
+	var cloud = &Cloud{}
 	if cfg.Cloud.IsEnabled() {
 		// Set up the HCP SDK here
 		logger.Info("Setting up HCP Cloud SDK")
@@ -35,6 +36,7 @@ func runSvc(ctx context.Context, cfg *Config) error {
 			return fmt.Errorf("failed to create hcp client %w", err)
 		}
 		svc.hcpClient = hcpClient
+		cloud = cfg.Cloud
 	}
 
 	if cfg.HTTPCollectorEndpoint != "" {
@@ -43,8 +45,9 @@ func runSvc(ctx context.Context, cfg *Config) error {
 
 	ctx = hclog.WithContext(ctx, logger)
 
-	collector, err := otelcol.New(ctx, cfg.HTTPCollectorEndpoint, cfg.Cloud.ResourceID, cfg.Cloud.ClientID,
-		cfg.Cloud.ClientSecret, svc.hcpClient)
+	collector, err := otelcol.New(ctx, cfg.HTTPCollectorEndpoint,
+		otelcol.WithCloud(cloud.ResourceID, cloud.ClientID, cloud.ClientSecret, svc.hcpClient),
+	)
 	if err != nil {
 		return err
 	}

@@ -50,7 +50,7 @@ func Test_New(t *testing.T) {
 
 			ctx := context.Background()
 
-			svc, err := New(ctx, "https://localhost:4138", tc.rid, tc.cid, tc.csec, client)
+			svc, err := New(ctx, "https://localhost:4138", WithCloud(tc.rid, tc.cid, tc.csec, client))
 			test.NoError(t, err)
 			go func() {
 				err := svc.Run(ctx)
@@ -94,7 +94,6 @@ func Test_New(t *testing.T) {
 			svc.Shutdown()
 		})
 	}
-
 }
 
 type containsFunc[T any] func(T) bool

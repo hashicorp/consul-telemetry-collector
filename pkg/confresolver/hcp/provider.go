@@ -20,6 +20,7 @@ type hcpProvider struct {
 	client           hcp.TelemetryClient
 	clientID         string
 	clientSecret     string
+	shutdownCh       chan struct{}
 }
 
 const scheme = "hcp"
@@ -35,6 +36,7 @@ func NewProvider(forwarderEndpoint string, client hcp.TelemetryClient, clientID,
 		client:           client,
 		clientID:         clientID,
 		clientSecret:     clientSecret,
+		shutdownCh:       make(chan struct{}),
 	}
 }
 
@@ -96,6 +98,8 @@ func (m *hcpProvider) Retrieve(ctx context.Context, uri string, change confmap.W
 		for {
 			select {
 			case <-ctx.Done():
+			case <-m.shutdownCh:
+				return
 			case <-changeCh:
 				change(&confmap.ChangeEvent{})
 			}
@@ -116,6 +120,7 @@ func (m *hcpProvider) Scheme() string {
 }
 
 func (m *hcpProvider) Shutdown(ctx context.Context) error {
+	close(m.shutdownCh)
 	return nil
 }
 
@@ -123,8 +128,7 @@ func (m *hcpProvider) configChange() <-chan struct{} {
 	changeCh := make(chan struct{})
 	go func() {
 		// m.client.configChange
-		changeCh <- struct{}{}
-		close(changeCh)
+		// changeCh <- struct{}{}
 	}()
 	return changeCh
 }

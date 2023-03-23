@@ -11,6 +11,29 @@ import (
 	"github.com/hashicorp/consul-telemetry-collector/pkg/confresolver/inmem"
 )
 
+type collectorCfg struct {
+	clientID     string
+	clientSecret string
+	resourceID   string
+	client       internalhcp.TelemetryClient
+}
+
+type collectorOpts func(*collectorCfg)
+
+// revive:disable:unexported-return
+
+// WithCloud adds cloud parameters to the collector creation
+func WithCloud(resourceID string, clientID string, clientSecret string, client internalhcp.TelemetryClient) collectorOpts {
+	return func(o *collectorCfg) {
+		o.resourceID = resourceID
+		o.clientID = clientID
+		o.clientSecret = clientSecret
+		o.client = client
+	}
+}
+
+//revive:enable:unexported-return
+
 func newConfigProvider(forwarderEndpoint string, resourceID string,
 	clientID string, clientSecret string, client internalhcp.TelemetryClient) (otelcol.ConfigProvider, error) {
 	uris := []string{"inmem:"}
