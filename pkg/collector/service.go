@@ -43,7 +43,8 @@ func runSvc(ctx context.Context, cfg *Config) error {
 
 	ctx = hclog.WithContext(ctx, logger)
 
-	collector, err := otelcol.New(ctx, cfg.HTTPCollectorEndpoint)
+	collector, err := otelcol.New(ctx, cfg.HTTPCollectorEndpoint, cfg.Cloud.ResourceID, cfg.Cloud.ClientID,
+		cfg.Cloud.ClientSecret, svc.hcpClient)
 	if err != nil {
 		return err
 	}

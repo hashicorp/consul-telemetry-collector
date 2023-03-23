@@ -11,11 +11,11 @@ import (
 	"github.com/hashicorp/consul-telemetry-collector/pkg/confresolver/inmem"
 )
 
-func newConfigProvider(forwarderEndpoint string, resourceURL string,
+func newConfigProvider(forwarderEndpoint string, resourceID string,
 	clientID string, clientSecret string, client internalhcp.TelemetryClient) (otelcol.ConfigProvider, error) {
 	uris := []string{"inmem:"}
-	if resourceURL != "" {
-		uris = append(uris, fmt.Sprintf("hcp:%s", resourceURL))
+	if resourceID != "" {
+		uris = append(uris, fmt.Sprintf("hcp:%s", resourceID))
 	}
 	resolver := confmap.ResolverSettings{
 		URIs: uris,
