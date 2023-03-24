@@ -29,6 +29,7 @@ func NewFactory() receiver.Factory {
 func createMetrics(ctx context.Context,
 	set receiver.CreateSettings,
 	cfg component.Config,
+	// nextConsumer is whatever component is next on the pipeline.
 	nextConsumer consumer.Metrics) (receiver.Metrics, error) {
 
 	if nextConsumer == nil {
