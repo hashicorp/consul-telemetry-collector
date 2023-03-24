@@ -12,6 +12,9 @@ import (
 const defaultIssuerURL = "https://auth.idp.hashicorp.com"
 const audience = "https://api.hashicorp.com"
 
+// Oauth2ClientID is the component.ID used by the oauth2client extension
+const Oauth2ClientID = "oauth2client"
+
 // OauthClient helper creates an oauth2client authentication extension that authenticates to HCP.
 func OauthClient(c *confresolver.Config, clientID, clientSecret string) {
 	// this duplicates logic in hcp-sdk-go
@@ -21,10 +24,17 @@ func OauthClient(c *confresolver.Config, clientID, clientSecret string) {
 		issuerURL = defaultIssuerURL
 	}
 
-	oauth2auth := c.NewExtensions(component.NewIDWithName("oauth2client", "hcp"))
-	oauth2auth.Set("client_id", clientID)
-	oauth2auth.Set("client_secret", clientSecret)
-	oauth2auth.Set("token_url", fmt.Sprintf("%s/oauth2/token", issuerURL))
+	const (
+		clientIDKey     = "client_id"
+		clientSecretKey = "client_secret"
+		tokenURL        = "token_url"
+		audienceKey     = "audience"
+	)
+
+	oauth2auth := c.NewExtensions(component.NewIDWithName(Oauth2ClientID, "hcp"))
+	oauth2auth.Set(clientIDKey, clientID)
+	oauth2auth.Set(clientSecretKey, clientSecret)
+	oauth2auth.Set(tokenURL, fmt.Sprintf("%s/oauth2/token", issuerURL))
 	endpointParams := oauth2auth.SetMap("endpoint_params")
-	endpointParams.Set("audience", audience)
+	endpointParams.Set(audienceKey, audience)
 }

@@ -70,7 +70,7 @@ func (m *hcpProvider) Retrieve(ctx context.Context, uri string, change confmap.W
 	// filters := m.client.MetricFilters()
 	// confhelper.Filter(c, filters, hcpPipeline)
 
-	c.NewProcessor(component.NewID("batch"), pipeline, hcpPipeline)
+	c.NewProcessor(component.NewID(confhelper.BatchProcessorID), pipeline, hcpPipeline)
 
 	confhelper.Ballast(c)
 
@@ -84,13 +84,13 @@ func (m *hcpProvider) Retrieve(ctx context.Context, uri string, change confmap.W
 	if err != nil {
 		return nil, err
 	}
-	c.NewExporter(component.NewID("logging"), pipeline, hcpPipeline)
-	otlphttpHCP := c.NewExporter(component.NewIDWithName("otlphttp", "hcp"), hcpPipeline)
+	c.NewExporter(component.NewID(confhelper.LoggingExporterID), pipeline, hcpPipeline)
+	otlphttpHCP := c.NewExporter(component.NewIDWithName(confhelper.OTLPHTTPExporterID, "hcp"), hcpPipeline)
 	otlphttpHCP.Set("endpoint", metricsEndpoint)
-	otlphttpHCP.SetMap("auth").Set("authenticator", component.NewIDWithName("oauth2client", "hcp"))
+	otlphttpHCP.SetMap("auth").Set("authenticator", component.NewIDWithName(confhelper.Oauth2ClientID, "hcp"))
 
 	if m.otlpHTTPEndpoint != "" {
-		c.PushExporterOnPipeline(pipeline, component.NewID("otlphttp"))
+		c.PushExporterOnPipeline(pipeline, component.NewID(confhelper.OTLPHTTPExporterID))
 	}
 
 	changeCh := m.configChange()
