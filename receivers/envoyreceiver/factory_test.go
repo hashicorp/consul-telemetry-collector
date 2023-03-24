@@ -5,10 +5,9 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/shoenig/test"
 	"github.com/shoenig/test/must"
 	"github.com/shoenig/test/portal"
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/component/componenttest"
 	"go.opentelemetry.io/collector/config/configgrpc"
 	"go.opentelemetry.io/collector/config/confignet"
@@ -27,14 +26,11 @@ func TestCreateReceiver(t *testing.T) {
 	factory := NewFactory()
 	cfg := factory.CreateDefaultConfig().(*Config)
 
-	// cfg.GRPC.NetAddr.Endpoint = localEndpoint(t)
-	// cfg.HTTP.Endpoint = localEndpoint(t)
-
 	creationSet := receivertest.NewNopCreateSettings()
 
 	mReceiver, err := factory.CreateMetricsReceiver(context.Background(), creationSet, cfg, consumertest.NewNop())
-	assert.NotNil(t, mReceiver)
-	assert.NoError(t, err)
+	test.NotNil(t, mReceiver)
+	test.NoError(t, err)
 }
 
 func TestCreateMetricReceiver(t *testing.T) {
@@ -57,47 +53,33 @@ func TestCreateMetricReceiver(t *testing.T) {
 				GRPC: defaultGRPCSettings,
 			},
 		},
-		// {
-		// 	name: "invalid_grpc_address",
-		// 	cfg:  &Config{
-		// Protocols: Protocols{
-		// 	GRPC: &configgrpc.GRPCServerSettings{
-		// 		NetAddr: confignet.NetAddr{
-		// 			Endpoint:  "327.0.0.1:1122",
-		// 			Transport: "tcp",
-		// 		},
-		// 	},
-		// 	HTTP: defaultHTTPSettings,
-		// },
-		// },
-		// wantErr: true,
-		// },
-		// {
-		// 	name: "invalid_http_address",
-		// 	cfg:  &Config{
-		// Protocols: Protocols{
-		// 	GRPC: defaultGRPCSettings,
-		// 	HTTP: &confighttp.HTTPServerSettings{
-		// 		Endpoint: "327.0.0.1:1122",
-		// 	},
-		// },
-		// },
-		// wantErr: true,
-		// },
+		{
+			name: "invalid_grpc_address",
+			cfg: &Config{
+				GRPC: &configgrpc.GRPCServerSettings{
+					NetAddr: confignet.NetAddr{
+						Endpoint:  "327.0.0.1:1122",
+						Transport: "tcp",
+					},
+				},
+			},
+			wantErr: true,
+		},
 	}
+
 	ctx := context.Background()
 	creationSet := receivertest.NewNopCreateSettings()
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			sink := new(consumertest.MetricsSink)
 			mr, err := factory.CreateMetricsReceiver(ctx, creationSet, tt.cfg, sink)
-			assert.NoError(t, err)
-			require.NotNil(t, mr)
+			test.NoError(t, err)
+			must.NotNil(t, mr)
 			if tt.wantErr {
-				assert.Error(t, mr.Start(context.Background(), componenttest.NewNopHost()))
+				test.Error(t, mr.Start(context.Background(), componenttest.NewNopHost()))
 			} else {
-				require.NoError(t, mr.Start(context.Background(), componenttest.NewNopHost()))
-				assert.NoError(t, mr.Shutdown(context.Background()))
+				must.NoError(t, mr.Start(context.Background(), componenttest.NewNopHost()))
+				test.NoError(t, mr.Shutdown(context.Background()))
 			}
 		})
 	}
