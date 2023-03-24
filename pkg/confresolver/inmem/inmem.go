@@ -7,6 +7,7 @@ import (
 	"go.opentelemetry.io/collector/confmap"
 
 	"github.com/hashicorp/consul-telemetry-collector/pkg/confresolver"
+	"github.com/hashicorp/consul-telemetry-collector/pkg/confresolver/confhelper"
 )
 
 type inmemProvider struct {
@@ -27,27 +28,23 @@ func (m *inmemProvider) Retrieve(_ context.Context, _ string, _ confmap.WatcherF
 
 	c := &confresolver.Config{}
 	pipeline := c.NewPipeline(component.DataTypeMetrics)
-	receiver := c.NewReceiver(pipeline, component.NewID("otlp"))
-	receiver.SetMap("protocols").SetMap("http")
-	c.NewExporter(pipeline, component.NewID("logging"))
+	confhelper.OTLPReceiver(c, pipeline)
 
-	limiter := c.NewProcessor(pipeline, component.NewID("memory_limiter"))
-	limiter.Set("check_interval", "1s")
-	limiter.Set("limit_percentage", "50")
-	limiter.Set("spike_limit_percentage", "30")
+	c.NewExporter(component.NewID(confhelper.LoggingExporterID), pipeline)
+
+	confhelper.MemoryLimiter(c, pipeline)
 
 	// put other processors here
 	// follow recommended practices: https://github.com/open-telemetry/opentelemetry-collector/tree/main/processor#recommended-processors
 
-	c.NewProcessor(pipeline, component.NewID("batch"))
+	c.NewProcessor(component.NewID(confhelper.BatchProcessorID), pipeline)
 
-	ballast := c.NewExtensions(component.NewID("memory_ballast"))
-	ballast.Set("size_in_percentage", 10)
+	confhelper.Ballast(c)
 
 	c.Service.Telemetry = confresolver.Telemetry()
 
 	if m.otlpHTTPEndpoint != "" {
-		otlphttp := c.NewExporter(pipeline, component.NewID("otlphttp"))
+		otlphttp := c.NewExporter(component.NewID(confhelper.OTLPHTTPExporterID), pipeline)
 		otlphttp.Set("endpoint", m.otlpHTTPEndpoint)
 	}
 

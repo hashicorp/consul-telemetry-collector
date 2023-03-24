@@ -1,0 +1,39 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 50
+    spike_limit_percentage: 30
+  batch:
+
+extensions:
+  memory_ballast:
+    size_in_percentage: 10
+
+connectors: {}
+
+exporters:
+  logging:
+
+service:
+  extensions: [memory_ballast]
+  telemetry:
+    resource: {}
+    logs:
+      encoding: console
+      output_paths: stderr
+      initial_fields: {}
+    metrics:
+      address: localhost:9090
+      level: "detailed"
+    traces:
+      propagators: tracecontext,b3
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter,batch]
+      exporters: [logging]

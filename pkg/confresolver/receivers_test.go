@@ -10,8 +10,8 @@ import (
 func Test_NewReceiver(t *testing.T) {
 	cfg := &Config{}
 	pipelineRef := cfg.NewPipeline(component.DataTypeTraces)
-	ccfg := cfg.NewReceiver(pipelineRef, component.NewID("custom-trace-receiver"))
-	otlp := cfg.NewReceiver(pipelineRef, component.NewID("otlp"))
+	ccfg := cfg.NewReceiver(component.NewID("custom-trace-receiver"), pipelineRef)
+	otlp := cfg.NewReceiver(component.NewID("otlp"), pipelineRef)
 	ccfg.Set("key", "value")
 	ccfg.Set("endpoint", "http://localhost:8000")
 	otlp.SetMap("protocols").SetMap("http")

@@ -32,8 +32,8 @@ func Test_PipelineWithName(t *testing.T) {
 	forwarderMetricsPipelineRef := c.NewPipelineWithName(component.DataTypeMetrics, "forwarder")
 	metricsPipelineRef := c.NewPipeline(component.DataTypeMetrics)
 
-	c.NewExporter(hcpMetricsPipelineRef, component.NewIDWithName("foo", "hcp"))
-	c.NewExporter(forwarderMetricsPipelineRef, component.NewID("foo"))
+	c.NewExporter(component.NewIDWithName("foo", "hcp"), hcpMetricsPipelineRef)
+	c.NewExporter(component.NewID("foo"), forwarderMetricsPipelineRef)
 
 	pipelines := c.Service.Pipelines
 

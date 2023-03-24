@@ -10,8 +10,8 @@ import (
 func Test_NewExporter(t *testing.T) {
 	cfg := &Config{}
 	pipelineRef := cfg.NewPipeline(component.DataTypeTraces)
-	ccfg := cfg.NewExporter(pipelineRef, component.NewID("custom-trace-exporter"))
-	otlp := cfg.NewExporter(pipelineRef, component.NewID("otlp"))
+	ccfg := cfg.NewExporter(component.NewID("custom-trace-exporter"), pipelineRef)
+	otlp := cfg.NewExporter(component.NewID("otlp"), pipelineRef)
 	ccfg.Set("key", "value")
 	ccfg.Set("endpoint", "http://localhost:8000")
 	otlp.SetMap("protocols").SetMap("http")
