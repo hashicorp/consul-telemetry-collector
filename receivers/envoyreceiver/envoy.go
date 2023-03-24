@@ -19,7 +19,7 @@ type envoyReceiver struct {
 	logger          *zap.Logger
 	grpcServer      *grpc.Server
 	metricsReceiver *metrics.Receiver
-	shutdownCh      []chan struct{}
+	shutdownCh      chan struct{}
 
 	settings receiver.CreateSettings
 }
@@ -63,8 +63,7 @@ func (r *envoyReceiver) Start(_ context.Context, host component.Host) error {
 
 	r.logger.Info("Starting GRPC Server", zap.String("endpoint", r.cfg.GRPC.NetAddr.Endpoint))
 
-	shutdownCh := make(chan struct{})
-	r.shutdownCh = append(r.shutdownCh, shutdownCh)
+	r.shutdownCh = make(chan struct{})
 	go func() {
 		if grpcErr := r.grpcServer.Serve(listener); err != nil {
 			switch {
@@ -73,7 +72,7 @@ func (r *envoyReceiver) Start(_ context.Context, host component.Host) error {
 				host.ReportFatalError(grpcErr)
 			}
 		}
-		shutdownCh <- struct{}{}
+		r.shutdownCh <- struct{}{}
 	}()
 
 	return nil
@@ -81,9 +80,7 @@ func (r *envoyReceiver) Start(_ context.Context, host component.Host) error {
 
 func (r *envoyReceiver) Shutdown(ctx context.Context) error {
 	r.grpcServer.GracefulStop()
-	for _, shutdownCh := range r.shutdownCh {
-		<-shutdownCh
-	}
+	<-r.shutdownCh
 	return nil
 }
 
