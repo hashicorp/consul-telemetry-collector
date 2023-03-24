@@ -2,6 +2,7 @@ package metrics
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"net"
 	"testing"
@@ -28,8 +29,10 @@ func TestReceiver_StreamMetrics(t *testing.T) {
 	s := grpc.NewServer()
 	receiver.Register(s)
 
+	errCh := make(chan error)
 	go func() {
 		err = s.Serve(l)
+		errCh <- err
 	}()
 
 	// WithBlock() should make sure that we have a connection before calling StreamMetrics().
@@ -50,4 +53,9 @@ func TestReceiver_StreamMetrics(t *testing.T) {
 	})
 
 	must.NoError(t, err)
+	s.GracefulStop()
+	err = <-errCh
+	if !errors.Is(err, grpc.ErrServerStopped) {
+		must.NoError(t, err)
+	}
 }
