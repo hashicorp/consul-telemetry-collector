@@ -17,6 +17,7 @@ const (
 	defaultGRPCEndpoint = "0.0.0.0:9356"
 )
 
+// NewFactory creates a new envoy receiver factory
 func NewFactory() receiver.Factory {
 	return receiver.NewFactory(
 		typeStr,

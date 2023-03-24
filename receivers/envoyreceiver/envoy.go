@@ -29,6 +29,7 @@ var _ component.Component = (*envoyReceiver)(nil)
 
 var _ component.Config = (*Config)(nil)
 
+// Config is the configuration for the envoy receiver
 type Config struct {
 	GRPC *configgrpc.GRPCServerSettings `mapstructure:"grpc"`
 }

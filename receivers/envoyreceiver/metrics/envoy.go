@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc"
 )
 
+// Receiver is the metrics implementation for an envoy metrics receiver
 type Receiver struct {
 	nextConsumer consumer.Metrics
 	logger       *zap.Logger
@@ -25,10 +26,13 @@ func New(nextConsumer consumer.Metrics, logger *zap.Logger) *Receiver {
 	}
 }
 
+// Register will register the MetricsServiceServer on the provided grpc Server
 func (r *Receiver) Register(g *grpc.Server) {
 	metricsv3.RegisterMetricsServiceServer(g, r)
 }
 
+// StreamMetrics implements the envoy MetricsServiceServer method StreamMetrics.
+// It will consume the envoy prometheus metrics and write them to the nextConsumer.
 func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsServer) error {
 
 	var identifier *metricsv3.StreamMetricsMessage_Identifier
