@@ -43,7 +43,7 @@ dev: bin
 
 .PHONY: tests
 tests: goversion
-	go test ./...
+	go test -timeout 10s ./...
 
 .PHONY: lint
 lint:
