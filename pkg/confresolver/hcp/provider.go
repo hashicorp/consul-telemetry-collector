@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"strings"
+	"time"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/confmap"
@@ -93,18 +94,20 @@ func (m *hcpProvider) Retrieve(ctx context.Context, uri string, change confmap.W
 		c.PushExporterOnPipeline(pipeline, component.NewID(confhelper.OTLPHTTPExporterID))
 	}
 
-	changeCh := m.configChange()
 	go func() {
+		ticker := time.NewTicker(time.Minute)
 		for {
 			select {
 			case <-ctx.Done():
 			case <-m.shutdownCh:
 				return
-			case <-changeCh:
-				change(&confmap.ChangeEvent{})
+			case <-ticker.C:
+				if m.configChange() {
+					change(&confmap.ChangeEvent{})
+					return
+				}
 			}
 		}
-
 	}()
 
 	conf := confmap.New()
@@ -124,11 +127,8 @@ func (m *hcpProvider) Shutdown(ctx context.Context) error {
 	return nil
 }
 
-func (m *hcpProvider) configChange() <-chan struct{} {
-	changeCh := make(chan struct{})
-	go func() {
-		// m.client.configChange
-		// changeCh <- struct{}{}
-	}()
-	return changeCh
+func (m *hcpProvider) configChange() bool {
+	// changed := m.client.configChange()
+	// return changed
+	return false
 }
