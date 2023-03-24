@@ -68,6 +68,8 @@ func (r *envoyReceiver) Start(_ context.Context, host component.Host) error {
 		if grpcErr := r.grpcServer.Serve(listener); err != nil {
 			switch {
 			case errors.Is(grpcErr, grpc.ErrServerStopped):
+				// ignore ErrServerStopped because it's expected
+				break
 			default:
 				host.ReportFatalError(grpcErr)
 			}
