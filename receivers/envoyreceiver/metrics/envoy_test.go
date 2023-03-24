@@ -27,11 +27,18 @@ func TestReceiver_StreamMetrics(t *testing.T) {
 
 	s := grpc.NewServer()
 	receiver.Register(s)
+
 	go func() {
 		err = s.Serve(l)
 	}()
 
-	conn, err := grpc.Dial(addr, grpc.WithTransportCredentials(insecure.NewCredentials()))
+	// WithBlock() should make sure that we have a connection before calling StreamMetrics().
+	// We have an open TCP connection even if the server might not be serving yet, so we shouldn't have a fatal error
+	// here.
+	conn, err := grpc.Dial(addr,
+		grpc.WithBlock(),
+		grpc.WithTransportCredentials(insecure.NewCredentials()),
+	)
 	must.NoError(t, err)
 	client := metricsv3.NewMetricsServiceClient(conn)
 	stream, err := client.StreamMetrics(context.Background())
