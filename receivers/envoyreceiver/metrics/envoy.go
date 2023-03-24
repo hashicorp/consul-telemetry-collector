@@ -45,7 +45,7 @@ func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsSe
 			return err
 		}
 
-		if identifier != nil {
+		if identifier == nil {
 			identifier = metricsMessage.GetIdentifier()
 		}
 
