@@ -24,7 +24,7 @@ GOLDFLAGS=-X github.com/hashicorp/consul-telemetry-collector/pkg/version.GitComm
 REVISION = $(shell git rev-parse HEAD)
 GOLANGCI_CONFIG_DIR ?= $(CURDIR)
 
-GO_MODULE_DIRS ?= $(shell go list -m -f "{{ .Dir }}")
+GO_MODULE_DIRS ?= $(shell go list -m -f "{{ .Dir }}" | grep -v mod-vendor)
 
 .PHONY: goversion
 goversion:
@@ -75,5 +75,3 @@ go/lint:
 .PHONY: deps
 deps:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.1
-
-
