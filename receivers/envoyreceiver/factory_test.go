@@ -75,10 +75,11 @@ func TestCreateMetricReceiver(t *testing.T) {
 			mr, err := factory.CreateMetricsReceiver(ctx, creationSet, tt.cfg, sink)
 			test.NoError(t, err)
 			must.NotNil(t, mr)
+			startErr := mr.Start(context.Background(), componenttest.NewNopHost())
 			if tt.wantErr {
-				test.Error(t, mr.Start(context.Background(), componenttest.NewNopHost()))
+				test.Error(t, startErr)
 			} else {
-				must.NoError(t, mr.Start(context.Background(), componenttest.NewNopHost()))
+				must.NoError(t, startErr)
 				test.NoError(t, mr.Shutdown(context.Background()))
 			}
 		})
