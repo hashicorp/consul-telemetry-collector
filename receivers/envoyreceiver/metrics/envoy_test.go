@@ -31,7 +31,12 @@ func TestReceiver_StreamMetrics(t *testing.T) {
 
 	errCh := make(chan error)
 	go func() {
-		err = s.Serve(l)
+		err := s.Serve(l)
+		// the grpc.ErrServerStopped is acceptable so send nil over the channel.
+		if !errors.Is(err, grpc.ErrServerStopped) {
+			errCh <- nil
+			return
+		}
 		errCh <- err
 	}()
 
@@ -54,8 +59,6 @@ func TestReceiver_StreamMetrics(t *testing.T) {
 
 	must.NoError(t, err)
 	s.GracefulStop()
-	err = <-errCh
-	if !errors.Is(err, grpc.ErrServerStopped) {
-		must.NoError(t, err)
-	}
+	// This will check the error from the grpc.Serve
+	must.NoError(t, <-errCh)
 }
