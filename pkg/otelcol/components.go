@@ -17,6 +17,8 @@ import (
 	memorylimiter "go.opentelemetry.io/collector/processor/memorylimiterprocessor"
 	"go.opentelemetry.io/collector/receiver"
 	"go.opentelemetry.io/collector/receiver/otlpreceiver"
+
+	"github.com/hashicorp/consul-telemetry-collector/receivers/envoyreceiver"
 )
 
 func components() (otelcol.Factories, error) {
@@ -25,6 +27,7 @@ func components() (otelcol.Factories, error) {
 
 	factories.Receivers, err = receiver.MakeFactoryMap(
 		otlpreceiver.NewFactory(),
+		envoyreceiver.NewFactory(),
 	)
 	if err != nil {
 		return otelcol.Factories{}, err

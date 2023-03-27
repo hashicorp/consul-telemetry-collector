@@ -1,0 +1,1 @@
+Test data is created by writing envoy metrics from a streaming server to disk

@@ -1,0 +1,3 @@
+# The following entry initializes the default envoy receiver.
+# The full name of this receiver is `envoy` and can be referenced in pipelines by 'envoy'.
+grpc:

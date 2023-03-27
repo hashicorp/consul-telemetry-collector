@@ -3,6 +3,8 @@ SHELL := /usr/bin/env bash -euo pipefail -c
 REPO_NAME    ?= $(shell basename "$(CURDIR)")
 PRODUCT_NAME ?= $(REPO_NAME)
 BIN_NAME     ?= $(PRODUCT_NAME)
+GOPATH 	     ?= $(shell go env GOPATH)
+GOBIN        ?= $(GOPATH)/bin
 
 # Get local ARCH; on Intel Mac, 'uname -m' returns x86_64 which we turn into amd64.
 # Not using 'go env GOOS/GOARCH' here so 'make docker' will work without local Go install.
@@ -20,6 +22,9 @@ GOLDFLAGS=-X github.com/hashicorp/consul-telemetry-collector/pkg/version.GitComm
 
 # Get latest revision (no dirty check for now).
 REVISION = $(shell git rev-parse HEAD)
+GOLANGCI_CONFIG_DIR ?= $(CURDIR)
+
+GO_MODULE_DIRS ?= $(shell go list -m -f "{{ .Dir }}" | grep -v mod-vendor)
 
 .PHONY: goversion
 goversion:
@@ -42,15 +47,31 @@ dev: bin
 	cp $(BIN) $(GOBIN)/$(BIN_NAME)
 
 .PHONY: tests
-tests: goversion
-	go test -timeout 10s ./...
+tests: goversion go/test/mod
 
 .PHONY: lint
-lint:
-	golangci-lint run --config .golangci.yml
+lint: go/lint/mod
+
+.PHONY: $(GO_MODULE_DIRS)
+$(GO_MODULE_DIRS):
+	@echo -e "Running $(TARGET) for $(@)\n"
+	make -C $@ $(TARGET)
+
+.PHONY: go/test/mod
+go/test/mod: TARGET=go/test
+go/test/mod: $(GO_MODULE_DIRS)
+
+.PHONY: go/lint/mod
+go/lint/mod: TARGET=go/lint
+go/lint/mod: $(GO_MODULE_DIRS)
+
+go/test:
+	@go test -timeout 10s ./...
+
+go/lint:
+	@golangci-lint run --config $(GOLANGCI_CONFIG_DIR)/.golangci.yml
+
 
 .PHONY: deps
 deps:
 	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.1
-
-
