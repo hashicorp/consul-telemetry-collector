@@ -136,29 +136,31 @@ When a pull request is opened CI will run all tests and lint to verify the chang
 
 Before writing any code, we recommend:
 - Create a Github issue if none already exists for the code change you'd like to make.
-- Write a comment on the Github issue indicating you're interested in contributing so
+- Write a comment on the GitHub issue indicating you're interested in 
+  contributing so
   maintainers can provide their perspective if needed.
 
-Keep your pull requests (PRs) small and open them early so you can get feedback on
-approach from maintainers before investing your time in larger changes.
+Keep your pull requests (PRs) small and open them early so you can get 
+feedback on approach from maintainers before investing your time in larger changes.
 
 When you're ready to submit a pull request:
 1. Review the [list of checklists](#checklists) for common changes and follow any
    that apply to your work.
-2. Include evidence that your changes work as intended (e.g., add/modify unit tests;
-   describe manual tests you ran, in what environment,
+1. Include evidence that your changes work as intended (e.g., add/modify unit 
+   tests; describe manual tests you ran, in what environment,
    and the results including screenshots or terminal output).
-3. Open the PR from your fork against base repository `hashicorp/consul` and branch `main`.
+1. Open the PR from your fork against base repository 
+   `hashicorp/consul-telemetry-collector` and branch `main`.
     - [Link the PR to its associated issue](https://docs.github.com/en/issues/tracking-your-work-with-issues/linking-a-pull-request-to-an-issue).
-4. Include any specific questions that you have for the reviewer in the PR description
-   or as a PR comment in Github.
+1. Include any specific questions that you have for the reviewer in the PR 
+      description or as a PR comment in Github.
     - If there's anything you find the need to explain or clarify in the PR, consider
       whether that explanation should be added in the source code as comments.
     - You can submit a [draft PR](https://github.blog/2019-02-14-introducing-draft-pull-requests/)
       if your changes aren't finalized but would benefit from in-process feedback.
-5. If there's any reason Consul users might need to know about this change,
-   [add a changelog entry](../docs/contributing/add-a-changelog-entry.md).
-6. Add labels to your pull request. A table of commonly use labels is below.
+1. If there's any reason users might need to know about this change,
+   [add a changelog entry](docs/add-a-changelog-entry.md).
+1. Add labels to your pull request. A table of commonly use labels is below.
    If you have any questions about which to apply, feel free to call it out in the PR or comments.
    | Label | When to Use |
    | --- | --- |
@@ -166,19 +168,20 @@ When you're ready to submit a pull request:
    | `pr/no-metrics-test` | This PR does not require any testing for metrics |
    | `backport/1.12.x` | Backport the changes in this PR to the targeted release branch. Consult the [Consul Release Notes](https://www.consul.io/docs/release-notes) page to view active releases. Website documentation merged to the latest release branch is deployed immediately |
    Other labels may automatically be added by the Github Action CI.
-7. After you submit, the Consul maintainers team needs time to carefully review your
-   contribution and ensure it is production-ready, considering factors such as: security,
+1. After you submit, the Consul maintainers team needs time to carefully 
+   review your contribution and ensure it is production-ready, considering factors such as: security,
    backwards-compatibility, potential regressions, etc.
-8. After you address Consul maintainer feedback and the PR is approved, a Consul maintainer
+1. After you address Consul maintainer feedback and the PR is approved, a 
+   Consul maintainer
    will merge it. Your contribution will be available from the next major release (e.g., 1.x)
    unless explicitly backported to an existing or previous major release by the maintainer.
-9. Any backport labels will generate an additional PR to the targeted release branch.
-   These will be linked in the original PR.
+1. Any backport labels will generate an additional PR to the targeted release 
+   branch. These will be linked in the original PR.
    Assuming the tests pass, the PR will be merged automatically.
    If the tests fail, it is you responsibility to resolve the issues with backports and request another reviewer.
 
 #### Checklists
 
 Some common changes that many PRs require are documented through checklists as
-`checklist-*.md` files in [docs/](../docs/), including:
-- [Adding config fields](../docs/config/checklist-adding-config-fields.md)
+`checklist-*.md` files in [docs/](docs), including:
+- [Adding a new component](docs/adding-a-new-component.md)
