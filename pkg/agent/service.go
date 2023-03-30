@@ -1,6 +1,6 @@
-// Package collector manages the consul-telemetry-collector process, loads the configuration,
+// Package agent manages the consul-telemetry-collector process, loads the configuration,
 // and sets up and manages the lifecycle of the opentelemetry-otel.
-package collector
+package agent
 
 import (
 	"context"
@@ -16,7 +16,6 @@ import (
 type Service struct {
 	// ctx is our lifecycle handler for the Service.
 	// All other lifecycle context cancelers should come from this context
-	ctx       context.Context
 	collector otel.Collector
 	hcpClient *hcp.Client
 }

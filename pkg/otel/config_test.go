@@ -7,7 +7,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/hashicorp/hcp-sdk-go/resource"
-	"github.com/mitchellh/mapstructure"
 	"github.com/shoenig/test"
 	"github.com/shoenig/test/must"
 	"go.opentelemetry.io/collector/component"
@@ -104,9 +103,6 @@ func compareComponents(t *testing.T, golden, components map[component.ID]compone
 	t.Helper()
 	for id, goldenCfg := range golden {
 		cfg := components[id]
-
-		p := &map[string]interface{}{}
-		_ = mapstructure.Decode(goldenCfg, p)
 		test.Eq(t, goldenCfg, cfg, settings...)
 	}
 	for id := range components {

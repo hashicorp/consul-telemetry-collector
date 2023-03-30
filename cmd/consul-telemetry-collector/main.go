@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"github.com/hashicorp/consul-telemetry-collector/pkg/collector"
+	"github.com/hashicorp/consul-telemetry-collector/pkg/agent"
 	"github.com/hashicorp/consul-telemetry-collector/pkg/version"
 	"github.com/hashicorp/go-hclog"
 	"github.com/mitchellh/cli"
@@ -22,7 +22,7 @@ func main() {
 
 	commands := map[string]cli.CommandFactory{
 		"agent": func() (cli.Command, error) {
-			return collector.NewAgentCmd(ui)
+			return agent.NewAgentCmd(ui)
 		},
 	}
 

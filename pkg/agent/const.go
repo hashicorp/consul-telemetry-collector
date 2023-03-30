@@ -1,4 +1,4 @@
-package collector
+package agent
 
 const (
 	// HCPClientID is the environment variable for the hcp client id
