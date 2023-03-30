@@ -8,6 +8,7 @@ require (
 	github.com/google/uuid v1.3.0
 	github.com/hashicorp/consul-telemetry-collector/receivers/envoyreceiver v0.0.0-20230327155548-933d487bbe6a
 	github.com/hashicorp/go-hclog v1.4.0
+	github.com/hashicorp/go-multierror v1.1.0
 	github.com/hashicorp/hcl/v2 v2.16.1
 	github.com/hashicorp/hcp-sdk-go v0.38.0
 	github.com/imdario/mergo v0.3.11
@@ -82,7 +83,6 @@ require (
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/hashicorp/errwrap v1.0.0 // indirect
 	github.com/hashicorp/go-cleanhttp v0.5.2 // indirect
-	github.com/hashicorp/go-multierror v1.1.0 // indirect
 	github.com/huandu/xstrings v1.3.2 // indirect
 	github.com/iancoleman/strcase v0.2.0 // indirect
 	github.com/inconshreveable/mousetrap v1.0.1 // indirect
@@ -177,3 +177,6 @@ require (
 )
 
 //replace github.com/hashicorp/hcp-sdk-go => github.com/hashicorp/hcp-sdk-go-internal v0.0.0-20230317182423-8d77dfd52b4c
+
+// https://github.com/golang/go/issues/50750 We should really just give the ci pipeline access to read the private repo
+replace github.com/hashicorp/consul-telemetry-collector/receivers/envoyreceiver => ./receivers/envoyreceiver
