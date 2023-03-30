@@ -12,8 +12,7 @@ import (
 	"github.com/hashicorp/hcp-sdk-go/resource"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
-	confresolver "github.com/hashicorp/consul-telemetry-collector/pkg/otel/config"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/config/helpers/exporters"
+	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/config"
 )
 
 type hcpProvider struct {
@@ -59,38 +58,46 @@ func (m *hcpProvider) Retrieve(
 		return nil, fmt.Errorf("unable to parse %q uri as HCP resource URL %w", uri, err)
 	}
 
-	c, intermediateCfg, err := confresolver.DefaultConfig(
-		&confresolver.DefaultParams{
-			OtlpHTTPEndpoint: m.otlpHTTPEndpoint,
-			Client:           m.client,
-			ClientID:         m.clientID,
-			ClientSecret:     m.clientSecret,
-		},
-	)
+	// Create new empty configuration
+	c := config.NewConfig()
+
+	// 1. Setup Telemetery
+	c.Service.Telemetry = config.Telemetry()
+
+	// 2. Setup Extensions
+	extensions := config.ExtensionBuilder(config.WithExtOauthClientID)
+	// in this set of extension IDs we want the WithExtOauthClientID which requires the params to build
+	// the actual extension.
+	hcpParams := &config.Params{
+		OtlpHTTPEndpoint: m.otlpHTTPEndpoint,
+		Client:           m.client,
+		ClientID:         m.clientID,
+		ClientSecret:     m.clientSecret,
+	}
+	err = c.EnrichWithExtensions(extensions, hcpParams)
 	if err != nil {
-		return nil, fmt.Errorf("failure building configuration %w", err)
+		return nil, err
 	}
 
-	// Start setup for the service
-	c.Service.Telemetry = confresolver.Telemetry()
-	c.Service.Extensions = intermediateCfg.Extensions
-
-	// Start setup for our different pipelines
-	// Inmem is going to filter out the HCP exporter
-	inmemPipelineCfg := intermediateCfg.
-		Clone().
-		FilterExporter(exporters.HCPExporterID).
-		ToPipelineConfig()
-
-	inmemID := component.NewID(component.DataTypeMetrics)
-	c.Service.Pipelines[inmemID] = inmemPipelineCfg
-
-	hcpPipelineCfg := intermediateCfg.
-		Clone().
-		FilterExporter(exporters.BaseOtlpExporterID).
-		ToPipelineConfig()
+	// 3. Build pipeline configurations and enrich the config with them
+	// 3. A: Build HCP pipeline
+	hcpPipelineCfg := config.PipelineConfigBuilder(hcpParams)
 	hcpID := component.NewIDWithName(component.DataTypeMetrics, "hcp")
-	c.Service.Pipelines[hcpID] = hcpPipelineCfg
+	err = c.EnrichWithPipelineCfg(hcpPipelineCfg, hcpParams, hcpID)
+	if err != nil {
+		return nil, err
+	}
+
+	// 3. B: Build external pipeline
+	externalParams := &config.Params{
+		OtlpHTTPEndpoint: m.otlpHTTPEndpoint,
+	}
+	externalCfg := config.PipelineConfigBuilder(externalParams)
+	externalID := component.NewID(component.DataTypeMetrics)
+	err = c.EnrichWithPipelineCfg(externalCfg, externalParams, externalID)
+	if err != nil {
+		return nil, err
+	}
 
 	go func() {
 		ticker := time.NewTicker(time.Minute)

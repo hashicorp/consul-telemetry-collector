@@ -8,9 +8,8 @@ import (
 )
 
 func Test_OtlpReceiver(t *testing.T) {
-	id, cfg := OtlpReceiverCfg()
+	cfg := OtlpReceiverCfg()
 
-	require.NotEmpty(t, id)
 	require.NotNil(t, cfg)
 	conf := confmap.New()
 	err := conf.Marshal(cfg)

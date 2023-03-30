@@ -13,8 +13,8 @@ const (
 var BallastID component.ID = component.NewID(ballastName)
 
 // BallastCfg  generates the config for a ballast config
-func BallastCfg() (component.ID, *ballastextension.Config) {
-	return BallastID, &ballastextension.Config{
+func BallastCfg() *ballastextension.Config {
+	return &ballastextension.Config{
 		SizeInPercentage: 10,
 	}
 }

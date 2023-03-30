@@ -1,4 +1,4 @@
-package collector
+package otel
 
 import (
 	"github.com/open-telemetry/opentelemetry-collector-contrib/extension/oauth2clientauthextension"

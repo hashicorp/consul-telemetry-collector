@@ -12,9 +12,9 @@
 //	    Service    service.Config      `mapstructure:"service"`
 //	 }
 //
-// The Receivers,Exporters, Processors, Connectors and Extensions are composed into a Service.Config that incorporates
-// multiple pipelines. The service config below shows how the Pipelines are defined in map of id -> pipeline. Each pipeline
-// is just a list of receivers, exporters and processors
+// First off we setup our extensions. Then we define our pipelines and from those definitions we
+// can build pipeline configuration.  The service config below shows how the Pipelines are defined in map of id -> pipeline. Each pipeline
+// is just a list of receivers, exporters and processors that are dynamically built from that list.
 //
 //	   Ex: "hcpPipeline"->pipelineConfig of receivers, exporters, processors.
 //		/*
@@ -33,9 +33,7 @@
 //		*/
 //
 // All of this is marshalled to a configuration that the otel collector sdk will run. The goal of this package is to help
-// build a configuration that the marshaller will run with our defaults. We can setup an arbritrary number of Receivers, Exporters,
-// Processors, Connectors and Extensions and the pipelines may use all of our only a subset of these defined components. As shown
-// below as an example the processors are configured but not consumed in the specific pipeline that gets marshalled.
+// build a configuration that the marshaller will run with our defaults. We setup specific IDs for each pipeline
 //
 //	/*
 //	     receivers:

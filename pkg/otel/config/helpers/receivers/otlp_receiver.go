@@ -27,12 +27,12 @@ type OtlpReceiverConfig struct {
 }
 
 // OtlpReceiverCfg  generates the config for an otlp receiver
-func OtlpReceiverCfg() (component.ID, *OtlpReceiverConfig) {
+func OtlpReceiverCfg() *OtlpReceiverConfig {
 	// cfg := otlpreceiver.Config{}
 	// cfg.HTTP = &confighttp.HTTPServerSettings{}
 	defaults := otlpreceiver.NewFactory().CreateDefaultConfig().(*otlpreceiver.Config)
 
-	return OtlpReceiverID, &OtlpReceiverConfig{
+	return &OtlpReceiverConfig{
 		Protocols: Protocols{
 			HTTP: defaults.HTTP,
 		},

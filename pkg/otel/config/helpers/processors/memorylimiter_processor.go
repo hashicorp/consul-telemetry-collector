@@ -13,8 +13,8 @@ const memoryLimiterName = "memory_limiter"
 var MemoryLimiterID component.ID = component.NewID(memoryLimiterName)
 
 // MemoryLimiterCfg  generates the config for a memory limiter processor
-func MemoryLimiterCfg() (component.ID, *memorylimiterprocessor.Config) {
-	return MemoryLimiterID, &memorylimiterprocessor.Config{
+func MemoryLimiterCfg() *memorylimiterprocessor.Config {
+	return &memorylimiterprocessor.Config{
 		CheckInterval:         time.Second,
 		MemoryLimitPercentage: 50,
 		MemorySpikePercentage: 30,

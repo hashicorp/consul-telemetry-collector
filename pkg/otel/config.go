@@ -1,4 +1,4 @@
-package collector
+package otel
 
 import (
 	"fmt"
@@ -7,8 +7,8 @@ import (
 	"go.opentelemetry.io/collector/otelcol"
 
 	internalhcp "github.com/hashicorp/consul-telemetry-collector/internal/hcp"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/collector/providers/hcp"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/collector/providers/inmem"
+	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/providers/external"
+	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/providers/hcp"
 )
 
 type collectorCfg struct {
@@ -41,14 +41,14 @@ func newProvider(
 	clientSecret string,
 	client internalhcp.TelemetryClient,
 ) (otelcol.ConfigProvider, error) {
-	uris := []string{"inmem:"}
+	uris := []string{"external:"}
 	if resourceID != "" {
 		uris = append(uris, fmt.Sprintf("hcp:%s", resourceID))
 	}
 	resolver := confmap.ResolverSettings{
 		URIs: uris,
 		Providers: makeMapProvidersMap(
-			inmem.NewProvider(forwarderEndpoint),
+			external.NewProvider(forwarderEndpoint),
 			hcp.NewProvider(forwarderEndpoint, client, clientID, clientSecret),
 		),
 

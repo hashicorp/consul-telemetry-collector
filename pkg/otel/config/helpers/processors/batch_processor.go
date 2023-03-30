@@ -11,9 +11,9 @@ const batchProcessorName = "batch"
 var BatchProcessorID component.ID = component.NewID(batchProcessorName)
 
 // BatchProcessorCfg  generates the config for a batch processor
-func BatchProcessorCfg() (component.ID, *batchprocessor.Config) {
+func BatchProcessorCfg() *batchprocessor.Config {
 	factory := batchprocessor.NewFactory()
 	cfg := factory.CreateDefaultConfig().(*batchprocessor.Config)
 
-	return BatchProcessorID, cfg
+	return cfg
 }

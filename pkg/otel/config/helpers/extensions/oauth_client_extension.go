@@ -17,12 +17,12 @@ const (
 	oauth2ClientName = "oauth2client"
 )
 
-// Oauth2ClientID is the component.ID used by the oauth2client extension
-var Oauth2ClientID component.ID = component.NewIDWithName(oauth2ClientName, "hcp")
+// OauthClientID is the component.ID used by the oauth2client extension
+var OauthClientID component.ID = component.NewIDWithName(oauth2ClientName, "hcp")
 
 // OauthClientCfg returns a component ID and oauth config
-func OauthClientCfg(clientID string, clientSecret string) (component.ID, *oauth.Config) {
-	return Oauth2ClientID, &oauth.Config{
+func OauthClientCfg(clientID string, clientSecret string) *oauth.Config {
+	return &oauth.Config{
 		ClientID:       clientID,
 		ClientSecret:   configopaque.String(clientSecret),
 		TokenURL:       fmt.Sprintf("%s/oauth2/token", defaultIssuerURL),

@@ -1,4 +1,4 @@
-package inmem
+package external
 
 import (
 	"context"

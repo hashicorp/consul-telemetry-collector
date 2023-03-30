@@ -1,5 +1,5 @@
 // Package collector manages the consul-telemetry-collector process, loads the configuration,
-// and sets up and manages the lifecycle of the opentelemetry-collector.
+// and sets up and manages the lifecycle of the opentelemetry-otel.
 package collector
 
 import (
@@ -9,15 +9,15 @@ import (
 	"github.com/hashicorp/go-hclog"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/collector"
+	"github.com/hashicorp/consul-telemetry-collector/pkg/otel"
 )
 
-// Service manages the consul-telemetry-collector. It should be initialized and started by Run
+// Service manages the consul-telemetry-otel. It should be initialized and started by Run
 type Service struct {
 	// ctx is our lifecycle handler for the Service.
 	// All other lifecycle context cancelers should come from this context
 	ctx       context.Context
-	collector collector.Collector
+	collector otel.Collector
 	hcpClient *hcp.Client
 }
 
@@ -45,31 +45,30 @@ func runSvc(ctx context.Context, cfg *Config) error {
 
 	ctx = hclog.WithContext(ctx, logger)
 
-	collector, err := collector.New(ctx, cfg.HTTPCollectorEndpoint,
-		collector.WithCloud(cloud.ResourceID, cloud.ClientID, cloud.ClientSecret, svc.hcpClient),
+	collector, err := otel.NewCollector(ctx, cfg.HTTPCollectorEndpoint,
+		otel.WithCloud(cloud.ResourceID, cloud.ClientID, cloud.ClientSecret, svc.hcpClient),
 	)
 	if err != nil {
 		return err
 	}
 
 	svc.collector = collector
-	svc.ctx = ctx
 
 	return svc.start(ctx)
 }
 
 // Start starts the initialized Service
 func (s *Service) start(ctx context.Context) error {
+	logger := hclog.FromContext(ctx)
+	logger.Info("Shutting down service")
 	// We would start the otel collector here
-	ctx, cancel := context.WithCancel(ctx)
+	childCtx, cancel := context.WithCancel(ctx)
 	go func() {
-		err := s.collector.Run(ctx)
+		err := s.collector.Run(childCtx)
 		hclog.FromContext(ctx).Error("Failed to run opentelemetry-collector", "error", err)
 		cancel()
 	}()
-	<-ctx.Done()
-	logger := hclog.FromContext(s.ctx)
-	logger.Info("Shutting down service")
+	<-childCtx.Done()
 	s.stop()
 	return nil
 }

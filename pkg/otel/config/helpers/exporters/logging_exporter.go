@@ -31,10 +31,10 @@ const loggingExporterName = "logging"
 var LoggingExporterID component.ID = component.NewID(loggingExporterName)
 
 // LogExporterCfg generates the configuration for a logging exporter
-func LogExporterCfg() (component.ID, *LoggingConfig) {
+func LogExporterCfg() *LoggingConfig {
 	defaults := loggingexporter.NewFactory().CreateDefaultConfig().(*loggingexporter.Config)
 
-	return LoggingExporterID, &LoggingConfig{
+	return &LoggingConfig{
 		Verbosity:          defaults.Verbosity,
 		SamplingInitial:    defaults.SamplingInitial,
 		SamplingThereafter: defaults.SamplingThereafter,

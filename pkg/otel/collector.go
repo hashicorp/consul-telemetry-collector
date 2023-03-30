@@ -1,19 +1,26 @@
-package collector
+package otel
 
 import (
 	"context"
 
+	"github.com/hashicorp/consul-telemetry-collector/pkg/version"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/featuregate"
 	"go.opentelemetry.io/collector/otelcol"
-
-	"github.com/hashicorp/consul-telemetry-collector/pkg/version"
 )
+
+// Collector is an interface that is satisfied by the otelcol.Collector struct.
+// This allows us to wrap the opentelemetry collector and not necessarily run it ourselves
+type Collector interface {
+	Run(context.Context) error
+	GetState() otelcol.State
+	Shutdown()
+}
 
 const otelFeatureGate = "telemetry.useOtelForInternalMetrics"
 
-// New will create a new open-telemetry collector service and configuration based on the provided values
-func New(ctx context.Context, forwarderEndpoint string, opts ...collectorOpts) (Collector,
+// NewCollector will create a new open-telemetry collector service and configuration based on the provided values
+func NewCollector(ctx context.Context, forwarderEndpoint string, opts ...collectorOpts) (Collector,
 	error) {
 	cfg := &collectorCfg{}
 	for _, opt := range opts {
