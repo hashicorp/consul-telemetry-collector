@@ -1,7 +1,6 @@
 package extensions
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/open-telemetry/opentelemetry-collector-contrib/extension/oauth2clientauthextension"
@@ -19,9 +18,10 @@ func Test_OauthClient(t *testing.T) {
 	err := conf.Marshal(cfg)
 	require.NoError(t, err)
 
-	//Unmarshall and verify
+	// Unmarshall and verify
 	unmarshalledCfg := &OauthClientConfig{}
-	conf.Unmarshal(unmarshalledCfg)
+	err = conf.Unmarshal(unmarshalledCfg)
+	require.NoError(t, err)
 
 	require.Equal(t, cfg, unmarshalledCfg)
 }
@@ -34,16 +34,14 @@ func Test_OauthClientPkg(t *testing.T) {
 		ClientSecret: configopaque.String("foo"),
 	}
 
-	fmt.Println(cfg.ClientSecret)
-
 	conf := confmap.New()
 	err := conf.Marshal(cfg)
 	require.NoError(t, err)
 
-	//Unmarshall and verify
+	// Unmarshall and verify
 	unmarshalledCfg := &oauth2clientauthextension.Config{}
-	conf.Unmarshal(unmarshalledCfg)
-	fmt.Println(unmarshalledCfg.ClientSecret)
+	err = conf.Unmarshal(unmarshalledCfg)
+	require.NoError(t, err)
 
 	require.NotEqual(t, cfg, unmarshalledCfg)
 

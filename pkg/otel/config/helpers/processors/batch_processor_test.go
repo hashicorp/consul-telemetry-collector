@@ -17,9 +17,10 @@ func Test_BatchProcessor(t *testing.T) {
 	err := conf.Marshal(cfg)
 	require.NoError(t, err)
 
-	//Unmarshall and verify
+	// Unmarshall and verify
 	unmarshalledCfg := &batchprocessor.Config{}
-	conf.Unmarshal(unmarshalledCfg)
+	err = conf.Unmarshal(unmarshalledCfg)
+	require.NoError(t, err)
 
 	require.Equal(t, cfg, unmarshalledCfg)
 }

@@ -1,21 +1,24 @@
-package receivers
+package processors
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/confmap"
+	"go.opentelemetry.io/collector/processor/memorylimiterprocessor"
 )
 
-func Test_OtlpReceiver(t *testing.T) {
-	cfg := OtlpReceiverCfg()
+func Test_BatchMemoryLimiter(t *testing.T) {
+	cfg := MemoryLimiterCfg()
+	require.NotNil(t, cfg)
 
+	// Marshall the configuration
 	conf := confmap.New()
 	err := conf.Marshal(cfg)
 	require.NoError(t, err)
 
 	// Unmarshall and verify
-	unmarshalledCfg := &OtlpReceiverConfig{}
+	unmarshalledCfg := &memorylimiterprocessor.Config{}
 	err = conf.Unmarshal(unmarshalledCfg)
 	require.NoError(t, err)
 

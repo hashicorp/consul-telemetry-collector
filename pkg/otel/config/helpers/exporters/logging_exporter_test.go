@@ -16,9 +16,10 @@ func Test_LoggingExporter(t *testing.T) {
 	err := conf.Marshal(cfg)
 	require.NoError(t, err)
 
-	//Unmarshall and verify
+	// Unmarshall and verify
 	unmarshalledCfg := &LoggingConfig{}
-	conf.Unmarshal(unmarshalledCfg)
+	err = conf.Unmarshal(unmarshalledCfg)
+	require.NoError(t, err)
 
 	require.Equal(t, cfg, unmarshalledCfg)
 }

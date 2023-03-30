@@ -17,9 +17,10 @@ func Test_OtlpExporter(t *testing.T) {
 	err := conf.Marshal(cfg)
 	require.NoError(t, err)
 
-	//Unmarshall and verify
+	// Unmarshall and verify
 	unmarshalledCfg := &ExporterConfig{}
-	conf.Unmarshal(unmarshalledCfg)
+	err = conf.Unmarshal(unmarshalledCfg)
+	require.NoError(t, err)
 
 	require.Equal(t, cfg, unmarshalledCfg)
 }
@@ -33,9 +34,9 @@ func Test_OtlpExporterHCP(t *testing.T) {
 	err := conf.Marshal(cfg)
 	require.NoError(t, err)
 
-	//Unmarshall and verify
+	// Unmarshall and verify
 	unmarshalledCfg := &ExporterConfig{}
-	conf.Unmarshal(unmarshalledCfg)
-
+	err = conf.Unmarshal(unmarshalledCfg)
+	require.NoError(t, err)
 	require.Equal(t, cfg, unmarshalledCfg)
 }
