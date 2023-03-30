@@ -15,6 +15,16 @@ var (
 	BaseOtlpExporterID = component.NewID(otlpHTTPExporterName)
 )
 
+// ExporterConfig is a base wrapper around the otlphttpexorter which
+// we cannot use directly since our golden tests can't handle the comparisons unfortunately.
+// https://pkg.go.dev/go.opentelemetry.io/collector/exporter/otlphttpexporter@v0.72.0#section-readme
+type ExporterConfig struct {
+	// Endpoint to send strings to it
+	Endpoint string `mapstructure:"endpoint"`
+	// Auth configuration for the exporter
+	Auth *configauth.Authentication `mapstructure:"auth"`
+}
+
 // OtlpExporterCfg generates the configuration for a otlp exporter
 func OtlpExporterCfg(endpoint string) *ExporterConfig {
 	// defaultCfg := otlphttpexporter.NewFactory().CreateDefaultConfig().(*otlphttpexporter.Config)
@@ -26,16 +36,6 @@ func OtlpExporterCfg(endpoint string) *ExporterConfig {
 	// cfg.Auth = &configauth.Authentication{AuthenticatorID: authId}
 
 	return &cfg
-}
-
-// ExporterConfig is a base wrapper around the otlphttpexorter which
-// we cannot use directly since our golden tests can't handle the comparisons unfortunately.
-// https://pkg.go.dev/go.opentelemetry.io/collector/exporter/otlphttpexporter@v0.72.0#section-readme
-type ExporterConfig struct {
-	// Endpoint to send strings to it
-	Endpoint string `mapstructure:"endpoint"`
-	// Auth configuration for the exporter
-	Auth *configauth.Authentication `mapstructure:"auth"`
 }
 
 // OtlpExporterHCPCfg generates the config for an otlp exporter to HCP

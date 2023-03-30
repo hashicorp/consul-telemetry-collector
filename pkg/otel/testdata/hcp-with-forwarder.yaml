@@ -13,7 +13,7 @@ processors:
 extensions:
   oauth2client/hcp:
     client_id: cid
-    client_secret: "[REDACTED]"
+    client_secret: "csec"
     endpoint_params:
       audience: https://api.hashicorp.com
     token_url: https://auth.idp.hashicorp.com/oauth2/token

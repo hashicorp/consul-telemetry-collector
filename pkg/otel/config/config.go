@@ -85,17 +85,17 @@ func (c *Config) EnrichWithExtensions(
 // will build it and attach it to the componentMap for that ID. Otherwise we move
 // on
 func buildComponents(
-	tc componentMap,
+	componentMap componentMap,
 	componentIDs []component.ID,
 	p *Params,
 ) error {
 	for _, id := range componentIDs {
-		if _, ok := tc[id]; !ok {
+		if _, ok := componentMap[id]; !ok {
 			component, err := buildComponent(id, p)
 			if err != nil {
 				return err
 			}
-			tc[id] = component
+			componentMap[id] = component
 		}
 	}
 	return nil
