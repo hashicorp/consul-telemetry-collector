@@ -6,4 +6,5 @@
 # IntelliJ
 .idea
 
-dist*
+bin*
+bin/*
