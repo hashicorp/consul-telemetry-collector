@@ -3,7 +3,7 @@ SHELL := /usr/bin/env bash -euo pipefail -c
 BIN_NAME     ?= consul-telemetry-collector
 GIT_COMMIT?=$(shell git rev-parse --short HEAD)
 GIT_DIRTY?=$(shell test -n "`git status --porcelain`" && echo "+CHANGES" || true)
-GOLDFLAGS=-X github.com/hashicorp/consul-telemetry-collector/pkg/version.GitCommit=$(GIT_COMMIT)$(GIT_DIRTY)
+GOLDFLAGS=-X github.com/hashicorp/consul-telemetry-collector/internal/version.GitCommit=$(GIT_COMMIT)$(GIT_DIRTY)
 GOLANGCI_CONFIG_DIR ?= $(CURDIR)
 ARCH := $(shell uname -m)
 ifeq ($(ARCH),x86_64)

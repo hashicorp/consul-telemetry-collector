@@ -3,7 +3,7 @@ package otel
 import (
 	"context"
 
-	"github.com/hashicorp/consul-telemetry-collector/pkg/version"
+	"github.com/hashicorp/consul-telemetry-collector/internal/version"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/featuregate"
 	"go.opentelemetry.io/collector/otelcol"
