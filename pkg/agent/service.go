@@ -14,8 +14,6 @@ import (
 
 // Service manages the consul-telemetry-otel. It should be initialized and started by Run
 type Service struct {
-	// ctx is our lifecycle handler for the Service.
-	// All other lifecycle context cancelers should come from this context
 	collector otel.Collector
 	hcpClient *hcp.Client
 }
@@ -60,7 +58,7 @@ func runSvc(ctx context.Context, cfg *Config) error {
 func (s *Service) start(ctx context.Context) error {
 	logger := hclog.FromContext(ctx)
 	logger.Info("Shutting down service")
-	// We would start the otel collector here
+
 	childCtx, cancel := context.WithCancel(ctx)
 	go func() {
 		err := s.collector.Run(childCtx)
