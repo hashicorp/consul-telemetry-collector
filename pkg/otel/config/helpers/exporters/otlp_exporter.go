@@ -41,8 +41,8 @@ func OtlpExporterCfg(endpoint string) *ExporterConfig {
 // OtlpExporterHCPCfg generates the config for an otlp exporter to HCP
 func OtlpExporterHCPCfg(endpoint string, authID component.ID) *ExporterConfig {
 
-	// TODO: unfortunately we can't use the exporter config due to the golden tests. This is unfortunate
-	// but for now it's not the end of the world to ship our own config. Leaving this here as a reference
+	// TODO: unfortunately we can't use the exporter config that comes form the otlphttpexporter.Config
+	// due to unmarshalling issues. This is unfortunate but for now it's not the end of the world to ship our own config. Leaving this here as a reference
 	// to get to the defaultCfg if it's needed.
 	//
 	// defaultCfg := otlphttpexporter.NewFactory().CreateDefaultConfig().(*otlphttpexporter.Config)
