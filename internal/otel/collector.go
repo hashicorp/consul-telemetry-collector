@@ -30,7 +30,7 @@ type CollectorCfg struct {
 const otelFeatureGate = "telemetry.useOtelForInternalMetrics"
 
 // NewCollector will create a new open-telemetry collector service and configuration based on the provided values
-func NewCollector(ctx context.Context, cfg CollectorCfg) (Collector, error) {
+func NewCollector(cfg CollectorCfg) (Collector, error) {
 
 	// enable otel for collector internal metrics
 	if err := featuregate.GlobalRegistry().Set(otelFeatureGate, true); err != nil {

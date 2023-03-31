@@ -33,6 +33,11 @@ func NewService(cfg *Config) (*Service, error) {
 		s.cfg.Client = hcpClient
 		s.cfg.ResourceID = cfg.Cloud.ResourceID
 	}
+	var err error
+	s.collector, err = otel.NewCollector(s.cfg)
+	if err != nil {
+		return nil, err
+	}
 
 	return s, nil
 }
@@ -40,19 +45,12 @@ func NewService(cfg *Config) (*Service, error) {
 // Run will initialize and Start the consul-telemetry-collector Service
 func (s *Service) Run(ctx context.Context) error {
 	logger := hclog.FromContext(ctx)
-	var err error
-	s.collector, err = otel.NewCollector(ctx, s.cfg)
-	if err != nil {
-		logger.Error("failed to instantiate new otel collector", "error", err)
-		return err
-	}
 
 	go s.handleShutdown(ctx)
 
 	// blocking call
-	err = s.collector.Run(ctx)
+	err := s.collector.Run(ctx)
 	if err != nil {
-
 		logger.Error("failed to run opentelemetry-collector", "error", err)
 		return err
 	}

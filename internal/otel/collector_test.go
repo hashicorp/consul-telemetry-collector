@@ -58,7 +58,7 @@ func Test_New(t *testing.T) {
 				ForwarderEndpoint: "https://localhost:4138",
 			}
 
-			svc, err := NewCollector(ctx, c)
+			svc, err := NewCollector(c)
 			test.NoError(t, err)
 			go func() {
 				err := svc.Run(ctx)
