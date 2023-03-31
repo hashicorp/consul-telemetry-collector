@@ -1,76 +1,47 @@
 SHELL := /usr/bin/env bash -euo pipefail -c
 
-REPO_NAME    ?= $(shell basename "$(CURDIR)")
-PRODUCT_NAME ?= $(REPO_NAME)
-BIN_NAME     ?= $(PRODUCT_NAME)
-GOPATH 	     ?= $(shell go env GOPATH)
-GOBIN        ?= $(GOPATH)/bin
-
-# Get local ARCH; on Intel Mac, 'uname -m' returns x86_64 which we turn into amd64.
-# Not using 'go env GOOS/GOARCH' here so 'make docker' will work without local Go install.
-ARCH     = $(shell A=$$(uname -m); [ $$A = x86_64 ] && A=amd64; echo $$A)
-OS       = $(shell uname | tr [[:upper:]] [[:lower:]])
-PLATFORM = $(OS)/$(ARCH)
-DIST     = dist/$(PLATFORM)
-BIN      = $(DIST)/$(BIN_NAME)
-
-VERSION = $(shell ./build-scripts/version.sh pkg/version/version.go)
-
+BIN_NAME     ?= consul-telemetry-collector
 GIT_COMMIT?=$(shell git rev-parse --short HEAD)
 GIT_DIRTY?=$(shell test -n "`git status --porcelain`" && echo "+CHANGES" || true)
 GOLDFLAGS=-X github.com/hashicorp/consul-telemetry-collector/pkg/version.GitCommit=$(GIT_COMMIT)$(GIT_DIRTY)
-
-# Get latest revision (no dirty check for now).
-REVISION = $(shell git rev-parse HEAD)
 GOLANGCI_CONFIG_DIR ?= $(CURDIR)
+ARCH := $(shell uname -m)
+ifeq ($(ARCH),x86_64)
+    ARCH := amd64
+endif
+ifeq ($(ARCH),aarch64)
+    ARCH := amd64
+endif
+OS       = $(shell uname | tr [[:upper:]] [[:lower:]])
+PLATFORM = $(OS)/$(ARCH)
 
 GO_MODULE_DIRS ?= $(shell go list -m -f "{{ .Dir }}" | grep -v mod-vendor)
 
-.PHONY: goversion
-goversion:
-	@go version
-
 .PHONY: version
 version:
-	@echo $(VERSION)
-
-dist:
-	mkdir -p $(DIST)
-	echo '*' > dist/.gitignore
+	@bin/$(PLATFORM)/$(BIN_NAME) --version
 
 .PHONY: bin
-bin: goversion dist
-	GOARCH=$(ARCH) GOOS=$(OS) CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="$(GOLDFLAGS)" -o $(BIN) ./cmd/$(BIN_NAME)
-
-.PHONY: dev
-dev: bin
-	cp $(BIN) $(GOBIN)/$(BIN_NAME)
-
-.PHONY: tests
-tests: goversion go/test/mod
-
-.PHONY: lint
-lint: go/lint/mod
-
-.PHONY: $(GO_MODULE_DIRS)
-$(GO_MODULE_DIRS):
-	@echo -e "Running $(TARGET) for $(@)\n"
-	make -C $@ $(TARGET)
-
-.PHONY: go/test/mod
-go/test/mod: TARGET=go/test
-go/test/mod: $(GO_MODULE_DIRS)
-
-.PHONY: go/lint/mod
-go/lint/mod: TARGET=go/lint
-go/lint/mod: $(GO_MODULE_DIRS)
+bin:
+	@ GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="$(GOLDFLAGS)" -o bin/linux/amd64/$(BIN_NAME) ./cmd/$(BIN_NAME)
+	@ GOARCH=amd64 GOOS=darwin CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="$(GOLDFLAGS)" -o bin/darwin/x86_64/$(BIN_NAME) ./cmd/$(BIN_NAME)
+	@ GOARCH=arm64 GOOS=darwin CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="$(GOLDFLAGS)" -o bin/darwin/arm64/$(BIN_NAME) ./cmd/$(BIN_NAME)
 
 go/test:
-	@go test -timeout 10s ./...
+	@ for mod in $(GO_MODULE_DIRS) ; do \
+		cd $$mod > /dev/null; \
+		echo "testing $$mod"; \
+		go test -timeout 10s ./... ;\
+		cd - > /dev/null; \
+	done
 
 go/lint:
-	@golangci-lint run --config $(GOLANGCI_CONFIG_DIR)/.golangci.yml
-
+	@ for mod in $(GO_MODULE_DIRS) ; do \
+		cd $$mod > /dev/null; \
+		echo "linting $$mod"; \
+		golangci-lint run --config $(GOLANGCI_CONFIG_DIR)/.golangci.yml ;\
+		cd - > /dev/null; \
+	done
 
 .PHONY: deps
 deps:

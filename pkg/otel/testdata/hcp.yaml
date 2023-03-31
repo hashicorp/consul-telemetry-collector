@@ -1,0 +1,54 @@
+receivers:
+  otlp:
+    protocols:
+      http:
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 50
+    spike_limit_percentage: 30
+  batch:
+
+extensions:
+  oauth2client/hcp:
+    client_id: cid
+    client_secret: "csec"
+    endpoint_params:
+      audience: https://api.hashicorp.com
+    token_url: https://auth.idp.hashicorp.com/oauth2/token
+  memory_ballast:
+    size_in_percentage: 10
+
+connectors: {}
+
+exporters:
+  logging:
+  otlphttp/hcp:
+    endpoint: https://hcp-metrics-endpoint
+    auth:
+      authenticator: oauth2client/hcp
+
+
+service:
+  extensions: [memory_ballast,oauth2client/hcp]
+  telemetry:
+    resource: {}
+    logs:
+      encoding: console
+      output_paths: stderr
+      initial_fields: {}
+    metrics:
+      address: localhost:9090
+      level: "detailed"
+    traces:
+      propagators: tracecontext,b3
+  pipelines:
+    metrics:
+      receivers: [otlp]
+      processors: [memory_limiter,batch]
+      exporters: [logging]
+    metrics/hcp:
+      receivers: [otlp]
+      processors: [memory_limiter,batch]
+      exporters: [logging,otlphttp/hcp]
