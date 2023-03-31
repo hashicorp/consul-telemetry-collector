@@ -137,6 +137,12 @@ func (c *Command) Run(args []string) int {
 		return -1
 	}
 
+	service, err := NewService(cfg)
+	if err != nil {
+		logger.Error("error creating service", "error", err)
+		return -1
+	}
+
 	childCtx, cancel := context.WithCancel(ctx)
 	logger.Info("debugging args", "args", args)
 	sigCh := make(chan os.Signal, 1)
@@ -145,7 +151,7 @@ func (c *Command) Run(args []string) int {
 	go handleSignal(sigCh, cancel)
 
 	// run the service
-	if err := runSvc(childCtx, cfg); err != nil {
+	if err := service.Run(childCtx); err != nil {
 		cancel()
 		logger.Error("error running collector", "error", err)
 		return -1

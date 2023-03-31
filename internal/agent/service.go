@@ -12,52 +12,54 @@ import (
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel"
 )
 
-// runSvc will initialize and Start the consul-telemetry-collector Service
-func runSvc(ctx context.Context, cfg *Config) error {
-	logger := hclog.FromContext(ctx)
+// Service runs a otel.Collector with a configured otel pipeline
+type Service struct {
+	cfg       otel.CollectorCfg
+	collector otel.Collector
+}
 
-	var cloud = &Cloud{}
-	var hcpClient *hcp.Client
-	if cfg.Cloud.IsEnabled() {
-		// Set up the HCP SDK here
-		logger.Info("Setting up HCP Cloud SDK")
-		var err error
-		hcpClient, err = hcp.New(cfg.Cloud.ClientID, cfg.Cloud.ClientSecret, cfg.Cloud.ResourceID)
+// NewService returns a new Service based off the past in configuration
+func NewService(cfg *Config) (*Service, error) {
+	s := &Service{}
+	s.cfg = otel.CollectorCfg{ForwarderEndpoint: cfg.HTTPCollectorEndpoint}
+
+	if cfg.Cloud != nil && cfg.Cloud.IsEnabled() {
+		hcpClient, err := hcp.New(cfg.Cloud.ClientID, cfg.Cloud.ClientSecret, cfg.Cloud.ResourceID)
 		if err != nil {
-			return fmt.Errorf("failed to create hcp client %w", err)
+			return nil, fmt.Errorf("failed to create hcp client %w", err)
 		}
-		cloud = cfg.Cloud
+		s.cfg.ClientID = cfg.Cloud.ClientID
+		s.cfg.ClientSecret = cfg.Cloud.ClientSecret
+		s.cfg.Client = hcpClient
+		s.cfg.ResourceID = cfg.Cloud.ResourceID
 	}
 
-	if cfg.HTTPCollectorEndpoint != "" {
-		logger.Info("Forwarding telemetry to collector", "addr", cfg.HTTPCollectorEndpoint)
-	}
+	return s, nil
+}
 
-	c := otel.CollectorCfg{
-		ClientID:          cloud.ClientID,
-		ClientSecret:      cloud.ClientSecret,
-		Client:            hcpClient,
-		ResourceID:        cloud.ResourceID,
-		ForwarderEndpoint: cfg.HTTPCollectorEndpoint,
-	}
-
-	collector, err := otel.NewCollector(ctx, c)
+// Run will initialize and Start the consul-telemetry-collector Service
+func (s *Service) Run(ctx context.Context) error {
+	logger := hclog.FromContext(ctx)
+	var err error
+	s.collector, err = otel.NewCollector(ctx, s.cfg)
 	if err != nil {
+		logger.Error("failed to instantiate new otel collector", "error", err)
 		return err
 	}
 
-	childCtx, cancel := context.WithCancel(ctx)
-	go runCollector(childCtx, collector, cancel)
-	<-childCtx.Done()
-	return nil
+	go s.handleShutdown(ctx)
 
+	// blocking call
+	err = s.collector.Run(ctx)
+	if err != nil {
+
+		logger.Error("failed to run opentelemetry-collector", "error", err)
+		return err
+	}
+	return nil
 }
 
-func runCollector(ctx context.Context, collector otel.Collector, cancel func()) {
-	logger := hclog.FromContext(ctx)
-	err := collector.Run(ctx)
-	if err != nil {
-		logger.Error("Failed to run opentelemetry-collector", "error", err)
-	}
-	cancel()
+func (s *Service) handleShutdown(ctx context.Context) {
+	<-ctx.Done()
+	s.collector.Shutdown()
 }

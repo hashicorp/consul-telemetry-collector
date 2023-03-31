@@ -21,19 +21,20 @@ func Test_runSvc(t *testing.T) {
 
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
+			s, err := NewService(&tc.cfg)
+			must.NoError(t, err)
 			ctx := context.Background()
 			ctx, cancel := context.WithCancel(ctx)
 			errCh := make(chan error)
 			go func() {
-				err := runSvc(ctx, &tc.cfg)
+				err := s.Run(ctx)
 				errCh <- err
 			}()
 
-			// give us a 1 second wait
 			time.After(time.Second)
 			cancel()
 			<-ctx.Done()
-			err := <-errCh
+			err = <-errCh
 			must.NoError(t, err)
 		})
 	}
