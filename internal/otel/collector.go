@@ -3,6 +3,7 @@ package otel
 import (
 	"context"
 
+	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/internal/version"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/featuregate"
@@ -17,15 +18,21 @@ type Collector interface {
 	Shutdown()
 }
 
+// CollectorCfg is the configuration needed to start the collector.
+type CollectorCfg struct {
+	ClientID          string
+	ClientSecret      string
+	ResourceID        string
+	Client            hcp.TelemetryClient
+	ForwarderEndpoint string
+}
+
 const otelFeatureGate = "telemetry.useOtelForInternalMetrics"
 
 // NewCollector will create a new open-telemetry collector service and configuration based on the provided values
-func NewCollector(ctx context.Context, forwarderEndpoint string, opts ...collectorOpts) (Collector,
+func NewCollector(ctx context.Context, cfg CollectorCfg) (Collector,
 	error) {
-	cfg := &collectorCfg{}
-	for _, opt := range opts {
-		opt(cfg)
-	}
+
 	// enable otel for collector internal metrics
 	if err := featuregate.GlobalRegistry().Set(otelFeatureGate, true); err != nil {
 		return nil, err
@@ -36,7 +43,7 @@ func NewCollector(ctx context.Context, forwarderEndpoint string, opts ...collect
 		return nil, err
 	}
 
-	provider, err := newProvider(forwarderEndpoint, cfg.resourceID, cfg.clientID, cfg.clientSecret, cfg.client)
+	provider, err := newProvider(cfg)
 	if err != nil {
 		return nil, err
 	}

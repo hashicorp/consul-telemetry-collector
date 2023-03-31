@@ -50,7 +50,15 @@ func Test_New(t *testing.T) {
 
 			ctx := context.Background()
 
-			svc, err := NewCollector(ctx, "https://localhost:4138", WithCloud(tc.rid, tc.cid, tc.csec, client))
+			c := CollectorCfg{
+				ClientID:          tc.cid,
+				ClientSecret:      tc.csec,
+				Client:            client,
+				ResourceID:        tc.rid,
+				ForwarderEndpoint: "https://localhost:4138",
+			}
+
+			svc, err := NewCollector(ctx, c)
 			test.NoError(t, err)
 			go func() {
 				err := svc.Run(ctx)
