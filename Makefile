@@ -39,7 +39,7 @@ go/lint:
 	@ for mod in $(GO_MODULE_DIRS) ; do \
 		cd $$mod > /dev/null; \
 		echo "linting $$mod"; \
-		golangci-lint run --config $(GOLANGCI_CONFIG_DIR)/.golangci.yml ;\
+		golangci-lint run --timeout 5m --config $(GOLANGCI_CONFIG_DIR)/.golangci.yml ;\
 		cd - > /dev/null; \
 	done
 
