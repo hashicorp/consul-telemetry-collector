@@ -12,7 +12,7 @@ import (
 	"github.com/hashicorp/hcp-sdk-go/resource"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/config"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
 )
 
 type hcpProvider struct {

@@ -6,7 +6,7 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/confmap"
 
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/config"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
 )
 
 type externalProvider struct {

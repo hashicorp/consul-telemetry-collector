@@ -2,10 +2,10 @@ package config
 
 import (
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/config/helpers/exporters"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/config/helpers/extensions"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/config/helpers/processors"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/config/helpers/receivers"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/extensions"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/processors"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/receivers"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/service"
 )

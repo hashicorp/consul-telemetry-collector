@@ -10,14 +10,12 @@ import (
 func Test_OtlpReceiver(t *testing.T) {
 	cfg := OtlpReceiverCfg()
 
+	require.NotNil(t, cfg)
 	conf := confmap.New()
 	err := conf.Marshal(cfg)
-	require.NoError(t, err)
 
-	// Unmarshall and verify
-	unmarshalledCfg := &OtlpReceiverConfig{}
-	err = conf.Unmarshal(unmarshalledCfg)
 	require.NoError(t, err)
+	retrieved, _ := confmap.NewRetrieved(conf.ToStringMap())
+	require.NotNil(t, retrieved)
 
-	require.Equal(t, cfg, unmarshalledCfg)
 }

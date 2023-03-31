@@ -15,16 +15,6 @@ var (
 	BaseOtlpExporterID = component.NewID(otlpHTTPExporterName)
 )
 
-// ExporterConfig is a base wrapper around the otlphttpexorter which
-// we cannot use directly since our golden tests can't handle the comparisons unfortunately.
-// https://pkg.go.dev/go.opentelemetry.io/collector/exporter/otlphttpexporter@v0.72.0#section-readme
-type ExporterConfig struct {
-	// Endpoint to send strings to it
-	Endpoint string `mapstructure:"endpoint"`
-	// Auth configuration for the exporter
-	Auth *configauth.Authentication `mapstructure:"auth"`
-}
-
 // OtlpExporterCfg generates the configuration for a otlp exporter
 func OtlpExporterCfg(endpoint string) *ExporterConfig {
 	// defaultCfg := otlphttpexporter.NewFactory().CreateDefaultConfig().(*otlphttpexporter.Config)
@@ -38,11 +28,21 @@ func OtlpExporterCfg(endpoint string) *ExporterConfig {
 	return &cfg
 }
 
+// ExporterConfig is a base wrapper around the otlphttpexorter which
+// we cannot use directly since our golden tests can't handle the comparisons unfortunately.
+// https://pkg.go.dev/go.opentelemetry.io/collector/exporter/otlphttpexporter@v0.72.0#section-readme
+type ExporterConfig struct {
+	// Endpoint to send strings to it
+	Endpoint string `mapstructure:"endpoint"`
+	// Auth configuration for the exporter
+	Auth *configauth.Authentication `mapstructure:"auth"`
+}
+
 // OtlpExporterHCPCfg generates the config for an otlp exporter to HCP
 func OtlpExporterHCPCfg(endpoint string, authID component.ID) *ExporterConfig {
 
-	// TODO: unfortunately we can't use the exporter config that comes form the otlphttpexporter.Config
-	// due to unmarshalling issues. This is unfortunate but for now it's not the end of the world to ship our own config. Leaving this here as a reference
+	// TODO: unfortunately we can't use the exporter config due to the golden tests. This is unfortunate
+	// but for now it's not the end of the world to ship our own config. Leaving this here as a reference
 	// to get to the defaultCfg if it's needed.
 	//
 	// defaultCfg := otlphttpexporter.NewFactory().CreateDefaultConfig().(*otlphttpexporter.Config)

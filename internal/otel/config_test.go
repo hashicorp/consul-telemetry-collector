@@ -61,7 +61,7 @@ func Test_newConfigProvider(t *testing.T) {
 				}
 			}
 
-			provider, err := newProvider(tc.forwarder, resourceURL, "cid", "csec", mockClient)
+			provider, err := newProvider(tc.forwarder, resourceURL, "cid", "[REDACTED]", mockClient)
 			test.NoError(t, err)
 
 			ctx := context.Background()

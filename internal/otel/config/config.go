@@ -3,10 +3,10 @@ package config
 import (
 	"errors"
 
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/config/helpers/exporters"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/config/helpers/extensions"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/config/helpers/processors"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/config/helpers/receivers"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/extensions"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/processors"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/receivers"
 	"github.com/hashicorp/go-multierror"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/service"
@@ -85,17 +85,17 @@ func (c *Config) EnrichWithExtensions(
 // will build it and attach it to the componentMap for that ID. Otherwise we move
 // on
 func buildComponents(
-	componentMap componentMap,
+	tc componentMap,
 	componentIDs []component.ID,
 	p *Params,
 ) error {
 	for _, id := range componentIDs {
-		if _, ok := componentMap[id]; !ok {
+		if _, ok := tc[id]; !ok {
 			component, err := buildComponent(id, p)
 			if err != nil {
 				return err
 			}
-			componentMap[id] = component
+			tc[id] = component
 		}
 	}
 	return nil

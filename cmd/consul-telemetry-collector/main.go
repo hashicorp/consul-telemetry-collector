@@ -3,8 +3,8 @@ package main
 import (
 	"os"
 
-	"github.com/hashicorp/consul-telemetry-collector/pkg/agent"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/version"
+	"github.com/hashicorp/consul-telemetry-collector/internal/agent"
+	"github.com/hashicorp/consul-telemetry-collector/internal/version"
 	"github.com/hashicorp/go-hclog"
 	"github.com/mitchellh/cli"
 )
