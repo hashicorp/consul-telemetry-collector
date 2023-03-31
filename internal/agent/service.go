@@ -9,7 +9,7 @@ import (
 	"github.com/hashicorp/go-hclog"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel"
 )
 
 // Service manages the consul-telemetry-otel. It should be initialized and started by Run

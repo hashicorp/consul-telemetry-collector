@@ -7,8 +7,8 @@ import (
 	"go.opentelemetry.io/collector/otelcol"
 
 	internalhcp "github.com/hashicorp/consul-telemetry-collector/internal/hcp"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/providers/external"
-	"github.com/hashicorp/consul-telemetry-collector/pkg/otel/providers/hcp"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers/external"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers/hcp"
 )
 
 type collectorCfg struct {

@@ -13,7 +13,7 @@ import (
 	"github.com/imdario/mergo"
 	"github.com/mitchellh/cli"
 
-	"github.com/hashicorp/consul-telemetry-collector/pkg/flags"
+	"github.com/hashicorp/consul-telemetry-collector/internal/flags"
 )
 
 const (
