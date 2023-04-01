@@ -6,50 +6,26 @@ import (
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/otelcol"
 
-	internalhcp "github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers/external"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers/hcp"
 )
 
-type collectorCfg struct {
-	clientID     string
-	clientSecret string
-	resourceID   string
-	client       internalhcp.TelemetryClient
-}
-
-type collectorOpts func(*collectorCfg)
-
 // revive:disable:unexported-return
-
-// WithCloud adds cloud parameters to the collector creation
-func WithCloud(resourceID string, clientID string, clientSecret string, client internalhcp.TelemetryClient) collectorOpts {
-	return func(o *collectorCfg) {
-		o.resourceID = resourceID
-		o.clientID = clientID
-		o.clientSecret = clientSecret
-		o.client = client
-	}
-}
 
 //revive:enable:unexported-return
 
 func newProvider(
-	forwarderEndpoint string,
-	resourceID string,
-	clientID string,
-	clientSecret string,
-	client internalhcp.TelemetryClient,
+	cfg CollectorCfg,
 ) (otelcol.ConfigProvider, error) {
 	uris := []string{"external:"}
-	if resourceID != "" {
-		uris = append(uris, fmt.Sprintf("hcp:%s", resourceID))
+	if cfg.ResourceID != "" {
+		uris = append(uris, fmt.Sprintf("hcp:%s", cfg.ResourceID))
 	}
 	resolver := confmap.ResolverSettings{
 		URIs: uris,
 		Providers: makeMapProvidersMap(
-			external.NewProvider(forwarderEndpoint),
-			hcp.NewProvider(forwarderEndpoint, client, clientID, clientSecret),
+			external.NewProvider(cfg.ForwarderEndpoint),
+			hcp.NewProvider(cfg.ForwarderEndpoint, cfg.Client, cfg.ClientID, cfg.ClientSecret),
 		),
 
 		Converters: []confmap.Converter{},
