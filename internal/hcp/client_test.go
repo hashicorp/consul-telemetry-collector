@@ -9,8 +9,15 @@ import (
 
 	"github.com/hashicorp/hcp-sdk-go/clients/cloud-global-network-manager-service/preview/2022-02-15/client/global_network_manager_service"
 	"github.com/hashicorp/hcp-sdk-go/clients/cloud-global-network-manager-service/preview/2022-02-15/models"
+	hcpconfig "github.com/hashicorp/hcp-sdk-go/config"
 	"github.com/hashicorp/hcp-sdk-go/resource"
 )
+
+func getTestClientFn(svc *MockClientService) clientFunc {
+	return func(hcpConfig hcpconfig.HCPConfig) (agentTelemetryConfigClient, error) {
+		return svc, nil
+	}
+}
 
 func Test_New(t *testing.T) {
 	testcases := map[string]struct {
@@ -65,7 +72,7 @@ func Test_New(t *testing.T) {
 	}
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
-			_, err := New(tc.cid, tc.csec, tc.res.String())
+			_, err := New(&Params{tc.cid, tc.csec, tc.res.String()})
 			if tc.wantErr {
 				must.Error(t, err)
 				return
@@ -130,9 +137,9 @@ func TestLoadConfig(t *testing.T) {
 				MockResponse: tc.resp,
 				Err:          tc.err,
 			}
+			p := &Params{uuid.NewString(), uuid.NewString(), tc.r.String()}
+			client, err := newClient(p, getTestClientFn(clientServiceM))
 
-			client, err := NewWithDeps(uuid.NewString(), uuid.NewString(), tc.r.String(),
-				WithClientService(clientServiceM))
 			must.NoError(t, err)
 
 			err = client.ReloadConfig()

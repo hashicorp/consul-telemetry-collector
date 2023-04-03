@@ -30,7 +30,11 @@ func runSvc(ctx context.Context, cfg *Config) error {
 	if cfg.Cloud.IsEnabled() {
 		// Set up the HCP SDK here
 		logger.Info("Setting up HCP Cloud SDK")
-		hcpClient, err := hcp.New(cfg.Cloud.ClientID, cfg.Cloud.ClientSecret, cfg.Cloud.ResourceID)
+		hcpClient, err := hcp.New(&hcp.Params{
+			ClientID:     cfg.Cloud.ClientID,
+			ClientSecret: cfg.Cloud.ClientSecret,
+			ResourceURL:  cfg.Cloud.ResourceID,
+		})
 		if err != nil {
 			return fmt.Errorf("failed to create hcp client %w", err)
 		}

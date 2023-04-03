@@ -4,8 +4,7 @@ import (
 	"errors"
 	"fmt"
 
-	"github.com/go-openapi/runtime/client"
-
+	"github.com/go-openapi/runtime"
 	"github.com/hashicorp/hcp-sdk-go/clients/cloud-global-network-manager-service/preview/2022-02-15/client/global_network_manager_service"
 	hcpconfig "github.com/hashicorp/hcp-sdk-go/config"
 	"github.com/hashicorp/hcp-sdk-go/httpclient"
@@ -13,48 +12,51 @@ import (
 	"github.com/hashicorp/hcp-sdk-go/resource"
 )
 
-const sourceChannel = "consul-telemetry"
-
-// Client provides a TelemetryClient that lazily retrieves configuration from HCP.
-// TelemtryConfiguration can be loaded on-demand using the ReloadConfig() function
-type Client struct {
-	runtime     *client.Runtime
-	metricCfg   *telemetryConfig
-	hcpResource resource.Resource
-	ccmClient   ClientService
+// Params is structure used to hold parameters to generate a new client
+type Params struct {
+	ClientID, ClientSecret, ResourceURL string
 }
 
+// telemetryConfig is an internal structure use to store values from the ccm result
+// from the api. We use a temporary structure to be able to vary responses between
+// versions of the api so we don't have to handle multiple payload versions.
 type telemetryConfig struct {
 	labels      map[string]string
 	endpoint    string
 	includeList []string
 }
 
+// Client provides a TelemetryClient that lazily retrieves configuration from HCP.
+// TelemtryConfiguration can be loaded on-demand using the ReloadConfig() function
+type Client struct {
+	metricCfg     *telemetryConfig
+	hcpResource   *resource.Resource
+	clientService agentTelemetryConfigClient
+}
+
 var _ TelemetryClient = (*Client)(nil)
 
-// New creates a new telemetry client for the provided resource using the credentials.
-func New(clientID, clientSecret, resourceURL string) (*Client, error) {
-	r, err := resource.FromString(resourceURL)
-	if err != nil {
-		return nil, fmt.Errorf("failed to parse resource_url %w", err)
-	}
+// agentTelemetryConfigClient is the interface we expect from the client we
+// create. If additional endpoints are needed this interface should expand to
+// handle those additional endpoints. Unfortunately the hcp-sdk does not generate
+// a mocked client so we use this to build our own mocks as necessary
+type agentTelemetryConfigClient interface {
+	AgentTelemetryConfig(
+		params *global_network_manager_service.AgentTelemetryConfigParams,
+		authInfo runtime.ClientAuthInfoWriter,
+		opts ...global_network_manager_service.ClientOption,
+	) (*global_network_manager_service.AgentTelemetryConfigOK, error)
+}
 
-	if clientID == "" || clientSecret == "" {
-		return nil, errors.New("client credentials are empty")
-	}
+const sourceChannel = "consul-telemetry"
 
-	hcpConfig, err := hcpconfig.NewHCPConfig(
-		hcpconfig.FromEnv(),
-		hcpconfig.WithClientCredentials(clientID, clientSecret),
-		hcpconfig.WithProfile(&profile.UserProfile{
-			OrganizationID: r.Organization,
-			ProjectID:      r.Project,
-		}),
-	)
-	if err != nil {
-		return nil, fmt.Errorf("failed to configure hcp-sdk client %w", err)
-	}
+// clientFunc is used internally to do dependency injection to change the implementation
+// of the agentTelemetryConfigClient to use a mocked version during testing
+type clientFunc func(hcpconfig.HCPConfig) (agentTelemetryConfigClient, error)
 
+// baseClientFunc is the function used to take an HCP config and build a client that satifies
+// the agentTelemetryConfigClient interface
+func baseClientFunc(hcpConfig hcpconfig.HCPConfig) (agentTelemetryConfigClient, error) {
 	runtime, err := httpclient.New(httpclient.Config{
 		HCPConfig:     hcpConfig,
 		SourceChannel: sourceChannel,
@@ -62,56 +64,67 @@ func New(clientID, clientSecret, resourceURL string) (*Client, error) {
 	if err != nil {
 		return nil, err
 	}
+	return global_network_manager_service.New(runtime, nil), nil
+}
+
+// New creates a new telemetry client for the provided resource using the credentials.
+func New(p *Params) (*Client, error) {
+	return newClient(p, baseClientFunc)
+}
+
+// newClient is an internal implementation that takes a clientFn to do dependency injection.
+func newClient(p *Params, clientFn clientFunc) (*Client, error) {
+
+	hcpConfig, r, err := parseConfig(p)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse resource_url %w", err)
+	}
+
+	gnmClient, err := clientFn(hcpConfig)
+	if err != nil {
+		return nil, fmt.Errorf("failed to build client %w", err)
+	}
 
 	return &Client{
-		runtime: runtime,
+		hcpResource:   r,
+		clientService: gnmClient,
 	}, nil
 }
 
-type clientOpt func(*Client)
-
-// NewWithDeps creates a new client while also providing client modification via client
-func NewWithDeps(clientID, clientSecret, resourceURL string, opts ...clientOpt) (*Client, error) {
-	client, err := New(clientID, clientSecret, resourceURL)
+// parseConfig takes in a set of Params and generates an hcp config and a resource
+// identifier or an error
+func parseConfig(p *Params) (hcpconfig.HCPConfig, *resource.Resource, error) {
+	r, err := resource.FromString(p.ResourceURL)
 	if err != nil {
-		return nil, err
-	}
-	for _, opt := range opts {
-		opt(client)
+		return nil, nil, fmt.Errorf("failed to parse resource_url %w", err)
 	}
 
-	return client, nil
-}
+	if p.ClientID == "" || p.ClientSecret == "" {
+		return nil, nil, errors.New("client credentials are empty")
+	}
 
-// WithClientService sets the provided ClientService on the Client
-//
-//revive:disable:unexported-return
-func WithClientService(cs ClientService) clientOpt {
-	return clientOpt(func(c *Client) {
-		c.ccmClient = cs
-	})
+	hcpconfig, err := hcpconfig.NewHCPConfig(
+		hcpconfig.FromEnv(),
+		hcpconfig.WithClientCredentials(p.ClientID, p.ClientSecret),
+		hcpconfig.WithProfile(&profile.UserProfile{
+			OrganizationID: r.Organization,
+			ProjectID:      r.Project,
+		}),
+	)
+	if err != nil {
+		return nil, nil, errors.New("failed to build hcp config")
+	}
+	return hcpconfig, &r, nil
 }
-
-//revive:enable:unexported-return
 
 // ReloadConfig will retrieve the telemetry configuration from HCP using the initially configured runtime.
 func (c *Client) ReloadConfig() error {
-	metricsCfg, err := getTelemetryConfig(c.ccmClient, c.hcpResource.ID)
+	params := global_network_manager_service.NewAgentTelemetryConfigParams()
+	params.SetClusterID(c.hcpResource.ID)
+	result, err := c.clientService.AgentTelemetryConfig(params, nil)
 	if err != nil {
 		return err
 	}
-	c.metricCfg = &metricsCfg
-	return nil
-}
-
-func getTelemetryConfig(gnm ClientService, clusterID string) (telemetryConfig, error) {
-	params := global_network_manager_service.NewAgentTelemetryConfigParams()
-	params.SetClusterID(clusterID)
-	result, err := gnm.AgentTelemetryConfig(params, nil)
-	if err != nil {
-		return telemetryConfig{}, err
-	}
-
 	endpoint := result.Payload.TelemetryConfig.Endpoint
 	if result.Payload.TelemetryConfig.Metrics.Endpoint != "" {
 		endpoint = result.Payload.TelemetryConfig.Metrics.Endpoint
@@ -122,7 +135,8 @@ func getTelemetryConfig(gnm ClientService, clusterID string) (telemetryConfig, e
 		includeList: result.Payload.TelemetryConfig.Metrics.IncludeList,
 	}
 
-	return metricCfg, nil
+	c.metricCfg = &metricCfg
+	return nil
 }
 
 // MetricsEndpoint returns the metrics endpoint from the TelemetryConfig
