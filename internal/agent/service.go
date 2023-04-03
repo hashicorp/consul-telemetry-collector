@@ -12,71 +12,56 @@ import (
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel"
 )
 
-// Service manages the consul-telemetry-otel. It should be initialized and started by Run
+// Service runs a otel.Collector with a configured otel pipeline
 type Service struct {
-	// ctx is our lifecycle handler for the Service.
-	// All other lifecycle context cancelers should come from this context
+	cfg       otel.CollectorCfg
 	collector otel.Collector
-	hcpClient *hcp.Client
 }
 
-// runSvc will initialize and Start the consul-telemetry-collector Service
-func runSvc(ctx context.Context, cfg *Config) error {
-	logger := hclog.Default()
+// NewService returns a new Service based off the past in configuration
+func NewService(cfg *Config) (*Service, error) {
+	s := &Service{}
+	s.cfg = otel.CollectorCfg{ForwarderEndpoint: cfg.HTTPCollectorEndpoint}
 
-	svc := &Service{}
-
-	var cloud = &Cloud{}
-	if cfg.Cloud.IsEnabled() {
-		// Set up the HCP SDK here
-		logger.Info("Setting up HCP Cloud SDK")
+	if cfg.Cloud != nil && cfg.Cloud.IsEnabled() {
 		hcpClient, err := hcp.New(&hcp.Params{
 			ClientID:     cfg.Cloud.ClientID,
 			ClientSecret: cfg.Cloud.ClientSecret,
 			ResourceURL:  cfg.Cloud.ResourceID,
 		})
 		if err != nil {
-			return fmt.Errorf("failed to create hcp client %w", err)
+			return nil, fmt.Errorf("failed to create hcp client %w", err)
 		}
-		svc.hcpClient = hcpClient
-		cloud = cfg.Cloud
+		s.cfg.ClientID = cfg.Cloud.ClientID
+		s.cfg.ClientSecret = cfg.Cloud.ClientSecret
+		s.cfg.Client = hcpClient
+		s.cfg.ResourceID = cfg.Cloud.ResourceID
 	}
-
-	if cfg.HTTPCollectorEndpoint != "" {
-		logger.Info("Forwarding telemetry to collector", "addr", cfg.HTTPCollectorEndpoint)
-	}
-
-	ctx = hclog.WithContext(ctx, logger)
-
-	collector, err := otel.NewCollector(ctx, cfg.HTTPCollectorEndpoint,
-		otel.WithCloud(cloud.ResourceID, cloud.ClientID, cloud.ClientSecret, svc.hcpClient),
-	)
+	var err error
+	s.collector, err = otel.NewCollector(s.cfg)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
-	svc.collector = collector
-
-	return svc.start(ctx)
+	return s, nil
 }
 
-// Start starts the initialized Service
-func (s *Service) start(ctx context.Context) error {
+// Run will initialize and Start the consul-telemetry-collector Service
+func (s *Service) Run(ctx context.Context) error {
 	logger := hclog.FromContext(ctx)
-	logger.Info("Shutting down service")
-	// We would start the otel collector here
-	childCtx, cancel := context.WithCancel(ctx)
-	go func() {
-		err := s.collector.Run(childCtx)
-		hclog.FromContext(ctx).Error("Failed to run opentelemetry-collector", "error", err)
-		cancel()
-	}()
-	<-childCtx.Done()
-	s.stop()
+
+	go s.handleShutdown(ctx)
+
+	// blocking call
+	err := s.collector.Run(ctx)
+	if err != nil {
+		logger.Error("failed to run opentelemetry-collector", "error", err)
+		return err
+	}
 	return nil
 }
 
-// stop stops a started Service
-func (s *Service) stop() {
+func (s *Service) handleShutdown(ctx context.Context) {
+	<-ctx.Done()
 	s.collector.Shutdown()
 }

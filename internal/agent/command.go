@@ -123,17 +123,10 @@ func (c *Command) Help() string {
 // Run takes in args and runs the collector agent as an OTEL collector
 func (c *Command) Run(args []string) int {
 	logger := hclog.Default().Named("consul-collector")
-	ctx, cancel := context.WithCancel(hclog.WithContext(context.Background(), logger))
-	logger.Info("debugging args", "args", args)
-	sigCh := make(chan os.Signal, 1)
-	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
-
-	go handleSignal(sigCh, cancel)
-
+	ctx := hclog.WithContext(context.Background(), logger)
 	// load the configuration
 	cfg, err := c.loadConfiguration(ctx, args, parseFile)
 	if err != nil {
-		cancel()
 		logger.Error("error loading configuration", "error", err)
 		return -1
 	}
@@ -144,8 +137,21 @@ func (c *Command) Run(args []string) int {
 		return -1
 	}
 
+	service, err := NewService(cfg)
+	if err != nil {
+		logger.Error("error creating service", "error", err)
+		return -1
+	}
+
+	childCtx, cancel := context.WithCancel(ctx)
+	logger.Info("debugging args", "args", args)
+	sigCh := make(chan os.Signal, 1)
+	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGTERM)
+
+	go handleSignal(sigCh, cancel)
+
 	// run the service
-	if err := runSvc(ctx, cfg); err != nil {
+	if err := service.Run(childCtx); err != nil {
 		cancel()
 		logger.Error("error running collector", "error", err)
 		return -1

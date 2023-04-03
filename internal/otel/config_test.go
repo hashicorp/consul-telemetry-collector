@@ -60,8 +60,14 @@ func Test_newConfigProvider(t *testing.T) {
 					MockMetricsEndpoint: "https://hcp-metrics-endpoint",
 				}
 			}
-
-			provider, err := newProvider(tc.forwarder, resourceURL, "cid", "csec", mockClient)
+			c := CollectorCfg{
+				ClientID:          "cid",
+				ClientSecret:      "csec",
+				Client:            mockClient,
+				ResourceID:        resourceURL,
+				ForwarderEndpoint: tc.forwarder,
+			}
+			provider, err := newProvider(c)
 			test.NoError(t, err)
 
 			ctx := context.Background()
