@@ -104,9 +104,14 @@ func Test_New(t *testing.T) {
 			wantErr: true,
 		},
 		"InvalidResource": {
-			cid:     uuid.NewString(),
-			csec:    uuid.NewString(),
-			res:     testResource(),
+			cid:  uuid.NewString(),
+			csec: uuid.NewString(),
+			res: &resource.Resource{
+				ID:           "",
+				Type:         "type",
+				Organization: "",
+				Project:      uuid.NewString(),
+			},
 			wantErr: true,
 		},
 	}
