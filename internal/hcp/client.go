@@ -54,7 +54,7 @@ const sourceChannel = "consul-telemetry"
 // of the agentTelemetryConfigClient to use a mocked version during testing
 type clientFunc func(hcpconfig.HCPConfig) (agentTelemetryConfigClient, error)
 
-// baseClientFunc is the function used to take an HCP config and build a client that satifies
+// baseClientFunc is the function used to take an HCP config and build a client that satisfies
 // the agentTelemetryConfigClient interface
 func baseClientFunc(hcpConfig hcpconfig.HCPConfig) (agentTelemetryConfigClient, error) {
 	runtime, err := httpclient.New(httpclient.Config{
