@@ -50,13 +50,16 @@ type agentTelemetryConfigClient interface {
 
 const sourceChannel = "consul-telemetry"
 
-// clientFunc is used internally to do dependency injection to change the implementation
-// of the agentTelemetryConfigClient to use a mocked version during testing
-type clientFunc func(hcpconfig.HCPConfig) (agentTelemetryConfigClient, error)
-
-// baseClientFunc is the function used to take an HCP config and build a client that satisfies
-// the agentTelemetryConfigClient interface
-func baseClientFunc(hcpConfig hcpconfig.HCPConfig) (agentTelemetryConfigClient, error) {
+// New creates a new telemetry client for the provided resource using the credentials.
+func New(p *Params) (*Client, error) {
+	r, err := parseResource(p.ResourceURL)
+	if err != nil {
+		return nil, err
+	}
+	hcpConfig, err := parseConfig(p, r)
+	if err != nil {
+		return nil, err
+	}
 	runtime, err := httpclient.New(httpclient.Config{
 		HCPConfig:     hcpConfig,
 		SourceChannel: sourceChannel,
@@ -64,25 +67,18 @@ func baseClientFunc(hcpConfig hcpconfig.HCPConfig) (agentTelemetryConfigClient, 
 	if err != nil {
 		return nil, err
 	}
-	return global_network_manager_service.New(runtime, nil), nil
+	ccMClient, err := global_network_manager_service.New(runtime, nil), nil
+	if err != nil {
+		return nil, err
+	}
+	return newClient(p, ccMClient)
 }
 
-// New creates a new telemetry client for the provided resource using the credentials.
-func New(p *Params) (*Client, error) {
-	return newClient(p, baseClientFunc)
-}
-
-// newClient is an internal implementation that takes a clientFn to do dependency injection.
-func newClient(p *Params, clientFn clientFunc) (*Client, error) {
-
-	hcpConfig, r, err := parseConfig(p)
+// newClient is an internal implementation that takes a clientFn to do deped
+func newClient(p *Params, gnmClient agentTelemetryConfigClient) (*Client, error) {
+	r, err := parseResource(p.ResourceURL)
 	if err != nil {
 		return nil, fmt.Errorf("failed to parse resource_url %w", err)
-	}
-
-	gnmClient, err := clientFn(hcpConfig)
-	if err != nil {
-		return nil, fmt.Errorf("failed to build client %w", err)
 	}
 
 	return &Client{
@@ -91,16 +87,18 @@ func newClient(p *Params, clientFn clientFunc) (*Client, error) {
 	}, nil
 }
 
-// parseConfig takes in a set of Params and generates an hcp config and a resource
-// identifier or an error
-func parseConfig(p *Params) (hcpconfig.HCPConfig, *resource.Resource, error) {
-	r, err := resource.FromString(p.ResourceURL)
+func parseResource(res string) (*resource.Resource, error) {
+	r, err := resource.FromString(res)
 	if err != nil {
-		return nil, nil, fmt.Errorf("failed to parse resource_url %w", err)
+		return nil, fmt.Errorf("failed to parse resource_url %w", err)
 	}
 
+	return &r, nil
+}
+
+func parseConfig(p *Params, r *resource.Resource) (hcpconfig.HCPConfig, error) {
 	if p.ClientID == "" || p.ClientSecret == "" {
-		return nil, nil, errors.New("client credentials are empty")
+		return nil, errors.New("client credentials are empty")
 	}
 
 	hcpconfig, err := hcpconfig.NewHCPConfig(
@@ -112,9 +110,9 @@ func parseConfig(p *Params) (hcpconfig.HCPConfig, *resource.Resource, error) {
 		}),
 	)
 	if err != nil {
-		return nil, nil, errors.New("failed to build hcp config")
+		return nil, errors.New("failed to build hcp config")
 	}
-	return hcpconfig, &r, nil
+	return hcpconfig, nil
 }
 
 // ReloadConfig will retrieve the telemetry configuration from HCP using the initially configured runtime.
