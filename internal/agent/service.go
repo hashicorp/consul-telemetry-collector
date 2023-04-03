@@ -24,7 +24,11 @@ func NewService(cfg *Config) (*Service, error) {
 	s.cfg = otel.CollectorCfg{ForwarderEndpoint: cfg.HTTPCollectorEndpoint}
 
 	if cfg.Cloud != nil && cfg.Cloud.IsEnabled() {
-		hcpClient, err := hcp.New(cfg.Cloud.ClientID, cfg.Cloud.ClientSecret, cfg.Cloud.ResourceID)
+		hcpClient, err := hcp.New(&hcp.Params{
+			ClientID:     cfg.Cloud.ClientID,
+			ClientSecret: cfg.Cloud.ClientSecret,
+			ResourceURL:  cfg.Cloud.ResourceID,
+		})
 		if err != nil {
 			return nil, fmt.Errorf("failed to create hcp client %w", err)
 		}

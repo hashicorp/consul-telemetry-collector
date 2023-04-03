@@ -1,9 +1,10 @@
 package hcp
 
 import (
+	"errors"
 	"testing"
 
-	"github.com/go-openapi/errors"
+	oErrors "github.com/go-openapi/errors"
 	"github.com/google/uuid"
 	"github.com/shoenig/test/must"
 
@@ -12,49 +13,100 @@ import (
 	"github.com/hashicorp/hcp-sdk-go/resource"
 )
 
+func testResource() *resource.Resource {
+	return &resource.Resource{
+		ID:           uuid.NewString(),
+		Type:         "type",
+		Organization: uuid.NewString(),
+		Project:      uuid.NewString(),
+	}
+}
+
+func Test_ParseResource(t *testing.T) {
+	for testname, tc := range map[string]struct {
+		resourceString string
+		expectedError  error
+	}{
+		"success": {resourceString: testResource().String()},
+		"invalidURL": {
+			resourceString: "foobar",
+			expectedError:  errors.New("failed to parse resource_url could not parse resource: unexpected number of tokens 1"),
+		},
+	} {
+		t.Run(testname, func(t *testing.T) {
+			res, err := parseResource(tc.resourceString)
+			if tc.expectedError != nil {
+				must.Error(t, err)
+				must.EqError(t, err, tc.expectedError.Error())
+				return
+			}
+			must.NoError(t, err)
+			must.NotNil(t, res)
+
+		})
+	}
+}
+
+func Test_ParseConfig(t *testing.T) {
+	for testname, tc := range map[string]struct {
+		p             *Params
+		expectedError error
+	}{
+		"success": {p: &Params{uuid.NewString(), uuid.NewString(), testResource().String()}},
+		"emptyclientid": {
+			p:             &Params{"", uuid.NewString(), testResource().String()},
+			expectedError: errors.New("client credentials are empty"),
+		},
+		"emptyclientsec": {
+			p:             &Params{uuid.NewString(), "", testResource().String()},
+			expectedError: errors.New("client credentials are empty"),
+		},
+	} {
+		t.Run(testname, func(t *testing.T) {
+			res, err := parseResource(tc.p.ResourceURL)
+			must.NoError(t, err)
+			config, err := parseConfig(tc.p, res)
+
+			if tc.expectedError != nil {
+				must.Error(t, err)
+				must.EqError(t, err, tc.expectedError.Error())
+				return
+			}
+			must.NoError(t, err)
+			must.NotNil(t, config)
+
+		})
+	}
+}
+
 func Test_New(t *testing.T) {
 	testcases := map[string]struct {
 		cid     string
 		csec    string
-		res     resource.Resource
+		res     *resource.Resource
 		wantErr bool
 	}{
 		"Good": {
 			cid:  uuid.NewString(),
 			csec: uuid.NewString(),
-			res: resource.Resource{
-				ID:           uuid.NewString(),
-				Type:         "type",
-				Organization: uuid.NewString(),
-				Project:      uuid.NewString(),
-			},
+			res:  testResource(),
 		},
 		"NoClientID": {
-			cid:  "",
-			csec: uuid.NewString(),
-			res: resource.Resource{
-				ID:           uuid.NewString(),
-				Type:         "type",
-				Organization: uuid.NewString(),
-				Project:      uuid.NewString(),
-			},
+			cid:     "",
+			csec:    uuid.NewString(),
+			res:     testResource(),
 			wantErr: true,
 		},
 		"NoClientSecret": {
-			cid:  uuid.NewString(),
-			csec: "",
-			res: resource.Resource{
-				ID:           uuid.NewString(),
-				Type:         "type",
-				Organization: uuid.NewString(),
-				Project:      uuid.NewString(),
-			},
+			cid:     uuid.NewString(),
+			csec:    "",
+			res:     testResource(),
 			wantErr: true,
 		},
 		"InvalidResource": {
 			cid:  uuid.NewString(),
 			csec: uuid.NewString(),
-			res: resource.Resource{
+			res: &resource.Resource{
 				ID:           "",
 				Type:         "type",
 				Organization: "",
@@ -65,7 +117,7 @@ func Test_New(t *testing.T) {
 	}
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
-			_, err := New(tc.cid, tc.csec, tc.res.String())
+			_, err := New(&Params{tc.cid, tc.csec, tc.res.String()})
 			if tc.wantErr {
 				must.Error(t, err)
 				return
@@ -120,7 +172,7 @@ func TestLoadConfig(t *testing.T) {
 		},
 		"BadResponse": {
 			r:   resource.Resource{},
-			err: errors.New(500, "failed"),
+			err: oErrors.New(500, "failed"),
 		},
 	}
 
@@ -130,9 +182,10 @@ func TestLoadConfig(t *testing.T) {
 				MockResponse: tc.resp,
 				Err:          tc.err,
 			}
+			p := &Params{uuid.NewString(), uuid.NewString(), tc.r.String()}
 
-			client, err := NewWithDeps(uuid.NewString(), uuid.NewString(), tc.r.String(),
-				WithClientService(clientServiceM))
+			client, err := newClient(p, clientServiceM)
+
 			must.NoError(t, err)
 
 			err = client.ReloadConfig()
