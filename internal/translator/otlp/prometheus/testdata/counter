@@ -1,0 +1,38 @@
+[
+  {
+    "name": "cluster.update_attempt",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_rx_bytes_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 85447
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  }
+]
