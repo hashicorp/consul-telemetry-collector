@@ -4,48 +4,32 @@ import (
 	"time"
 
 	_go "github.com/prometheus/client_model/go"
+	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/pmetric"
 )
 
-// otlp type
-type sum struct {
-	name        string
-	help        string
-	isMonotonic bool
-	value       []counter
-	timestamp   time.Time
-}
+func (b *Builder) AddCounter(family *_go.MetricFamily) {
+	// s := sum{}
+	otlpMetric := pmetric.NewMetric()
 
-// underlying metric type from prom
-type counter struct {
-	label map[string]string
-	value float64
-}
-
-func (b *Builder) Counter(family *_go.MetricFamily) {
-	s := sum{}
-	s.name = family.GetName()
-	s.help = family.GetHelp()
-	var firstTimestampMs int64
+	otlpMetric.SetName(family.GetName())
+	otlpMetric.SetDescription(family.GetHelp())
+	emptySum := otlpMetric.SetEmptySum()
+	emptySum.SetIsMonotonic(true)
 	for _, metric := range family.GetMetric() {
-		if *metric.TimestampMs < firstTimestampMs {
-			firstTimestampMs = *metric.TimestampMs
-		}
-
-		c := counter{
-			label: map[string]string{},
-			value: metric.GetCounter().GetValue(),
-		}
+		dp := emptySum.DataPoints().AppendEmpty()
 
 		for _, labelPair := range metric.GetLabel() {
-			c.label[labelPair.GetName()] = labelPair.GetValue()
+			dp.Attributes().PutStr(labelPair.GetName(), labelPair.GetValue())
 		}
 
-		s.value = append(s.value, c)
+		t := time.Unix(0, metric.GetTimestampMs()*int64(time.Millisecond))
+		dp.SetTimestamp(pcommon.NewTimestampFromTime(t))
+
+		dp.SetDoubleValue(metric.GetCounter().GetValue())
 	}
 
-	s.timestamp = time.Unix(0, firstTimestampMs*int64(time.Millisecond))
-	b.sums = append(b.sums, s)
+	b.metrics = append(b.metrics, otlpMetric)
 }
 
 func NewCounter(family _go.MetricFamily) pmetric.Metric {

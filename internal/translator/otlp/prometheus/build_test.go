@@ -26,7 +26,7 @@ func TestBuilder_Counter(t *testing.T) {
 
 	b := NewBuilder(labels)
 	for _, counter := range counters {
-		b.Counter(counter)
+		b.AddCounter(counter)
 	}
 
 	md := b.Build()

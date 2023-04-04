@@ -74,7 +74,7 @@ func translateMetrics(resourceLabels map[string]string, envoyMetrics []*_go.Metr
 	for _, metric := range envoyMetrics {
 		switch metric.GetType() {
 		case _go.MetricType_COUNTER:
-			b.Counter(metric)
+			b.AddCounter(metric)
 		}
 	}
 
