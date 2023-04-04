@@ -46,15 +46,7 @@ func (b *Builder) Build() pmetric.Metrics {
 
 	// }
 
-	metricsDefintion := pmetric.NewMetrics()
-	// TODO leave link describing wtf scoped metrics are
-	resourceMetrics := metricsDefintion.ResourceMetrics().AppendEmpty()
-	b.identity.MoveTo(resourceMetrics.Resource())
-	scopedMetrics := resourceMetrics.ScopeMetrics().AppendEmpty()
-	// append(md.ResourceMetrics().AppendEmpty().ScopeMetrics().AppendEmpty(), metrics)
-	b.metricsRef.CopyTo(scopedMetrics.Metrics())
-
-	return metricsDefintion
+	return generateMetricsDefinition(b.identity, metrics)
 }
 
 func appendSum(metric pmetric.Metric, s sum) {
@@ -70,4 +62,22 @@ func appendSum(metric pmetric.Metric, s sum) {
 			dp.Attributes().PutStr(k, v)
 		}
 	}
+}
+
+func generateMetricsDefinition(resourceLabels pcommon.Resource, metricsRef pmetric.MetricSlice) pmetric.Metrics {
+	// create the new top level metrics container
+	metricsDefintion := pmetric.NewMetrics()
+
+	// create a new resource metrics container
+	resourceMetrics := metricsDefintion.ResourceMetrics().AppendEmpty()
+
+	// copy our identity labels onto the resource metrics
+	resourceLabels.CopyTo(resourceMetrics.Resource())
+
+	// TODO leave link describing wtf scoped metrics are
+	scopedMetrics := resourceMetrics.ScopeMetrics().AppendEmpty()
+
+	// copy our metrics reference into the scope metrics
+	metricsRef.CopyTo(scopedMetrics.Metrics())
+	return metricsDefintion
 }
