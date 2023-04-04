@@ -5,12 +5,17 @@ import (
 	"errors"
 	"fmt"
 	"net"
+	"os"
 	"testing"
 
+	"github.com/davecgh/go-spew/spew"
+	corev3 "github.com/envoyproxy/go-control-plane/envoy/config/core/v3"
 	metricsv3 "github.com/envoyproxy/go-control-plane/envoy/service/metrics/v3"
+	"github.com/google/uuid"
 	io_prometheus_client "github.com/prometheus/client_model/go"
 	"github.com/shoenig/test/must"
 	"github.com/shoenig/test/portal"
+	"github.com/xhhuango/json"
 	"go.opentelemetry.io/collector/consumer/consumertest"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
@@ -52,13 +57,46 @@ func TestReceiver_StreamMetrics(t *testing.T) {
 	stream, err := client.StreamMetrics(context.Background())
 	must.NoError(t, err)
 
+	b, err := os.ReadFile("testdata/metric.source.1.golden")
+	must.NoError(t, err)
+	envoyMetrics := make([]*io_prometheus_client.MetricFamily, 0)
+	must.NoError(t, json.Unmarshal(b, &envoyMetrics))
+
+	// spew.Dump(envoyMetrics)
+
 	err = stream.Send(&metricsv3.StreamMetricsMessage{
-		Identifier:   &metricsv3.StreamMetricsMessage_Identifier{},
-		EnvoyMetrics: []*io_prometheus_client.MetricFamily{},
+		Identifier: &metricsv3.StreamMetricsMessage_Identifier{
+			Node: &corev3.Node{
+				Id:                   uuid.NewString(),
+				Cluster:              "",
+				Metadata:             nil,
+				DynamicParameters:    nil,
+				Locality:             nil,
+				UserAgentName:        "",
+				UserAgentVersionType: nil,
+				Extensions:           nil,
+				ClientFeatures:       nil,
+			},
+		},
+		EnvoyMetrics: envoyMetrics,
 	})
 
 	must.NoError(t, err)
+	stream.CloseSend()
 	s.GracefulStop()
 	// This will check the error from the grpc.Serve
 	must.NoError(t, <-errCh)
+
+	// We should have 1 resource metric
+	must.Len(t, 1, metricSink.AllMetrics())
+	must.Eq(t, 1, metricSink.AllMetrics()[0].ResourceMetrics().Len())
+	must.Eq(t, 1, metricSink.AllMetrics()[0].ResourceMetrics().At(0).ScopeMetrics().Len())
+
+	scopeMetrics := metricSink.AllMetrics()[0].ResourceMetrics().At(0).ScopeMetrics()
+
+	for i := 0; i < scopeMetrics.At(0).Metrics().Len(); i++ {
+		metrics := scopeMetrics.At(0).Metrics().At(i)
+		spew.Dump(metrics)
+	}
+
 }
