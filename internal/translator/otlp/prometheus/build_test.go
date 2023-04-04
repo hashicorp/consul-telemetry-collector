@@ -28,5 +28,8 @@ func TestBuilder_Counter(t *testing.T) {
 		b.Counter(counter)
 	}
 
-	b.Build()
+	md := b.Build()
+	must.Length(t, 1, md.ResourceMetrics())
+	must.Length(t, 1, md.ResourceMetrics().At(0).ScopeMetrics())
+	must.Length(t, 2, md.ResourceMetrics().At(0).ScopeMetrics().At(0).Metrics())
 }

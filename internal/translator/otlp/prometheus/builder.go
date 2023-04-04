@@ -39,21 +39,7 @@ func (b *Builder) Build() pmetric.Metrics {
 	metrics := b.metricsRef
 
 	for _, s := range b.sums {
-		// appendSum(metrics.AppendEmpty(), b.sums[i])
-		// s := b.sums[i]
-		metric := metrics.AppendEmpty()
-		metric.SetName(s.name)
-		metric.SetDescription(s.help)
-
-		dpSlice := metric.SetEmptySum().DataPoints()
-		for _, v := range s.value {
-			dp := dpSlice.AppendEmpty()
-			dp.SetDoubleValue(v.value)
-			dp.SetTimestamp(pcommon.NewTimestampFromTime(s.timestamp))
-			for k, v := range v.label {
-				dp.Attributes().PutStr(k, v)
-			}
-		}
+		appendSum(metrics.AppendEmpty(), s)
 	}
 
 	// for _, histogram := range b.histograms {
