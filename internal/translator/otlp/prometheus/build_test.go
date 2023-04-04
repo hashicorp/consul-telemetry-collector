@@ -8,6 +8,7 @@ import (
 	"github.com/google/uuid"
 	_go "github.com/prometheus/client_model/go"
 	"github.com/shoenig/test/must"
+	"go.opentelemetry.io/collector/pdata/pcommon"
 )
 
 func TestBuilder_Counter(t *testing.T) {
@@ -29,7 +30,20 @@ func TestBuilder_Counter(t *testing.T) {
 	}
 
 	md := b.Build()
+
 	must.Length(t, 1, md.ResourceMetrics())
+	for k, v := range labels {
+		val, ok := md.ResourceMetrics().At(0).Resource().Attributes().Get(k)
+		must.True(t, ok)
+		must.Eq(t, v, val.AsString())
+	}
+	md.ResourceMetrics().At(0).Resource().Attributes().Range(func(k string, v pcommon.Value) bool {
+		val, ok := labels[k]
+		must.True(t, ok)
+		must.Eq(t, v.AsString(), val)
+		return true
+	})
+
 	must.Length(t, 1, md.ResourceMetrics().At(0).ScopeMetrics())
 	must.Length(t, 2, md.ResourceMetrics().At(0).ScopeMetrics().At(0).Metrics())
 }

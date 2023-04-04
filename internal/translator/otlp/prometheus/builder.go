@@ -48,7 +48,9 @@ func (b *Builder) Build() pmetric.Metrics {
 
 	metricsDefintion := pmetric.NewMetrics()
 	// TODO leave link describing wtf scoped metrics are
-	scopedMetrics := metricsDefintion.ResourceMetrics().AppendEmpty().ScopeMetrics().AppendEmpty()
+	resourceMetrics := metricsDefintion.ResourceMetrics().AppendEmpty()
+	b.identity.MoveTo(resourceMetrics.Resource())
+	scopedMetrics := resourceMetrics.ScopeMetrics().AppendEmpty()
 	// append(md.ResourceMetrics().AppendEmpty().ScopeMetrics().AppendEmpty(), metrics)
 	b.metricsRef.CopyTo(scopedMetrics.Metrics())
 
