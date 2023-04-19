@@ -9,9 +9,25 @@ import (
 	_go "github.com/prometheus/client_model/go"
 	"github.com/shoenig/test/must"
 	"go.opentelemetry.io/collector/pdata/pcommon"
+	"go.opentelemetry.io/collector/pdata/pmetric"
 )
 
 func TestBuilder_Counter(t *testing.T) {
+	type testcounter struct {
+		name string
+		val  float64
+	}
+
+	goldenCounters := []testcounter{
+		{
+			name: "cluster.upstream_cx_rx_bytes",
+			val:  85447,
+		},
+		{
+			name: "cluster.update_attempt",
+			val:  4,
+		},
+	}
 	f := "testdata/counter"
 	labels := map[string]string{
 		"name":    uuid.NewString(),
@@ -45,5 +61,47 @@ func TestBuilder_Counter(t *testing.T) {
 	})
 
 	must.Length(t, 1, md.ResourceMetrics().At(0).ScopeMetrics())
-	must.Length(t, 2, md.ResourceMetrics().At(0).ScopeMetrics().At(0).Metrics())
+	metricSlice := md.ResourceMetrics().At(0).ScopeMetrics().At(0).Metrics()
+	must.Length(t, 2, metricSlice)
+
+	for i := 0; i < metricSlice.Len(); i++ {
+		metric := metricSlice.At(0)
+		must.Eq(t, pmetric.MetricTypeSum, metric.Type())
+		must.True(t, metric.Sum().IsMonotonic())
+	}
+
+	for _, counter := range goldenCounters {
+		must.Contains[string](t, counter.name, ContainsMetricName(metricSlice))
+		val := lookup(metricSlice, counter.name)
+		must.Eq(t, counter.val, val)
+	}
+}
+
+type ContainsFunc[T any] func(T) bool
+
+func (c ContainsFunc[T]) Contains(v T) bool {
+	return (c)(v)
+}
+
+func ContainsMetricName(slice pmetric.MetricSlice) ContainsFunc[string] {
+	return func(v string) bool {
+		for i := 0; i < slice.Len(); i++ {
+			metric := slice.At(i)
+			if metric.Name() == v {
+				return true
+			}
+		}
+		return false
+	}
+}
+
+func lookup(metric pmetric.MetricSlice, name string) float64 {
+	for i := 0; i < metric.Len(); i++ {
+		m := metric.At(i)
+		if m.Name() == name {
+			dp := m.Sum().DataPoints().At(0).DoubleValue()
+			return dp
+		}
+	}
+	return 0
 }
