@@ -1,0 +1,32 @@
+[
+    {
+    "name": "http.downstream_rq_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "gauge": {
+          "value": 0
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "listener_manager.total_listeners_active",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 1
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  }
+]
