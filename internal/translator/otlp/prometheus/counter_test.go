@@ -72,7 +72,7 @@ func TestBuilder_Counter(t *testing.T) {
 
 	for _, counter := range goldenCounters {
 		must.Contains[string](t, counter.name, ContainsMetricName(metricSlice))
-		val := lookup(metricSlice, counter.name)
+		val := lookupSum(metricSlice, counter.name)
 		must.Eq(t, counter.val, val)
 	}
 }
@@ -95,7 +95,7 @@ func ContainsMetricName(slice pmetric.MetricSlice) ContainsFunc[string] {
 	}
 }
 
-func lookup(metric pmetric.MetricSlice, name string) float64 {
+func lookupSum(metric pmetric.MetricSlice, name string) float64 {
 	for i := 0; i < metric.Len(); i++ {
 		m := metric.At(i)
 		if m.Name() == name {
