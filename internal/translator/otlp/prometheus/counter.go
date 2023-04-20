@@ -13,6 +13,7 @@ func (b *Builder) AddCounter(family *_go.MetricFamily) {
 	otlpMetric.SetDescription(family.GetHelp())
 	emptySum := otlpMetric.SetEmptySum()
 	emptySum.SetIsMonotonic(true)
+	emptySum.SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
 	for _, metric := range family.GetMetric() {
 		dp := emptySum.DataPoints().AppendEmpty()
 
