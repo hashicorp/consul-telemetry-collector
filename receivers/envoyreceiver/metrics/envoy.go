@@ -69,12 +69,15 @@ func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsSe
 }
 
 func translateMetrics(resourceLabels map[string]string, envoyMetrics []*_go.MetricFamily) pmetric.Metrics {
-	//TODO: use the label provided in
 	b := prometheus.NewBuilder(resourceLabels)
 	for _, metric := range envoyMetrics {
 		switch metric.GetType() {
 		case _go.MetricType_COUNTER:
 			b.AddCounter(metric)
+		case _go.MetricType_GAUGE:
+			b.AddGauge(metric)
+		case _go.MetricType_HISTOGRAM:
+			b.AddHistogram(metric)
 		}
 	}
 
