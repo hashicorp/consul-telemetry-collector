@@ -40,6 +40,7 @@ func (r *Receiver) Register(g *grpc.Server) {
 func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsServer) error {
 
 	var identifier *metricsv3.StreamMetricsMessage_Identifier
+	var labels map[string]string
 	for {
 		metricsMessage, err := stream.Recv()
 		if err != nil {
@@ -55,11 +56,16 @@ func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsSe
 
 		if identifier == nil {
 			identifier = metricsMessage.GetIdentifier()
+
+			labels = map[string]string{
+				"envoy.cluster": identifier.GetNode().GetCluster(),
+				"envoy.id":      identifier.GetNode().GetId(),
+				"__cluster__":   identifier.GetNode().GetId(),
+			}
 		}
 
 		metrics := metricsMessage.GetEnvoyMetrics()
-		// TODO: what are our resource labels from the identifier
-		labels := map[string]string{}
+
 		otlpMetrics := translateMetrics(labels, metrics)
 		err = r.nextConsumer.ConsumeMetrics(stream.Context(), otlpMetrics)
 		if err != nil {
