@@ -179,3 +179,15 @@ func lookupHistogram(metric pmetric.MetricSlice, name string) pmetric.HistogramD
 	}
 	return pmetric.HistogramDataPoint{}
 }
+
+func ContainsMetricName(slice pmetric.MetricSlice) ContainsFunc[string] {
+	return func(v string) bool {
+		for i := 0; i < slice.Len(); i++ {
+			metric := slice.At(i)
+			if metric.Name() == v {
+				return true
+			}
+		}
+		return false
+	}
+}

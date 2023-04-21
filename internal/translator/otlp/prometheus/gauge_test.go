@@ -3,6 +3,7 @@ package prometheus
 import (
 	"encoding/json"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/google/uuid"
@@ -13,36 +14,25 @@ import (
 )
 
 func TestBuilder_Gauge(t *testing.T) {
-	type testmetric struct {
-		name string
-		val  float64
-	}
-
-	goldenCounters := []testmetric{
-		{
-			name: "http.downstream_rq_active",
-			val:  0,
-		},
-		{
-			name: "listener_manager.total_listeners_active",
-			val:  1,
-		},
-	}
+	goldenBytes, err := os.ReadFile("testdata/gauge.golden")
+	must.NoError(t, err)
+	goldenGauges, err := new(pmetric.JSONUnmarshaler).UnmarshalMetrics(goldenBytes)
+	must.NoError(t, err)
 	f := "testdata/gauge"
+	bytes, err := os.ReadFile(f)
+	must.NoError(t, err)
+
 	labels := map[string]string{
 		"name":    uuid.NewString(),
 		"cluster": uuid.NewString(),
 	}
 
-	bytes, err := os.ReadFile(f)
-	must.NoError(t, err)
-
-	counters := make([]*_go.MetricFamily, 0)
-	must.NoError(t, json.Unmarshal(bytes, &counters))
+	promGauges := make([]*_go.MetricFamily, 0)
+	must.NoError(t, json.Unmarshal(bytes, &promGauges))
 
 	b := NewBuilder(labels)
-	for _, counter := range counters {
-		b.AddGauge(counter)
+	for _, gauge := range promGauges {
+		b.AddGauge(gauge)
 	}
 
 	md := b.Build()
@@ -62,7 +52,7 @@ func TestBuilder_Gauge(t *testing.T) {
 
 	must.Length(t, 1, md.ResourceMetrics().At(0).ScopeMetrics())
 	metricSlice := md.ResourceMetrics().At(0).ScopeMetrics().At(0).Metrics()
-	must.Length(t, 2, metricSlice)
+	must.Length(t, 3, metricSlice)
 
 	for i := 0; i < metricSlice.Len(); i++ {
 		metric := metricSlice.At(0)
@@ -70,20 +60,35 @@ func TestBuilder_Gauge(t *testing.T) {
 			pmetric.MetricTypeGauge.String(), metric.Type().String()))
 	}
 
-	for _, counter := range goldenCounters {
-		must.Contains[string](t, counter.name, ContainsMetricName(metricSlice))
-		val := lookupGauge(metricSlice, counter.name)
-		must.Eq(t, counter.val, val)
+	goldenGaugeSlice := goldenGauges.ResourceMetrics().At(0).ScopeMetrics().At(0).Metrics()
+
+	goldenTestGauge := flattenGauge(goldenGaugeSlice)
+	gauges := flattenGauge(metricSlice)
+
+	for _, ct := range gauges {
+		must.Contains[testmetric](t, ct, ContainsTestMetric(goldenTestGauge), must.Sprintf("metric %s not found",
+			ct.name))
 	}
 }
 
-func lookupGauge(metric pmetric.MetricSlice, name string) float64 {
-	for i := 0; i < metric.Len(); i++ {
-		m := metric.At(i)
-		if m.Name() == name {
-			dp := m.Gauge().DataPoints().At(0).DoubleValue()
-			return dp
+func flattenGauge(ms pmetric.MetricSlice) []testmetric {
+	gauges := make([]testmetric, 0)
+	for i := 0; i < ms.Len(); i++ {
+		metric := ms.At(i)
+		for j := 0; j < metric.Gauge().DataPoints().Len(); j++ {
+			dp := metric.Gauge().DataPoints().At(j)
+			attrs := map[string]string{}
+			dp.Attributes().Range(func(k string, v pcommon.Value) bool {
+				k = strings.ReplaceAll(k, ".", "_")
+				attrs[k] = v.Str()
+				return true
+			})
+			gauges = append(gauges, testmetric{
+				name:       strings.ReplaceAll(metric.Name(), ".", "_"),
+				val:        dp.DoubleValue(),
+				attributes: attrs,
+			})
 		}
 	}
-	return 0
+	return gauges
 }

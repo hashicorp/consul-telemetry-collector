@@ -3,6 +3,7 @@ package prometheus
 import (
 	"encoding/json"
 	"os"
+	"strings"
 	"testing"
 
 	"github.com/google/uuid"
@@ -12,7 +13,7 @@ import (
 	"go.opentelemetry.io/collector/pdata/pmetric"
 )
 
-type testcounter struct {
+type testmetric struct {
 	name       string
 	val        float64
 	attributes map[string]string
@@ -60,7 +61,7 @@ func TestBuilder_Counter(t *testing.T) {
 	must.Length(t, 4, metricSlice)
 	must.Eq(t, 4, goldenMetrics.DataPointCount())
 	goldenMetricSlice := goldenMetrics.ResourceMetrics().At(0).ScopeMetrics().At(0).Metrics()
-	_ = goldenMetricSlice
+
 	for i := 0; i < metricSlice.Len(); i++ {
 		metric := metricSlice.At(0)
 		must.Eq(t, pmetric.MetricTypeSum, metric.Type())
@@ -71,7 +72,8 @@ func TestBuilder_Counter(t *testing.T) {
 	counters := flattenCounter(metricSlice)
 
 	for _, ct := range counters {
-		must.Contains[testcounter](t, ct, ContainsTestCounter(goldenCounters))
+		must.Contains[testmetric](t, ct, ContainsTestMetric(goldenCounters), must.Sprintf("does not contain %v",
+			ct))
 	}
 }
 
@@ -81,9 +83,9 @@ func (c ContainsFunc[T]) Contains(v T) bool {
 	return (c)(v)
 }
 
-func ContainsTestCounter(counters []testcounter) ContainsFunc[testcounter] {
-	return func(t testcounter) bool {
-		for _, counter := range counters {
+func ContainsTestMetric(metric []testmetric) ContainsFunc[testmetric] {
+	return func(t testmetric) bool {
+		for _, counter := range metric {
 			if counter.name == t.name && counter.val == t.val && len(counter.attributes) == len(t.attributes) {
 				for k, v := range counter.attributes {
 					val, ok := t.attributes[k]
@@ -101,19 +103,20 @@ func ContainsTestCounter(counters []testcounter) ContainsFunc[testcounter] {
 	}
 }
 
-func flattenCounter(ms pmetric.MetricSlice) []testcounter {
-	counters := make([]testcounter, 0)
+func flattenCounter(ms pmetric.MetricSlice) []testmetric {
+	counters := make([]testmetric, 0)
 	for i := 0; i < ms.Len(); i++ {
 		metric := ms.At(i)
 		for j := 0; j < metric.Sum().DataPoints().Len(); j++ {
 			dp := metric.Sum().DataPoints().At(j)
 			attrs := map[string]string{}
 			dp.Attributes().Range(func(k string, v pcommon.Value) bool {
+				k = strings.ReplaceAll(k, ".", "_")
 				attrs[k] = v.Str()
 				return true
 			})
-			counters = append(counters, testcounter{
-				name:       metric.Name(),
+			counters = append(counters, testmetric{
+				name:       strings.ReplaceAll(metric.Name(), ".", "_"),
 				val:        dp.DoubleValue(),
 				attributes: attrs,
 			})

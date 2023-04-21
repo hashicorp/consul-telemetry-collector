@@ -15,12 +15,12 @@ func (b *Builder) AddHistogram(family *_go.MetricFamily) {
 	otlpMetric.SetDescription(family.GetHelp())
 
 	emptyHistogram := otlpMetric.SetEmptyHistogram()
-	emptyHistogram.SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
+	emptyHistogram.SetAggregationTemporality(pmetric.AggregationTemporalityDelta)
 	for _, metric := range family.GetMetric() {
 
 		histogram := metric.GetHistogram()
 
-		if isValidHistogram(histogram) {
+		if !isValidHistogram(histogram) {
 			continue
 		}
 
