@@ -1,32 +1,50 @@
 [
-    {
-    "name": "http.downstream_rq_active",
+  {
+    "name": "cluster.upstream_cx_active",
     "type": 1,
     "metric": [
       {
         "label": [
           {
-            "name": "envoy.http_conn_manager_prefix",
-            "value": "admin"
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
           }
         ],
         "gauge": {
-          "value": 0
+          "value": 9
         },
-        "timestamp_ms": 1679521971954
+        "timestamp_ms": 1682099630190
       }
     ]
   },
+    {
+      "name": "cluster.upstream_cx_active",
+      "type": 1,
+      "metric": [
+        {
+          "label": [
+            {
+              "name": "envoy.cluster_name",
+              "value": "metrics_cluster"
+            }
+          ],
+          "gauge": {
+            "value": 1
+          },
+          "timestamp_ms": 1682099630190
+        }
+      ]
+    },
   {
-    "name": "listener_manager.total_listeners_active",
+    "name": "server.stats_recent_lookups",
     "type": 1,
     "metric": [
       {
         "gauge": {
-          "value": 1
+          "value": 2541
         },
-        "timestamp_ms": 1679521971954
+        "timestamp_ms": 1682099630190
       }
     ]
-  }
+  },
 ]

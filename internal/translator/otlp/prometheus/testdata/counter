@@ -1,24 +1,24 @@
 [
   {
-    "name": "cluster.update_attempt",
+    "name": "cluster.upstream_cx_destroy",
     "type": 0,
     "metric": [
       {
         "label": [
           {
             "name": "envoy.cluster_name",
-            "value": "service_envoyproxy_io"
+            "value": "metrics_cluster"
           }
         ],
         "counter": {
           "value": 4
         },
-        "timestamp_ms": 1679521971954
+        "timestamp_ms": 1682099630190
       }
     ]
   },
   {
-    "name": "cluster.upstream_cx_rx_bytes_total",
+    "name": "cluster.upstream_cx_destroy",
     "type": 0,
     "metric": [
       {
@@ -29,9 +29,45 @@
           }
         ],
         "counter": {
-          "value": 85447
+          "value": 23
         },
-        "timestamp_ms": 1679521971954
+        "timestamp_ms": 1682099630190
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 3
+        },
+        "timestamp_ms": 1682099630190
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_rq_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 43
+        },
+        "timestamp_ms": 1682099630190
       }
     ]
   }

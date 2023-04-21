@@ -1,0 +1,57 @@
+{
+  "resourceMetrics": [
+    {
+      "resource": {},
+      "scopeMetrics": [
+        {
+          "scope": {},
+          "metrics": [
+            {
+              "name": "envoy_cluster_upstream_cx_active",
+              "gauge": {
+                "dataPoints": [
+                  {
+                    "attributes": [
+                      {
+                        "key": "envoy_cluster_name",
+                        "value": {
+                          "stringValue": "metrics_cluster"
+                        }
+                      }
+                    ],
+                    "timeUnixNano": "1682099630856000000",
+                    "asDouble": 1
+                  },
+                  {
+                    "attributes": [
+                      {
+                        "key": "envoy_cluster_name",
+                        "value": {
+                          "stringValue": "service_envoyproxy_io"
+                        }
+                      }
+                    ],
+                    "timeUnixNano": "1682099630856000000",
+                    "asDouble": 9
+                  }
+                ]
+              }
+            },
+            {
+              "name": "envoy_server_stats_recent_lookups",
+              "gauge": {
+                "dataPoints": [
+                  {
+                    "attributes": [],
+                    "timeUnixNano": "1682099630856000000",
+                    "asDouble": 2541
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -17,7 +17,7 @@ const (
 )
 
 var (
-	suffixes = []string{suffixCreated, suffixBucket, suffixInfo, suffixSum, suffixCount, suffixTotal}
+	suffixes = []string{suffixCreated, suffixBucket, suffixInfo, suffixSum, suffixCount}
 )
 
 func timestampFromMs(timestampMs int64) pcommon.Timestamp {
