@@ -21,6 +21,9 @@ type Receiver struct {
 
 var _ metricsv3.MetricsServiceServer = (*Receiver)(nil)
 
+const namespaceKey = "namespace"
+const partitionKey = "partition"
+
 // New creates a new Receiver reference.
 func New(nextConsumer consumer.Metrics, logger *zap.Logger) *Receiver {
 	logger.Info("Created new receiver")
@@ -60,8 +63,12 @@ func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsSe
 			labels = map[string]string{
 				"envoy.cluster": identifier.GetNode().GetCluster(),
 				"envoy.id":      identifier.GetNode().GetId(),
-				"__cluster__":   identifier.GetNode().GetId(),
+				"__replica__":   identifier.GetNode().GetId(),
 			}
+
+			fields := identifier.GetNode().GetMetadata().AsMap()
+			setIfExists(labels, fields, namespaceKey)
+			setIfExists(labels, fields, partitionKey)
 		}
 
 		metrics := metricsMessage.GetEnvoyMetrics()
@@ -88,4 +95,12 @@ func translateMetrics(resourceLabels map[string]string, envoyMetrics []*prompb.M
 	}
 
 	return b.Build()
+}
+
+func setIfExists(labels map[string]string, fields map[string]interface{}, key string) {
+	if v, ok := fields[key]; ok {
+		if s, ok := v.(string); ok {
+			labels[key] = s
+		}
+	}
 }
