@@ -4,9 +4,13 @@ import (
 	"io"
 
 	metricsv3 "github.com/envoyproxy/go-control-plane/envoy/service/metrics/v3"
+	prompb "github.com/prometheus/client_model/go"
 	"go.opentelemetry.io/collector/consumer"
+	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.uber.org/zap"
 	"google.golang.org/grpc"
+
+	"github.com/hashicorp/consul-telemetry-collector/internal/translator/otlp/prometheus"
 )
 
 // Receiver is the metrics implementation for an envoy metrics receiver
@@ -16,6 +20,9 @@ type Receiver struct {
 }
 
 var _ metricsv3.MetricsServiceServer = (*Receiver)(nil)
+
+const namespaceKey = "namespace"
+const partitionKey = "partition"
 
 // New creates a new Receiver reference.
 func New(nextConsumer consumer.Metrics, logger *zap.Logger) *Receiver {
@@ -36,6 +43,7 @@ func (r *Receiver) Register(g *grpc.Server) {
 func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsServer) error {
 
 	var identifier *metricsv3.StreamMetricsMessage_Identifier
+	var labels map[string]string
 	for {
 		metricsMessage, err := stream.Recv()
 		if err != nil {
@@ -51,11 +59,48 @@ func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsSe
 
 		if identifier == nil {
 			identifier = metricsMessage.GetIdentifier()
+
+			labels = map[string]string{
+				"envoy.cluster": identifier.GetNode().GetCluster(),
+				"envoy.id":      identifier.GetNode().GetId(),
+				"__replica__":   identifier.GetNode().GetId(),
+			}
+
+			fields := identifier.GetNode().GetMetadata().AsMap()
+			setIfExists(labels, fields, namespaceKey)
+			setIfExists(labels, fields, partitionKey)
 		}
 
 		metrics := metricsMessage.GetEnvoyMetrics()
-		for _, metric := range metrics {
-			_ = metric
+
+		otlpMetrics := translateMetrics(labels, metrics)
+		err = r.nextConsumer.ConsumeMetrics(stream.Context(), otlpMetrics)
+		if err != nil {
+			return err
+		}
+	}
+}
+
+func translateMetrics(resourceLabels map[string]string, envoyMetrics []*prompb.MetricFamily) pmetric.Metrics {
+	b := prometheus.NewBuilder(resourceLabels)
+	for _, metric := range envoyMetrics {
+		switch metric.GetType() {
+		case prompb.MetricType_COUNTER:
+			b.AddCounter(metric)
+		case prompb.MetricType_GAUGE:
+			b.AddGauge(metric)
+		case prompb.MetricType_HISTOGRAM:
+			b.AddHistogram(metric)
+		}
+	}
+
+	return b.Build()
+}
+
+func setIfExists(labels map[string]string, fields map[string]interface{}, key string) {
+	if v, ok := fields[key]; ok {
+		if s, ok := v.(string); ok {
+			labels[key] = s
 		}
 	}
 }

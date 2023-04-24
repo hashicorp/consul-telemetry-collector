@@ -1,0 +1,122 @@
+[
+  {
+    "name": "cluster_upstream_cx_destroy",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy_cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1682099630190
+      }
+    ]
+  },
+  {
+    "name": "cluster_upstream_cx_destroy",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy_cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "counter": {
+          "value": 23
+        },
+        "timestamp_ms": 1682099630190
+      }
+    ]
+  },
+  {
+    "name": "http_downstream_rq_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy_http_conn_manager_prefix",
+            "value": "admin"
+          }
+        ],
+        "counter": {
+          "value": 4
+        },
+        "timestamp_ms": 1682099630190
+      }
+    ]
+  },
+  {
+    "name": "http_downstream_rq_total",
+    "type": 0,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy_http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "counter": {
+          "value": 43
+        },
+        "timestamp_ms": 1682099630190
+      }
+    ]
+  },
+  {
+    "name": "cluster_upstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy_cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 9
+        },
+        "timestamp_ms": 1682099630190
+      }
+    ]
+  },
+  {
+    "name": "cluster_upstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy_cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "gauge": {
+          "value": 1
+        },
+        "timestamp_ms": 1682099630190
+      }
+    ]
+   },
+   {
+    "name": "server_stats_recent_lookups",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 2541
+        },
+        "timestamp_ms": 1682099630190
+      }
+    ]
+  }
+]

@@ -1,0 +1,50 @@
+[
+  {
+    "name": "cluster.upstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "gauge": {
+          "value": 9
+        },
+        "timestamp_ms": 1682099630190
+      }
+    ]
+  },
+  {
+    "name": "cluster.upstream_cx_active",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "metrics_cluster"
+          }
+        ],
+        "gauge": {
+          "value": 1
+        },
+        "timestamp_ms": 1682099630190
+      }
+    ]
+   },
+   {
+    "name": "server.stats_recent_lookups",
+    "type": 1,
+    "metric": [
+      {
+        "gauge": {
+          "value": 2541
+        },
+        "timestamp_ms": 1682099630190
+      }
+    ]
+  }
+]

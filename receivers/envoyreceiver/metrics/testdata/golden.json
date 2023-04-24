@@ -1,0 +1,152 @@
+{
+  "resourceMetrics": [
+    {
+      "resource": {},
+      "scopeMetrics": [
+        {
+          "scope": {},
+          "metrics": [
+            {
+              "name": "http_downstream_rq_total",
+              "sum": {
+                "dataPoints": [
+                  {
+                    "attributes": [
+                      {
+                        "key": "envoy_http_conn_manager_prefix",
+                        "value": {
+                          "stringValue": "admin"
+                        }
+                      }
+                    ],
+                    "startTimeUnixNano": "1682099630856000000",
+                    "timeUnixNano": "1682099630856000000",
+                    "asDouble": 4
+                  }
+                ],
+                "aggregationTemporality": 2,
+                "isMonotonic": true
+              }
+            },
+            {
+              "name": "http_downstream_rq_total",
+              "sum": {
+                "dataPoints": [
+                  {
+                    "attributes": [
+                      {
+                        "key": "envoy_http_conn_manager_prefix",
+                        "value": {
+                          "stringValue": "ingress_http"
+                        }
+                      }
+                    ],
+                    "startTimeUnixNano": "1682099630856000000",
+                    "timeUnixNano": "1682099630856000000",
+                    "asDouble": 43
+                  }
+                ],
+                "aggregationTemporality": 2,
+                "isMonotonic": true
+              }
+            },
+            {
+              "name": "cluster_upstream_cx_destroy",
+              "sum": {
+                "dataPoints": [
+                  {
+                    "attributes": [
+                      {
+                        "key": "envoy_cluster_name",
+                        "value": {
+                          "stringValue": "service_envoyproxy_io"
+                        }
+                      }
+                    ],
+                    "startTimeUnixNano": "1682099630856000000",
+                    "timeUnixNano": "1682099630856000000",
+                    "asDouble": 23
+                  }
+                ],
+                "aggregationTemporality": 2,
+                "isMonotonic": true
+              }
+            },
+            {
+              "name": "cluster_upstream_cx_destroy",
+              "sum": {
+                "dataPoints": [
+                  {
+                    "attributes": [
+                      {
+                        "key": "envoy_cluster_name",
+                        "value": {
+                          "stringValue": "metrics_cluster"
+                        }
+                      }
+                    ],
+                    "startTimeUnixNano": "1682099630856000000",
+                    "timeUnixNano": "1682099630856000000",
+                    "asDouble": 4
+                  }
+                ],
+                "aggregationTemporality": 2,
+                "isMonotonic": true
+              }
+            },
+            {
+              "name": "cluster_upstream_cx_active",
+              "gauge": {
+                "dataPoints": [
+                  {
+                    "attributes": [
+                      {
+                        "key": "envoy_cluster_name",
+                        "value": {
+                          "stringValue": "metrics_cluster"
+                        }
+                      }
+                    ],
+                    "timeUnixNano": "1682099630856000000",
+                    "asDouble": 1
+                  }
+                ]
+              }
+            },
+            {
+              "name": "cluster_upstream_cx_active",
+              "gauge": {
+                "dataPoints": [
+                  {
+                    "attributes": [
+                      {
+                        "key": "envoy_cluster_name",
+                        "value": {
+                          "stringValue": "service_envoyproxy_io"
+                        }
+                      }
+                    ],
+                    "timeUnixNano": "1682099630856000000",
+                    "asDouble": 9
+                  }
+                ]
+              }
+            },
+            {
+              "name": "server_stats_recent_lookups",
+              "gauge": {
+                "dataPoints": [
+                  {
+                    "attributes": [],
+                    "timeUnixNano": "1682099630856000000",
+                    "asDouble": 2541
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

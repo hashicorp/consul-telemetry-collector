@@ -1,0 +1,196 @@
+[
+  {
+    "name": "cluster.upstream_rq_time",
+    "type": 4,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.cluster_name",
+            "value": "service_envoyproxy_io"
+          }
+        ],
+        "histogram": {
+          "sample_count": 3,
+          "sample_sum": 552.5,
+          "bucket": [
+            {
+              "cumulative_count": 0,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  },
+  {
+    "name": "http.downstream_cx_length_ms",
+    "type": 4,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy.http_conn_manager_prefix",
+            "value": "ingress_http"
+          }
+        ],
+        "histogram": {
+          "sample_count": 3,
+          "sample_sum": 562.5,
+          "bucket": [
+            {
+              "cumulative_count": 0,
+              "upper_bound": 0.5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 1
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 5
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 10
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 25
+            },
+            {
+              "cumulative_count": 0,
+              "upper_bound": 50
+            },
+            {
+              "cumulative_count": 1,
+              "upper_bound": 100
+            },
+            {
+              "cumulative_count": 2,
+              "upper_bound": 250
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 2500
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 5000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 10000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 30000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 60000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 300000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 600000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 1800000
+            },
+            {
+              "cumulative_count": 3,
+              "upper_bound": 3600000
+            }
+          ]
+        },
+        "timestamp_ms": 1679521971954
+      }
+    ]
+  }
+]
