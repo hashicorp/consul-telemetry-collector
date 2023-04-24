@@ -4,7 +4,7 @@ import (
 	"io"
 
 	metricsv3 "github.com/envoyproxy/go-control-plane/envoy/service/metrics/v3"
-	_go "github.com/prometheus/client_model/go"
+	prompb "github.com/prometheus/client_model/go"
 	"go.opentelemetry.io/collector/consumer"
 	"go.opentelemetry.io/collector/pdata/pmetric"
 	"go.uber.org/zap"
@@ -74,15 +74,15 @@ func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsSe
 	}
 }
 
-func translateMetrics(resourceLabels map[string]string, envoyMetrics []*_go.MetricFamily) pmetric.Metrics {
+func translateMetrics(resourceLabels map[string]string, envoyMetrics []*prompb.MetricFamily) pmetric.Metrics {
 	b := prometheus.NewBuilder(resourceLabels)
 	for _, metric := range envoyMetrics {
 		switch metric.GetType() {
-		case _go.MetricType_COUNTER:
+		case prompb.MetricType_COUNTER:
 			b.AddCounter(metric)
-		case _go.MetricType_GAUGE:
+		case prompb.MetricType_GAUGE:
 			b.AddGauge(metric)
-		case _go.MetricType_HISTOGRAM:
+		case prompb.MetricType_HISTOGRAM:
 			b.AddHistogram(metric)
 		}
 	}

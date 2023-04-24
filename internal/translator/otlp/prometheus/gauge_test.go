@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	_go "github.com/prometheus/client_model/go"
+	prompb "github.com/prometheus/client_model/go"
 	"github.com/shoenig/test/must"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/pmetric"
@@ -27,7 +27,7 @@ func TestBuilder_Gauge(t *testing.T) {
 		"cluster": uuid.NewString(),
 	}
 
-	promGauges := make([]*_go.MetricFamily, 0)
+	promGauges := make([]*prompb.MetricFamily, 0)
 	must.NoError(t, json.Unmarshal(bytes, &promGauges))
 
 	b := NewBuilder(labels)

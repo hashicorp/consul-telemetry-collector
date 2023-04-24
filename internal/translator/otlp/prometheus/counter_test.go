@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	_go "github.com/prometheus/client_model/go"
+	prompb "github.com/prometheus/client_model/go"
 	"github.com/shoenig/test/must"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/pmetric"
@@ -33,7 +33,7 @@ func TestBuilder_Counter(t *testing.T) {
 	counterBytes, err := os.ReadFile(f)
 	must.NoError(t, err)
 
-	promCounter := make([]*_go.MetricFamily, 0)
+	promCounter := make([]*prompb.MetricFamily, 0)
 	must.NoError(t, json.Unmarshal(counterBytes, &promCounter))
 
 	b := NewBuilder(labels)

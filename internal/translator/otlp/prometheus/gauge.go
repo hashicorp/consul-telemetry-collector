@@ -1,12 +1,12 @@
 package prometheus
 
 import (
-	_go "github.com/prometheus/client_model/go"
+	prompb "github.com/prometheus/client_model/go"
 	"go.opentelemetry.io/collector/pdata/pmetric"
 )
 
 // AddGauge converts a prometheus gauge to an OTLP Gauge and adds it to the metrics builder
-func (b *Builder) AddGauge(family *_go.MetricFamily) {
+func (b *Builder) AddGauge(family *prompb.MetricFamily) {
 	otlpMetric := pmetric.NewMetric()
 
 	otlpMetric.SetName(normalizeName(family.GetName()))

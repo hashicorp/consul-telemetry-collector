@@ -6,7 +6,7 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	_go "github.com/prometheus/client_model/go"
+	prompb "github.com/prometheus/client_model/go"
 	"github.com/shoenig/test/must"
 	"go.opentelemetry.io/collector/pdata/pcommon"
 	"go.opentelemetry.io/collector/pdata/pmetric"
@@ -126,7 +126,7 @@ func TestBuilder_Histogram(t *testing.T) {
 	bytes, err := os.ReadFile(f)
 	must.NoError(t, err)
 
-	histograms := make([]*_go.MetricFamily, 0)
+	histograms := make([]*prompb.MetricFamily, 0)
 	must.NoError(t, json.Unmarshal(bytes, &histograms))
 
 	b := NewBuilder(labels)

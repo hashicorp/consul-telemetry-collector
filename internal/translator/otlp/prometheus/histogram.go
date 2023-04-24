@@ -3,12 +3,12 @@ package prometheus
 import (
 	"math"
 
-	_go "github.com/prometheus/client_model/go"
+	prompb "github.com/prometheus/client_model/go"
 	"go.opentelemetry.io/collector/pdata/pmetric"
 )
 
 // AddHistogram converts a prometheus histogram to an OTLP histogram
-func (b *Builder) AddHistogram(family *_go.MetricFamily) {
+func (b *Builder) AddHistogram(family *prompb.MetricFamily) {
 	otlpMetric := pmetric.NewMetric()
 
 	otlpMetric.SetName(normalizeName(family.GetName()))
@@ -43,7 +43,7 @@ func (b *Builder) AddHistogram(family *_go.MetricFamily) {
 	b.metrics = append(b.metrics, otlpMetric)
 }
 
-func getBoundsAndBuckets(histogram *_go.Histogram) (bounds []float64, bucketCount []uint64) {
+func getBoundsAndBuckets(histogram *prompb.Histogram) (bounds []float64, bucketCount []uint64) {
 	bounds = []float64{}
 	bucketCount = []uint64{}
 
@@ -58,7 +58,7 @@ func getBoundsAndBuckets(histogram *_go.Histogram) (bounds []float64, bucketCoun
 	return bounds, bucketCount
 }
 
-func isValidHistogram(histogram *_go.Histogram) bool {
+func isValidHistogram(histogram *prompb.Histogram) bool {
 	if histogram.SampleCount == nil || histogram.SampleSum == nil {
 		return false
 	}

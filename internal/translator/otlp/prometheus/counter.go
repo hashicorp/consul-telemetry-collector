@@ -1,12 +1,12 @@
 package prometheus
 
 import (
-	_go "github.com/prometheus/client_model/go"
+	prompb "github.com/prometheus/client_model/go"
 	"go.opentelemetry.io/collector/pdata/pmetric"
 )
 
 // AddCounter converts a prometheus counter to an OTLP monotonic Sum and adds it to the metrics builder
-func (b *Builder) AddCounter(family *_go.MetricFamily) {
+func (b *Builder) AddCounter(family *prompb.MetricFamily) {
 	otlpMetric := pmetric.NewMetric()
 
 	otlpMetric.SetName(normalizeName(family.GetName()))
