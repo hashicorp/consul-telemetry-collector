@@ -6,13 +6,14 @@ import (
 	"testing"
 
 	"github.com/google/uuid"
-	"github.com/hashicorp/hcp-sdk-go/resource"
 	"github.com/shoenig/test"
 	"github.com/shoenig/test/must"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/confmap/provider/fileprovider"
 	"go.opentelemetry.io/collector/otelcol"
+
+	"github.com/hashicorp/hcp-sdk-go/resource"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 )
@@ -58,6 +59,7 @@ func Test_newConfigProvider(t *testing.T) {
 				resourceURL = tc.hcpResource.String()
 				mockClient = &hcp.MockClient{
 					MockMetricsEndpoint: "https://hcp-metrics-endpoint",
+					MockMetricFilters:   []string{"^a", "b$"},
 				}
 			}
 			c := CollectorCfg{
