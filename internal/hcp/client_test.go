@@ -8,11 +8,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/hashicorp/hcp-sdk-go/clients/cloud-consul-telemetry-gateway/preview/2023-04-14/client/consul_telemetry_service"
 	"github.com/hashicorp/hcp-sdk-go/clients/cloud-consul-telemetry-gateway/preview/2023-04-14/models"
-
-	"github.com/shoenig/test/must"
-
-	// "github.com/hashicorp/hcp-sdk-go/clients/cloud-global-network-manager-service/preview/2022-02-15/models"
 	"github.com/hashicorp/hcp-sdk-go/resource"
+	"github.com/shoenig/test/must"
 )
 
 func testResource() *resource.Resource {
