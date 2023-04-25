@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	"github.com/go-openapi/runtime"
-	"github.com/hashicorp/hcp-sdk-go/clients/cloud-global-network-manager-service/preview/2022-02-15/client/global_network_manager_service"
+	"github.com/hashicorp/hcp-sdk-go/clients/cloud-consul-telemetry-gateway/preview/2023-04-14/client/consul_telemetry_service"
 	hcpconfig "github.com/hashicorp/hcp-sdk-go/config"
 	"github.com/hashicorp/hcp-sdk-go/httpclient"
 	"github.com/hashicorp/hcp-sdk-go/profile"
@@ -42,10 +42,10 @@ var _ TelemetryClient = (*Client)(nil)
 // a mocked client so we use this to build our own mocks as necessary
 type agentTelemetryConfigClient interface {
 	AgentTelemetryConfig(
-		params *global_network_manager_service.AgentTelemetryConfigParams,
+		params *consul_telemetry_service.AgentTelemetryConfigParams,
 		authInfo runtime.ClientAuthInfoWriter,
-		opts ...global_network_manager_service.ClientOption,
-	) (*global_network_manager_service.AgentTelemetryConfigOK, error)
+		opts ...consul_telemetry_service.ClientOption,
+	) (*consul_telemetry_service.AgentTelemetryConfigOK, error)
 }
 
 const sourceChannel = "consul-telemetry"
@@ -67,11 +67,9 @@ func New(p *Params) (*Client, error) {
 	if err != nil {
 		return nil, err
 	}
-	ccMClient, err := global_network_manager_service.New(runtime, nil), nil
-	if err != nil {
-		return nil, err
-	}
-	return newClient(p, ccMClient)
+
+	client := consul_telemetry_service.New(runtime, nil)
+	return newClient(p, client)
 }
 
 // newClient is an internal implementation that takes a clientFn to do deped
@@ -117,7 +115,7 @@ func parseConfig(p *Params, r *resource.Resource) (hcpconfig.HCPConfig, error) {
 
 // ReloadConfig will retrieve the telemetry configuration from HCP using the initially configured runtime.
 func (c *Client) ReloadConfig() error {
-	params := global_network_manager_service.NewAgentTelemetryConfigParams()
+	params := consul_telemetry_service.NewAgentTelemetryConfigParams()
 	params.SetClusterID(c.hcpResource.ID)
 	result, err := c.clientService.AgentTelemetryConfig(params, nil)
 	if err != nil {
