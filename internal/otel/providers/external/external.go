@@ -62,6 +62,6 @@ func (m *externalProvider) Scheme() string {
 	return "external"
 }
 
-func (m *externalProvider) Shutdown(ctx context.Context) error {
+func (m *externalProvider) Shutdown(_ context.Context) error {
 	return nil
 }

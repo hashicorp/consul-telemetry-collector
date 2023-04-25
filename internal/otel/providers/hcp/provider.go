@@ -131,7 +131,7 @@ func (m *hcpProvider) Scheme() string {
 	return "hcp"
 }
 
-func (m *hcpProvider) Shutdown(ctx context.Context) error {
+func (m *hcpProvider) Shutdown(_ context.Context) error {
 	close(m.shutdownCh)
 	return nil
 }

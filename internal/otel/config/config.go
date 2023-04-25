@@ -113,7 +113,7 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		return processors.MemoryLimiterCfg(), nil
 	case processors.BatchProcessorID:
 		return processors.BatchProcessorCfg(), nil
-	case processors.FitlerProcessorID:
+	case processors.FilterProcessorID:
 		return processors.FilterProcessorCfg(p.Client), nil
 	// exporters
 	case exporters.LoggingExporterID:

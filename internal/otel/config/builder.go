@@ -53,8 +53,9 @@ func WithExtOauthClientID(ext []component.ID) []component.ID {
 	return append(ext, extensions.OauthClientID)
 }
 
+// WithFilterProcessor is an Opt function to add the filter processor to a list of processors.
 func WithFilterProcessor(procesors []component.ID) []component.ID {
-	return append(procesors, processors.FitlerProcessorID)
+	return append(procesors, processors.FilterProcessorID)
 }
 
 // ExtensionBuilder builds a list of extension IDs. Optionally we can include more ids with variadic opts
@@ -68,6 +69,8 @@ func ExtensionBuilder(opts ...Opts) []component.ID {
 	return base
 }
 
+// ProcessorBuilder returns a list of processor IDs.
+// The provided IDs inserted between the memory limiter and batch processor
 func ProcessorBuilder(opts ...Opts) []component.ID {
 	base := []component.ID{
 		processors.MemoryLimiterID,

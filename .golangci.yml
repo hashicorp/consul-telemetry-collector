@@ -21,6 +21,9 @@ issues:
     - path: _test\.go
       linters:
         - revive
+    - path: mock.*.go
+      linters:
+        - revive
   include:
     - EXC0011 # https://golangci-lint.run/usage/false-positives/#exc0011
     - EXC0012 # https://golangci-lint.run/usage/false-positives/#exc0012
