@@ -10,7 +10,7 @@ require (
 	github.com/hashicorp/go-hclog v1.4.0
 	github.com/hashicorp/go-multierror v1.1.0
 	github.com/hashicorp/hcl/v2 v2.16.1
-	github.com/hashicorp/hcp-sdk-go v0.38.0
+	github.com/hashicorp/hcp-sdk-go v0.42.1-0.20230421152652-ecdf1b988cc0
 	github.com/imdario/mergo v0.3.11
 	github.com/kr/text v0.2.0
 	github.com/mitchellh/cli v1.1.5
@@ -175,8 +175,6 @@ require (
 	sigs.k8s.io/structured-merge-diff/v4 v4.2.3 // indirect
 	sigs.k8s.io/yaml v1.3.0 // indirect
 )
-
-//replace github.com/hashicorp/hcp-sdk-go => github.com/hashicorp/hcp-sdk-go-internal v0.0.0-20230317182423-8d77dfd52b4c
 
 // https://github.com/golang/go/issues/50750 We should really just give the ci pipeline access to read the private repo
 replace github.com/hashicorp/consul-telemetry-collector/receivers/envoyreceiver => ./receivers/envoyreceiver

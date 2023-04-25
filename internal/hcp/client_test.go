@@ -6,10 +6,12 @@ import (
 
 	oErrors "github.com/go-openapi/errors"
 	"github.com/google/uuid"
+	"github.com/hashicorp/hcp-sdk-go/clients/cloud-consul-telemetry-gateway/preview/2023-04-14/client/consul_telemetry_service"
+	"github.com/hashicorp/hcp-sdk-go/clients/cloud-consul-telemetry-gateway/preview/2023-04-14/models"
+
 	"github.com/shoenig/test/must"
 
-	"github.com/hashicorp/hcp-sdk-go/clients/cloud-global-network-manager-service/preview/2022-02-15/client/global_network_manager_service"
-	"github.com/hashicorp/hcp-sdk-go/clients/cloud-global-network-manager-service/preview/2022-02-15/models"
+	// "github.com/hashicorp/hcp-sdk-go/clients/cloud-global-network-manager-service/preview/2022-02-15/models"
 	"github.com/hashicorp/hcp-sdk-go/resource"
 )
 
@@ -131,19 +133,18 @@ func Test_New(t *testing.T) {
 func TestLoadConfig(t *testing.T) {
 	testcases := map[string]struct {
 		r        resource.Resource
-		resp     *global_network_manager_service.AgentTelemetryConfigOK
+		resp     *consul_telemetry_service.AgentTelemetryConfigOK
 		endpoint string
 		filters  []string
 		err      error
 	}{
 		"GoodGlobalEndpoint": {
-			resp: &global_network_manager_service.AgentTelemetryConfigOK{
-				Payload: &models.
-					HashicorpCloudGlobalNetworkManager20220215AgentTelemetryConfigResponse{
-					TelemetryConfig: &models.HashicorpCloudGlobalNetworkManager20220215TelemetryConfig{
+			resp: &consul_telemetry_service.AgentTelemetryConfigOK{
+				Payload: &models.HashicorpCloudConsulTelmetry20230414AgentTelemetryConfigResponse{
+					TelemetryConfig: &models.HashicorpCloudConsulTelmetry20230414TelemetryConfig{
 						Endpoint: "https://global.metrics.com",
 						Labels:   nil,
-						Metrics: &models.HashicorpCloudGlobalNetworkManager20220215TelemetryMetricsConfig{
+						Metrics: &models.HashicorpCloudConsulTelmetry20230414TelemetryMetricsConfig{
 							Endpoint:    "",
 							IncludeList: []string{"a", "b"},
 						},
@@ -154,13 +155,12 @@ func TestLoadConfig(t *testing.T) {
 			filters:  []string{"a", "b"},
 		},
 		"GoodMetricsEndpoint": {
-			resp: &global_network_manager_service.AgentTelemetryConfigOK{
-				Payload: &models.
-					HashicorpCloudGlobalNetworkManager20220215AgentTelemetryConfigResponse{
-					TelemetryConfig: &models.HashicorpCloudGlobalNetworkManager20220215TelemetryConfig{
+			resp: &consul_telemetry_service.AgentTelemetryConfigOK{
+				Payload: &models.HashicorpCloudConsulTelmetry20230414AgentTelemetryConfigResponse{
+					TelemetryConfig: &models.HashicorpCloudConsulTelmetry20230414TelemetryConfig{
 						Endpoint: "https://global.metrics.com",
 						Labels:   nil,
-						Metrics: &models.HashicorpCloudGlobalNetworkManager20220215TelemetryMetricsConfig{
+						Metrics: &models.HashicorpCloudConsulTelmetry20230414TelemetryMetricsConfig{
 							Endpoint:    "https://local.metrics.com",
 							IncludeList: []string{"a"},
 						},
