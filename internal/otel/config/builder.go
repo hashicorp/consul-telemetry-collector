@@ -1,13 +1,14 @@
 package config
 
 import (
+	"go.opentelemetry.io/collector/component"
+	"go.opentelemetry.io/collector/service"
+
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/extensions"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/processors"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/receivers"
-	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/service"
 )
 
 // Params are the inputs to the configuration building process. Only some config requires
@@ -52,6 +53,11 @@ func WithExtOauthClientID(ext []component.ID) []component.ID {
 	return append(ext, extensions.OauthClientID)
 }
 
+// WithFilterProcessor is an Opt function to add the filter processor to a list of processors.
+func WithFilterProcessor(procesors []component.ID) []component.ID {
+	return append(procesors, processors.FilterProcessorID)
+}
+
 // ExtensionBuilder builds a list of extension IDs. Optionally we can include more ids with variadic opts
 func ExtensionBuilder(opts ...Opts) []component.ID {
 	base := []component.ID{
@@ -60,5 +66,19 @@ func ExtensionBuilder(opts ...Opts) []component.ID {
 	for _, opt := range opts {
 		base = opt(base)
 	}
+	return base
+}
+
+// ProcessorBuilder returns a list of processor IDs.
+// The provided IDs inserted between the memory limiter and batch processor
+func ProcessorBuilder(opts ...Opts) []component.ID {
+	base := []component.ID{
+		processors.MemoryLimiterID,
+	}
+	for _, opt := range opts {
+		base = opt(base)
+	}
+
+	base = append(base, processors.BatchProcessorID)
 	return base
 }

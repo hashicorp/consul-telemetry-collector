@@ -3,13 +3,14 @@ package config
 import (
 	"errors"
 
+	"github.com/hashicorp/go-multierror"
+	"go.opentelemetry.io/collector/component"
+	"go.opentelemetry.io/collector/service"
+
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/extensions"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/processors"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/receivers"
-	"github.com/hashicorp/go-multierror"
-	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/service"
 )
 
 // componentMap is a way of identifying a component and it's specific configuration
@@ -112,6 +113,8 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		return processors.MemoryLimiterCfg(), nil
 	case processors.BatchProcessorID:
 		return processors.BatchProcessorCfg(), nil
+	case processors.FilterProcessorID:
+		return processors.FilterProcessorCfg(p.Client), nil
 	// exporters
 	case exporters.LoggingExporterID:
 		return exporters.LogExporterCfg(), nil

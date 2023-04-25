@@ -82,6 +82,10 @@ func (m *hcpProvider) Retrieve(
 	// 3. Build pipeline configurations and enrich the config with them
 	// 3. A: Build HCP pipeline
 	hcpPipelineCfg := config.PipelineConfigBuilder(hcpParams)
+
+	// Set the filter processor on the config
+	hcpPipelineCfg.Processors = config.ProcessorBuilder(config.WithFilterProcessor)
+
 	hcpID := component.NewIDWithName(component.DataTypeMetrics, "hcp")
 	err = c.EnrichWithPipelineCfg(hcpPipelineCfg, hcpParams, hcpID)
 	if err != nil {
@@ -127,7 +131,7 @@ func (m *hcpProvider) Scheme() string {
 	return "hcp"
 }
 
-func (m *hcpProvider) Shutdown(ctx context.Context) error {
+func (m *hcpProvider) Shutdown(_ context.Context) error {
 	close(m.shutdownCh)
 	return nil
 }

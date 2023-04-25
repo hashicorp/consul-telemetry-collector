@@ -35,6 +35,14 @@ go/test:
 		cd - > /dev/null; \
 	done
 
+go/mod:
+	@ for mod in $(GO_MODULE_DIRS); do \
+		(	cd $$mod > /dev/null; \
+		echo "go mod tidy $$mod"; \
+		go mod tidy; \
+		); \
+	done
+
 go/lint:
 	@ for mod in $(GO_MODULE_DIRS) ; do \
 		cd $$mod > /dev/null; \
