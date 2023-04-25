@@ -1,6 +1,7 @@
 package processors
 
 import (
+	"fmt"
 	"regexp"
 
 	"github.com/hashicorp/go-hclog"
@@ -15,7 +16,7 @@ const filterProcessorName = "filter"
 var FilterProcessorID component.ID = component.NewID(filterProcessorName)
 
 const (
-	regexpMatch = "regexp"
+	regexpMatchType = "regexp"
 )
 
 // FilterProcessorConfig creates the filter processor configuration
@@ -41,22 +42,23 @@ func FilterProcessorCfg(client hcp.TelemetryClient) *FilterProcessorConfig {
 	logger := hclog.Default().Named("config/helpers")
 	if err != nil {
 		// log failure here, but it's not fatal because the gateway should also filter metrics
-		logger.Error("failed to retrieve metric filters from HCP")
+		logger.Warn("failed to retrieve metric filters from HCP", "error", err)
+		return &FilterProcessorConfig{}
 	}
 	for _, filter := range filters {
 		if err := validateFilter(filter); err != nil {
 			// log failure here, but it's not fatal because the gateway should also filter metrics
-			logger.Error("failed to validate filter", "filter", filter)
+			logger.Warn("failed to validate filter", "filter", filter, "error", err)
 			continue
 		}
 		usableFilters = append(usableFilters, filter)
 	}
-	logger.Info("created", len(usableFilters), "usable filters")
+	logger.Info(fmt.Sprintf("created %d usable filters for the HCP pipeline", len(usableFilters)))
 
 	cfg := FilterProcessorConfig{
 		Metrics: &MetricFilters{
 			Include: &MatchProperties{
-				MatchType:   regexpMatch,
+				MatchType:   regexpMatchType,
 				MetricNames: usableFilters,
 			},
 		},
