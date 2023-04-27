@@ -18,6 +18,7 @@ type Params struct {
 	Client           hcp.TelemetryClient
 	ClientID         string
 	ClientSecret     string
+	ResourceID       string
 }
 
 // PipelineConfigBuilder defines a basic list of pipeline component IDs for a service.PipelineConfig
@@ -56,6 +57,10 @@ func WithExtOauthClientID(ext []component.ID) []component.ID {
 // WithFilterProcessor is an Opt function to add the filter processor to a list of processors.
 func WithFilterProcessor(procesors []component.ID) []component.ID {
 	return append(procesors, processors.FilterProcessorID)
+}
+
+func WithResourceProcessor(prcs []component.ID) []component.ID {
+	return append(prcs, processors.ResourceProcessorID)
 }
 
 // ExtensionBuilder builds a list of extension IDs. Optionally we can include more ids with variadic opts

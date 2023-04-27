@@ -2,8 +2,6 @@ package processors
 
 import (
 	"errors"
-	"fmt"
-	"strings"
 
 	"go.opentelemetry.io/collector/component"
 )
@@ -17,14 +15,13 @@ type ResourceProcessorConfig struct {
 	Attributes []Actions `mapstructure:"attributes"`
 }
 
-type Action int
+type Action string
 
-//go:generate stringer -type Action --linecomment
 const (
-	insert Action = iota // insert
-	update               // update
-	upsert               // upsert
-	delete               // delete
+	insert Action = "insert" // insert
+	update        = "update" // update
+	upsert        = "upsert" // upsert
+	delete        = "delete" // delete
 
 	clusterKey = "cluster"
 )
@@ -57,27 +54,7 @@ type Actions struct {
 	Action Action `mapstructure:"action"`
 }
 
-func (a *Action) MarshalText() (text []byte, err error) {
-	return []byte(a.String()), nil
-}
-
 var ErrUnknownAction = errors.New("unknown action")
-
-func (a *Action) UnmarshalText(text []byte) error {
-	switch strings.ToLower(string(text)) {
-	case insert.String():
-		*a = insert
-	case update.String():
-		*a = update
-	case upsert.String():
-		*a = upsert
-	case delete.String():
-		*a = delete
-	default:
-		return fmt.Errorf("%w: %s", ErrUnknownAction, text)
-	}
-	return nil
-}
 
 // FilterProcessorCfg generates the config for a filter processor
 func ResourcesProcessorCfg(resourceID string) ResourceProcessorConfig {
