@@ -16,12 +16,11 @@ import (
 )
 
 type hcpProvider struct {
-	otlpHTTPEndpoint  string
-	client            hcp.TelemetryClient
-	clientID          string
-	clientSecret      string
-	clusterResourceID string
-	shutdownCh        chan struct{}
+	otlpHTTPEndpoint string
+	client           hcp.TelemetryClient
+	clientID         string
+	clientSecret     string
+	shutdownCh       chan struct{}
 }
 
 const scheme = "hcp"

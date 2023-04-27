@@ -10,7 +10,8 @@ import (
 )
 
 func Test_ResourceProcessorCfg(t *testing.T) {
-	cfg := ResourcesProcessorCfg(uuid.NewString())
+	clusterVal := uuid.NewString()
+	cfg := ResourcesProcessorCfg(clusterVal)
 	require.NotNil(t, cfg)
 
 	// Marshall the configuration
@@ -25,12 +26,6 @@ func Test_ResourceProcessorCfg(t *testing.T) {
 
 	require.NoError(t, unmarshalledCfg.Validate())
 	require.Len(t, unmarshalledCfg.AttributesActions, 1)
-
-	mshCfg := confmap.New()
-	require.NoError(t, mshCfg.Marshal(unmarshalledCfg))
-	// make sure that the initially marshalled cfg matches the marshal'd resourceprocessor match
-	require.Equal(t, mshCfg.AllKeys(), conf.AllKeys())
-	require.Equal(t, mshCfg.Get("action"), conf.Get("action"))
-	require.Equal(t, mshCfg.Get("key"), conf.Get("key"))
-	require.Equal(t, mshCfg.Get("value"), conf.Get("value"))
+	require.Equal(t, unmarshalledCfg.AttributesActions[0].Key, "cluster")
+	require.Equal(t, unmarshalledCfg.AttributesActions[0].Value, clusterVal)
 }

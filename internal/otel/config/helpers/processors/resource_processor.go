@@ -14,14 +14,14 @@ type ResourceProcessorConfig struct {
 	Attributes []Actions `mapstructure:"attributes"`
 }
 
-type Action string
+type action string
 
 const (
-	insert Action = "insert" // insert
-	update        = "update" // update
-	upsert        = "upsert" // upsert
-	delete        = "delete" // delete
+	upsertAction action = "upsert"
 
+	// clusterKey is the label key for "cluster" section of the Cortex High Availability client labels: https
+	// ://cortexmetrics.io/docs/guides/ha-pair-handling/#client-side. The __replica__ label is added at the receiver
+	// side for envoy metrics. If we cannot add __replica__ at the receiver we will need to add it here in the future.
 	clusterKey = "cluster"
 )
 
@@ -36,7 +36,7 @@ type Actions struct {
 	Value interface{} `mapstructure:"value"`
 
 	// Action specifies the type of action to perform.
-	// The set of values are {INSERT, UPDATE, UPSERT, DELETE, HASH}.
+	// The set of values are {INSERT, UPDATE, UPSERT, DELETE}.
 	// Both lower case and upper case are supported.
 	// INSERT -  Inserts the key/value to attributes when the key does not exist.
 	//           No action is applied to attributes where the key already exists.
@@ -51,7 +51,7 @@ type Actions struct {
 	//           Either Value, FromAttribute or FromContext must be set.
 	// DELETE  - Deletes the attribute. If the key doesn't exist,
 	//           no action is performed.
-	Action Action `mapstructure:"action"`
+	Action action `mapstructure:"action"`
 }
 
 // ResourcesProcessorCfg generates the config for a resource processor.
@@ -61,7 +61,7 @@ func ResourcesProcessorCfg(resourceID string) ResourceProcessorConfig {
 		{
 			Key:    clusterKey,
 			Value:  resourceID,
-			Action: upsert,
+			Action: upsertAction,
 		},
 	}}
 }
