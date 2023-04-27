@@ -59,6 +59,7 @@ func WithFilterProcessor(procesors []component.ID) []component.ID {
 	return append(procesors, processors.FilterProcessorID)
 }
 
+// WithResourceProcessor adds the resource processor to a list of processors. It should go after the filter processor to ensure that we do not operate on signals that we won't forward
 func WithResourceProcessor(prcs []component.ID) []component.ID {
 	return append(prcs, processors.ResourceProcessorID)
 }
