@@ -14,7 +14,7 @@ ifeq ($(ARCH),aarch64)
 endif
 OS       = $(shell uname | tr [[:upper:]] [[:lower:]])
 PLATFORM = $(OS)/$(ARCH)
-BIN_PATH     ?= dist/$(PLATFORM)
+BIN_PATH ?= dist/$(PLATFORM)
 
 GO_MODULE_DIRS ?= $(shell go list -m -f "{{ .Dir }}" | grep -v mod-vendor)
 
@@ -24,7 +24,7 @@ version:
 
 .PHONY: build
 build:
-	@CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="-X github.com/hashicorp/consul-telemetery-collector/internal/version.GitCommit=${GITHUB_SHA::8}" -o $BIN_PATH ./cmd/$BIN_NAME
+	@CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="-X github.com/hashicorp/consul-telemetery-collector/internal/version.GitCommit=${GITHUB_SHA::8}" -o $(BIN_PATH) ./cmd/$(BIN_NAME)
 
 go/test:
 	@ for mod in $(GO_MODULE_DIRS) ; do \
