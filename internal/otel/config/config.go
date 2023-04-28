@@ -115,6 +115,8 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		return processors.BatchProcessorCfg(), nil
 	case processors.FilterProcessorID:
 		return processors.FilterProcessorCfg(p.Client), nil
+	case processors.ResourceProcessorID:
+		return processors.ResourcesProcessorCfg(p.ResourceID), nil
 	// exporters
 	case exporters.LoggingExporterID:
 		return exporters.LogExporterCfg(), nil

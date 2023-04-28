@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"testing"
 
-	"github.com/google/uuid"
 	"github.com/shoenig/test"
 	"github.com/shoenig/test/must"
 	"go.opentelemetry.io/collector/component"
@@ -36,8 +35,8 @@ func Test_newConfigProvider(t *testing.T) {
 			hcpResource: &resource.Resource{
 				ID:           "otel-cluster",
 				Type:         "hashicorp.consul.cluster",
-				Organization: uuid.NewString(),
-				Project:      uuid.NewString(),
+				Organization: "00000000-0000-0000-0000-000000000000",
+				Project:      "00000000-0000-0000-0000-000000000001",
 			},
 		},
 		"hcp-with-forwarder": {
@@ -46,8 +45,8 @@ func Test_newConfigProvider(t *testing.T) {
 			hcpResource: &resource.Resource{
 				ID:           "otel-with-cluster",
 				Type:         "hashicorp.consul.cluster",
-				Organization: uuid.NewString(),
-				Project:      uuid.NewString(),
+				Organization: "00000000-0000-0000-0000-000000000003",
+				Project:      "00000000-0000-0000-0000-000000000004",
 			},
 		},
 	}

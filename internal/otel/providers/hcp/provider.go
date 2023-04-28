@@ -53,7 +53,7 @@ func (m *hcpProvider) Retrieve(
 		return nil, fmt.Errorf("%q uri is not supported by %q provider", uri, m.Scheme())
 	}
 
-	_, err := resource.FromString(strings.TrimLeft(uri, schemePrefix))
+	r, err := resource.FromString(strings.TrimLeft(uri, schemePrefix))
 	if err != nil {
 		return nil, fmt.Errorf("unable to parse %q uri as HCP resource URL %w", uri, err)
 	}
@@ -73,6 +73,7 @@ func (m *hcpProvider) Retrieve(
 		Client:           m.client,
 		ClientID:         m.clientID,
 		ClientSecret:     m.clientSecret,
+		ResourceID:       r.String(),
 	}
 	err = c.EnrichWithExtensions(extensions, hcpParams)
 	if err != nil {
@@ -84,7 +85,7 @@ func (m *hcpProvider) Retrieve(
 	hcpPipelineCfg := config.PipelineConfigBuilder(hcpParams)
 
 	// Set the filter processor on the config
-	hcpPipelineCfg.Processors = config.ProcessorBuilder(config.WithFilterProcessor)
+	hcpPipelineCfg.Processors = config.ProcessorBuilder(config.WithFilterProcessor, config.WithResourceProcessor)
 
 	hcpID := component.NewIDWithName(component.DataTypeMetrics, "hcp")
 	err = c.EnrichWithPipelineCfg(hcpPipelineCfg, hcpParams, hcpID)
