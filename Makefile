@@ -20,7 +20,7 @@ GO_MODULE_DIRS ?= $(shell go list -m -f "{{ .Dir }}" | grep -v mod-vendor)
 
 .PHONY: version
 version:
-	@bin/$(PLATFORM)/$(BIN_NAME) --version
+	@cat internal/version/VERSION
 
 .PHONY: build
 build:

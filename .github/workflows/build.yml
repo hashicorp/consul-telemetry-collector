@@ -41,7 +41,7 @@ jobs:
         id: get-product-version
         run: |
           # Need to run make target first to see if it fails/passes
-          make bin version
+          make version
           echo "product-version=$(make version)" >> $GITHUB_OUTPUT
 
 
