@@ -12,7 +12,7 @@ ARG BIN_NAME
 # Escape the GOPATH
 WORKDIR /build
 COPY . ./
-RUN make build
+RUN make dev
 
 
 # ===================================
@@ -46,16 +46,18 @@ RUN addgroup $PRODUCT_NAME && \
 COPY dist/$TARGETOS/$TARGETARCH/$BIN_NAME /bin/
 
 USER 100
-CMD /bin/$BIN_NAME
+COPY .github/docker/entrypoint.sh /usr/bin/entrypoint.sh
+ENTRYPOINT [ "entrypoint.sh" ]
 
 # dev runs the binary from devbuild
 # -----------------------------------
 FROM alpine:latest AS dev
 ARG BIN_NAME
 # Export BIN_NAME for the CMD below, it can't see ARGs directly.
-ENV BIN_NAME=$BIN_NAME
-COPY --from=devbuild /build/$BIN_NAME /bin/
-CMD /bin/$BIN_NAME
+ENV BIN_NAME=${BIN_NAME}
+COPY --from=devbuild /build/${BIN_NAME} /bin/
+COPY .github/docker/entrypoint.sh /usr/bin/entrypoint.sh
+ENTRYPOINT [ "entrypoint.sh" ]
 
 # alternate release image, just for the sake of example. In this case we're using
 # debian as the base image just to make the image different from the default alpine one.
@@ -85,7 +87,8 @@ RUN addgroup $PRODUCT_NAME && \
 COPY dist/$TARGETOS/$TARGETARCH/$BIN_NAME /bin/
 
 USER 101
-CMD /bin/$BIN_NAME
+COPY .github/docker/entrypoint.sh /usr/local/bin/entrypoint.sh
+ENTRYPOINT [ "entrypoint.sh" ]
 
 
 # Red Hat UBI-based image

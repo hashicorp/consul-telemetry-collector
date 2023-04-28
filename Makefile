@@ -22,9 +22,13 @@ GO_MODULE_DIRS ?= $(shell go list -m -f "{{ .Dir }}" | grep -v mod-vendor)
 version:
 	@cat internal/version/VERSION
 
+.PHONY: dev
+dev:
+	CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="-X github.com/hashicorp/consul-telemetery-collector/internal/version.GitCommit=${GITHUB_SHA::8}" -o $(BIN_NAME) ./cmd/$(BIN_NAME)
+
 .PHONY: build
 build:
-	@CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="-X github.com/hashicorp/consul-telemetery-collector/internal/version.GitCommit=${GITHUB_SHA::8}" -o $(BIN_PATH) ./cmd/$(BIN_NAME)
+	CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="-X github.com/hashicorp/consul-telemetery-collector/internal/version.GitCommit=${GITHUB_SHA::8}" -o $(BIN_PATH) ./cmd/$(BIN_NAME)
 
 go/test:
 	@ for mod in $(GO_MODULE_DIRS) ; do \
@@ -49,6 +53,9 @@ go/lint:
 		golangci-lint run --timeout 5m --config $(GOLANGCI_CONFIG_DIR)/.golangci.yml ;\
 		cd - > /dev/null; \
 	done
+
+build/docker:
+	DOCKER_BUILDKIT=1 docker build -t consul-telemetry-collector --build-arg BIN_NAME=consul-telemetry-collector .
 
 .PHONY: deps
 deps:
