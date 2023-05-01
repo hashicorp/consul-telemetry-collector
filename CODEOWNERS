@@ -1,2 +1,6 @@
 # The cloud-consul team will be automatically requested for reviews.
 *       @hashicorp/cloud-consul
+
+# release configuration
+/.release/                              @hashicorp/release-engineering
+/.github/workflows/build.yml            @hashicorp/release-engineering
