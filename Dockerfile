@@ -9,6 +9,7 @@
 # -----------------------------------
 FROM golang:latest AS devbuild
 ARG BIN_NAME
+ENV BIN_NAME=${BIN_NAME}
 # Escape the GOPATH
 WORKDIR /build
 COPY . ./
@@ -28,16 +29,20 @@ FROM alpine:latest AS release-default
 
 ARG BIN_NAME
 # Export BIN_NAME for the CMD below, it can't see ARGs directly.
-ENV BIN_NAME=$BIN_NAME
+ENV BIN_NAME=${BIN_NAME}
 ARG PRODUCT_VERSION
 ARG PRODUCT_REVISION
-ARG PRODUCT_NAME=$BIN_NAME
+ARG PRODUCT_NAME=${BIN_NAME}
 # TARGETARCH and TARGETOS are set automatically when --platform is provided.
 ARG TARGETOS TARGETARCH
 
-LABEL maintainer="Team RelEng <team-rel-eng@hashicorp.com>"
-LABEL version=$PRODUCT_VERSION
-LABEL revision=$PRODUCT_REVISION
+LABEL name="Consul Telemetry Collector" \
+	  maintainer="Consul Cloud Team <team-consul-cloud@hashicorp.com>" \
+      vendor="HashiCorp" \
+      version=${PRODUCT_VERSION} \
+      release=${PRODUCT_REVISION} \
+      revision=${PRODUCT_REVISION} \
+      description="Consul Telemetry Collector is a service mesh observability tools that collectors and forwards service mesh information via open-telemetry"
 
 # Create a non-root user to run the software.
 RUN addgroup $PRODUCT_NAME && \
@@ -76,9 +81,13 @@ ARG PRODUCT_NAME=$BIN_NAME
 # TARGETARCH and TARGETOS are set automatically when --platform is provided.
 ARG TARGETOS TARGETARCH
 
-LABEL maintainer="Team RelEng <team-rel-eng@hashicorp.com>"
-LABEL version=$PRODUCT_VERSION
-LABEL revision=$PRODUCT_REVISION
+LABEL name="Consul Telemetry Collector" \
+	  maintainer="Consul Cloud Team <team-consul-cloud@hashicorp.com>" \
+      vendor="HashiCorp" \
+      version=${PRODUCT_VERSION} \
+      release=${PRODUCT_REVISION} \
+      revision=${PRODUCT_REVISION} \
+      description="Consul Telemetry Collector is a service mesh observability tools that collectors and forwards service mesh information via open-telemetry"
 
 # Create a non-root user to run the software.
 RUN addgroup $PRODUCT_NAME && \
@@ -106,14 +115,14 @@ ARG PRODUCT_NAME=$BIN_NAME
 # TARGETARCH and TARGETOS are set automatically when --platform is provided.
 ARG TARGETOS TARGETARCH
 
-LABEL name="CRT Core Hello World" \
-	  maintainer="Team RelEng <team-rel-eng@hashicorp.com>" \
+
+LABEL name="Consul Telemetry Collector" \
+	  maintainer="Consul Cloud Team <team-consul-cloud@hashicorp.com>" \
       vendor="HashiCorp" \
       version=${PRODUCT_VERSION} \
       release=${PRODUCT_REVISION} \
       revision=${PRODUCT_REVISION} \
-      summary="CRT Core Hello World is a demo project." \
-      description="Example repository demonstrating CRT."
+      description="Consul Telemetry Collector is a service mesh observability tools that collectors and forwards service mesh information via open-telemetry"
 
 # Create a non-root user to run the software.
 RUN groupadd --gid 1000 $PRODUCT_NAME && \
