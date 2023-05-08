@@ -4,17 +4,17 @@ project "consul-telemetry-collector" {
   // the team key is not used by CRT currently
   team = "consul-cloud"
   slack {
-    notification_channel = "C01A3A54G0L"
+    notification_channel = "C055APXRUTB"
   }
   github {
     organization = "hashicorp"
     repository = "consul-telemetry-collector"
-    // An allow-list of branch names where artifacts are built. Note that wildcards are accepted! 
+    // An allow-list of branch names where artifacts are built. Note that wildcards are accepted!
     // Artifacts built from these branches will be processed through CRT and get into a
     // "release ready" state.
     release_branches = [
       "main",
-      "release/**" 
+      "release/**"
     ]
   }
 }
@@ -113,7 +113,7 @@ event "promote-staging-packaging" {
 
 // When you're onboarding your project to CRT, uncomment the promote-* workflows. We commented them out here
 // as we do not want to accidentally promote a test product to production environment. Also, if you are working with the promote
-// production workflows, please ensure that this section is commented out before merging your changes in. 
+// production workflows, please ensure that this section is commented out before merging your changes in.
 
 
 
