@@ -3,9 +3,9 @@ name: build
 on:
   workflow_dispatch:
   push:
-    #    branches:
-    #- main
-    #- 'release/*.*.x'
+  branches:
+    - main
+    - 'release/*.*.x'
 
 env:
   PKG_NAME: "consul-telemetry-collector"
@@ -26,27 +26,20 @@ jobs:
           echo "Building with Go $(cat .go-version)"
           echo "go-version=$(cat .go-version)" >> $GITHUB_OUTPUT
 
-  get-product-version:
+  set-product-version:
     runs-on: ubuntu-latest
-    needs:
-      - get-go-version
     outputs:
-      product-version: ${{ steps.get-product-version.outputs.product-version }}
+      product-version: ${{ steps.set-product-version.outputs.product-version }}
+      product-base-version: ${{ steps.set-product-version.outputs.base-product-version }}
+      product-prerelease-version: ${{ steps.set-product-version.outputs.prerelease-product-version }}
     steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-go@v2
-        with:
-          go-version: ${{ needs.get-go-version.outputs.go-version }}
-      - name: get product version
-        id: get-product-version
-        run: |
-          # Need to run make target first to see if it fails/passes
-          make version
-          echo "product-version=$(make version)" >> $GITHUB_OUTPUT
-
+      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b #https://github.com/actions/checkout/releases/tag/v3.2.0
+      - name: Set Product version
+        id: set-product-version
+        uses: hashicorp/actions-set-product-version@v1
 
   generate-metadata-file:
-    needs: get-product-version
+    needs: set-product-version
     runs-on: ubuntu-latest
     outputs:
       filepath: ${{ steps.generate-metadata-file.outputs.filepath }}
@@ -57,7 +50,7 @@ jobs:
         id: generate-metadata-file
         uses: hashicorp/actions-generate-metadata@v1
         with:
-          version: ${{ needs.get-product-version.outputs.product-version }}
+          version: ${{ needs.set-product-version.outputs.product-version }}
           product: ${{ env.PKG_NAME }}
           repositoryOwner: "hashicorp"
       - uses: actions/upload-artifact@v2
@@ -88,7 +81,7 @@ jobs:
   build-other:
     needs:
       - get-go-version
-      - get-product-version
+      - set-product-version
     runs-on: ubuntu-latest
     strategy:
       fail-fast: true
@@ -108,12 +101,12 @@ jobs:
 
       - uses: hashicorp/actions-go-build@v0.1.7
         env:
-          BASE_VERSION: ${{ needs.get-product-version.outputs.product-base-version }}
-          PRERELEASE_VERSION: ${{ needs.get-product-version.outputs.product-prerelease-version}}
+          BASE_VERSION: ${{ needs.set-product-version.outputs.product-base-version }}
+          PRERELEASE_VERSION: ${{ needs.set-product-version.outputs.product-prerelease-version}}
           METADATA_VERSION: ${{ env.METADATA }}
         with:
           product_name: ${{ env.PKG_NAME }}
-          product_version: ${{ needs.get-product-version.outputs.product-version }}
+          product_version: ${{ needs.set-product-version.outputs.product-version }}
           go_version: ${{ needs.get-go-version.outputs.go-version }}
           os: ${{ matrix.goos }}
           arch: ${{ matrix.goarch }}
@@ -124,7 +117,7 @@ jobs:
   build-linux:
     needs:
       - get-go-version
-      - get-product-version
+      - set-product-version
       - test
     runs-on: ubuntu-latest
     strategy:
@@ -142,7 +135,7 @@ jobs:
       - uses: hashicorp/actions-go-build@v0.1.3
         with:
           product_name: ${{ env.PKG_NAME }}
-          product_version: ${{ needs.get-product-version.outputs.product-version }}
+          product_version: ${{ needs.set-product-version.outputs.product-version }}
           go_version: ${{ needs.get-go-version.outputs.go-version }}
           os: ${{ matrix.goos }}
           arch: ${{ matrix.goarch }}
@@ -157,7 +150,7 @@ jobs:
           name: ${{ github.event.repository.name }}
           description: "Consul Telemetry Collector"
           arch: ${{ matrix.goarch }}
-          version: ${{ needs.get-product-version.outputs.product-version }}
+          version: ${{ needs.set-product-version.outputs.product-version }}
           maintainer: "HashiCorp"
           homepage: "https://github.com/hashicorp/consul-telemetry-collector"
           license: "MPL-2.0"
@@ -186,7 +179,7 @@ jobs:
   build-darwin:
     needs:
       - get-go-version
-      - get-product-version
+      - set-product-version
       - test
     runs-on: macos-latest
     strategy:
@@ -207,7 +200,7 @@ jobs:
       - uses: hashicorp/actions-go-build@v0.1.3
         with:
           product_name: ${{ env.PKG_NAME }}
-          product_version: ${{ needs.get-product-version.outputs.product-version }}
+          product_version: ${{ needs.set-product-version.outputs.product-version }}
           go_version: ${{ needs.get-go-version.outputs.go-version }}
           os: ${{ matrix.goos }}
           arch: ${{ matrix.goarch }}
@@ -218,7 +211,7 @@ jobs:
   build-docker-default:
     name: Docker ${{ matrix.arch }} default release build
     needs:
-      - get-product-version
+      - set-product-version
       - build-linux
     runs-on: ubuntu-latest
     strategy:
@@ -280,7 +273,7 @@ jobs:
   build-docker-alternate:
     name: Docker ${{ matrix.arch }} alternate release build
     needs:
-      - get-product-version
+      - set-product-version
       - build-linux
     runs-on: ubuntu-latest
     strategy:
@@ -288,7 +281,7 @@ jobs:
         arch: ["arm", "arm64", "386", "amd64"]
     env:
       repo: ${{ github.event.repository.name }}
-      version: ${{ needs.get-product-version.outputs.product-version }}
+      version: ${{ needs.set-product-version.outputs.product-version }}
 
     steps:
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b #https://github.com/actions/checkout/releases/tag/v3.2.0
@@ -319,12 +312,12 @@ jobs:
   build-docker-redhat:
     name: Docker UBI Image Build (for Red Hat Certified Container Registry)
     needs:
-      - get-product-version
+      - set-product-version
       - build-linux
     runs-on: ubuntu-latest
     env:
       repo: ${{github.event.repository.name}}
-      version: ${{needs.get-product-version.outputs.product-version}}
+      version: ${{needs.set-product-version.outputs.product-version}}
 
     steps:
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b #https://github.com/actions/checkout/releases/tag/v3.2.0
