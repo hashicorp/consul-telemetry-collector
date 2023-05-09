@@ -219,7 +219,8 @@ jobs:
         arch: ["arm", "arm64", "386", "amd64"]
     env:
       repo: ${{ github.event.repository.name }}
-      version: ${{ needs.get-product-version.outputs.product-version }}
+      version: ${{ needs.set-product-version.outputs.product-version }}
+      base-version: ${{ needs.set-product-version.outputs.base-product-version }}
 
     steps:
       - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b #https://github.com/actions/checkout/releases/tag/v3.2.0
@@ -267,7 +268,7 @@ jobs:
           # will fail to any other DockerHub org or registry. You can optionally
           # prepend docker.io
           dev_tags: |
-            docker.io/hashicorppreview/${{ env.repo }}:${{ env.version }}-dev
+            docker.io/hashicorppreview/${{ env.repo }}:${{ env.base-version }}-dev
             docker.io/hashicorppreview/${{ env.repo }}:${{ env.version }}-${{ github.sha }}
 
   build-docker-alternate:
