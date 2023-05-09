@@ -42,7 +42,7 @@ LABEL name="Consul Telemetry Collector" \
       version=${PRODUCT_VERSION} \
       release=${PRODUCT_REVISION} \
       revision=${PRODUCT_REVISION} \
-      description="Consul Telemetry Collector is a service mesh observability tools that collectors and forwards service mesh information via open-telemetry"
+      description="Consul Telemetry Collector is a service mesh observability tool that collects and forwards service mesh information via open-telemetry"
 
 # Create a non-root user to run the software.
 RUN addgroup $PRODUCT_NAME && \
