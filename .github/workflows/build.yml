@@ -3,9 +3,9 @@ name: build
 on:
   workflow_dispatch:
   push:
-  branches:
-    - main
-    - 'release/*.*.x'
+    #branches:
+    #  - main
+    #  - 'release/*.*.x'
 
 env:
   PKG_NAME: "consul-telemetry-collector"
