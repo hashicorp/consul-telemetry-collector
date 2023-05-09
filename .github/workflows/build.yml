@@ -271,33 +271,6 @@ jobs:
             docker.io/hashicorppreview/${{ env.repo }}:${{ env.base-version }}-dev
             docker.io/hashicorppreview/${{ env.repo }}:${{ env.version }}-${{ github.sha }}
 
-  build-docker-alternate:
-    name: Docker ${{ matrix.arch }} alternate release build
-    needs:
-      - set-product-version
-      - build-linux
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        arch: ["arm", "arm64", "386", "amd64"]
-    env:
-      repo: ${{ github.event.repository.name }}
-      version: ${{ needs.set-product-version.outputs.product-version }}
-
-    steps:
-      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b #https://github.com/actions/checkout/releases/tag/v3.2.0
-      - uses: hashicorp/actions-docker-build@v1
-        with:
-          version: ${{ env.version }}
-          target: release-alternate
-          arch: ${{ matrix.arch }}
-          tags: |
-            docker.io/hashicorp/${{ env.repo }}-alternate:${{ env.version }}
-            986891699432.dkr.ecr.us-east-1.amazonaws.com/hashicorp/${{ env.repo }}:alternate-${{ env.version }}
-          dev_tags: |
-            docker.io/hashicorppreview/${{ env.repo }}-alternate:${{ env.version }}-dev
-            docker.io/hashicorppreview/${{ env.repo }}-alternate:${{ env.version }}-${{ github.sha }}
-
   # build-docker-redhat is an example of how to build a Red Hat Certified Container (RHCC) Image.
   # This means it uses the 'redhat_tag' input, instead of 'tags' and 'dev_tags'.
   #
