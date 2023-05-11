@@ -1,6 +1,7 @@
 package metrics
 
 import (
+	"errors"
 	"io"
 
 	metricsv3 "github.com/envoyproxy/go-control-plane/envoy/service/metrics/v3"
@@ -13,7 +14,7 @@ import (
 	"github.com/hashicorp/consul-telemetry-collector/internal/translator/otlp/prometheus"
 )
 
-// Receiver is the metrics implementation for an envoy metrics receiver
+// Receiver is the metrics implementation for an envoy metrics receiver.
 type Receiver struct {
 	nextConsumer consumer.Metrics
 	logger       *zap.Logger
@@ -33,7 +34,7 @@ func New(nextConsumer consumer.Metrics, logger *zap.Logger) *Receiver {
 	}
 }
 
-// Register will register the MetricsServiceServer on the provided grpc Server
+// Register will register the MetricsServiceServer on the provided grpc Server.
 func (r *Receiver) Register(g *grpc.Server) {
 	metricsv3.RegisterMetricsServiceServer(g, r)
 }
@@ -47,7 +48,7 @@ func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsSe
 	for {
 		metricsMessage, err := stream.Recv()
 		if err != nil {
-			if err == io.EOF {
+			if errors.Is(err, io.EOF) {
 				return stream.SendAndClose(&metricsv3.StreamMetricsResponse{})
 			}
 			return err
@@ -91,6 +92,10 @@ func translateMetrics(resourceLabels map[string]string, envoyMetrics []*prompb.M
 			b.AddGauge(metric)
 		case prompb.MetricType_HISTOGRAM:
 			b.AddHistogram(metric)
+		case prompb.MetricType_GAUGE_HISTOGRAM:
+		case prompb.MetricType_SUMMARY:
+		case prompb.MetricType_UNTYPED:
+			// do nothing
 		}
 	}
 
