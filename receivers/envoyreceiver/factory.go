@@ -17,7 +17,7 @@ const (
 	defaultGRPCEndpoint = "0.0.0.0:9356"
 )
 
-// NewFactory creates a new envoy receiver factory
+// NewFactory creates a new envoy receiver factory.
 func NewFactory() receiver.Factory {
 	return receiver.NewFactory(
 		typeStr,
@@ -26,12 +26,11 @@ func NewFactory() receiver.Factory {
 	)
 }
 
-func createMetrics(ctx context.Context,
+func createMetrics(_ context.Context,
 	set receiver.CreateSettings,
 	cfg component.Config,
 	// nextConsumer is whatever component is next on the pipeline.
 	nextConsumer consumer.Metrics) (receiver.Metrics, error) {
-
 	if nextConsumer == nil {
 		return nil, component.ErrNilNextConsumer
 	}

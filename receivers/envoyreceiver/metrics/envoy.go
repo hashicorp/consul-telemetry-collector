@@ -42,7 +42,6 @@ func (r *Receiver) Register(g *grpc.Server) {
 // StreamMetrics implements the envoy MetricsServiceServer method StreamMetrics.
 // It will consume the envoy prometheus metrics and write them to the nextConsumer.
 func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsServer) error {
-
 	var identifier *metricsv3.StreamMetricsMessage_Identifier
 	var labels map[string]string
 	for {
