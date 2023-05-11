@@ -9,10 +9,9 @@ import (
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/confmap"
 
-	"github.com/hashicorp/hcp-sdk-go/resource"
-
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
+	"github.com/hashicorp/hcp-sdk-go/resource"
 )
 
 type hcpProvider struct {
@@ -28,7 +27,7 @@ const schemePrefix = scheme + ":"
 
 var _ confmap.Provider = (*hcpProvider)(nil)
 
-// NewProvider creates a new static in memory configmap provider
+// NewProvider creates a new static in memory configmap provider.
 func NewProvider(
 	forwarderEndpoint string,
 	client hcp.TelemetryClient,
@@ -138,7 +137,5 @@ func (m *hcpProvider) Shutdown(_ context.Context) error {
 }
 
 func (m *hcpProvider) configChange() bool {
-	// changed := m.client.configChange()
-	// return changed
 	return false
 }

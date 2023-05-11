@@ -6,10 +6,10 @@ import (
 
 const resourceProcessorName = "resource"
 
-// ResourceProcessorID is the component id of the resource processor
+// ResourceProcessorID is the component id of the resource processor.
 var ResourceProcessorID component.ID = component.NewID(resourceProcessorName)
 
-// ResourceProcessorConfig configures the Resource Processor
+// ResourceProcessorConfig configures the Resource Processor.
 type ResourceProcessorConfig struct {
 	Attributes []Actions `mapstructure:"attributes"`
 }
@@ -25,7 +25,7 @@ const (
 	clusterKey = "cluster"
 )
 
-// Actions specifys the key, value and action that should be acted upon
+// Actions specifys the key, value and action that should be acted upon.
 type Actions struct {
 	// Key specifies the attribute to act upon.
 	// This is a required field.
@@ -55,7 +55,7 @@ type Actions struct {
 }
 
 // ResourcesProcessorCfg generates the config for a resource processor.
-// The cluster's ResourceID is upserted as a label in all metrics
+// The cluster's ResourceID is upserted as a label in all metrics.
 func ResourcesProcessorCfg(resourceID string) ResourceProcessorConfig {
 	return ResourceProcessorConfig{Attributes: []Actions{
 		{

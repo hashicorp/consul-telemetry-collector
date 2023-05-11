@@ -6,6 +6,8 @@ import (
 	"io"
 	"os"
 
+	"go.uber.org/multierr"
+
 	"github.com/hashicorp/hcl/v2/hclsimple"
 )
 
@@ -24,10 +26,9 @@ func configFromEnvVars() *Config {
 		ConfigFile:            os.Getenv(COOConfigPath),
 		HTTPCollectorEndpoint: os.Getenv(COOtelHTTPEndpoint),
 	}
-
 }
 
-// used to parse a file path and return a configuration
+// used to parse a file path and return a configuration.
 type parser func(string) (*Config, error)
 
 // ParseFile parses the given file for a configuration. The file is expected
@@ -41,12 +42,11 @@ func parseFile(filename string) (*Config, error) {
 	mb := int64(1024 * 1024 * 1024)
 	r := io.LimitReader(f, mb)
 	cfg, err := readConfiguration(r, filename)
+	cerr := f.Close()
 	if err != nil {
-		f.Close()
-		return nil, err
+		return nil, multierr.Append(err, cerr)
 	}
-	f.Close()
-	return cfg, nil
+	return cfg, cerr
 }
 
 func readConfiguration(reader io.Reader, filename string) (*Config, error) {
@@ -65,14 +65,14 @@ func readConfiguration(reader io.Reader, filename string) (*Config, error) {
 	return cfg, nil
 }
 
-// Config is the global collector configuration
+// Config is the global collector configuration.
 type Config struct {
 	Cloud                 *Cloud `hcl:"cloud,block"`
 	HTTPCollectorEndpoint string `hcl:"http_collector_endpoint,optional"`
 	ConfigFile            string
 }
 
-// Cloud is the HCP Cloud configuration
+// Cloud is the HCP Cloud configuration.
 type Cloud struct {
 	ClientID     string `hcl:"client_id,optional"`
 	ClientSecret string `hcl:"client_secret,optional"`
@@ -80,7 +80,7 @@ type Cloud struct {
 }
 
 // IsEnabled checks if the Cloud config is enabled. It returns false if the ClientID,
-// ClientSecret and ResourceID are all empty
+// ClientSecret and ResourceID are all empty.
 func (c *Cloud) IsEnabled() bool {
 	if c == nil {
 		return false

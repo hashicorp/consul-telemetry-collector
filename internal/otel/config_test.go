@@ -12,9 +12,8 @@ import (
 	"go.opentelemetry.io/collector/confmap/provider/fileprovider"
 	"go.opentelemetry.io/collector/otelcol"
 
-	"github.com/hashicorp/hcp-sdk-go/resource"
-
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
+	"github.com/hashicorp/hcp-sdk-go/resource"
 )
 
 func Test_newConfigProvider(t *testing.T) {

@@ -82,7 +82,6 @@ func Test_Validation(t *testing.T) {
 		},
 	} {
 		t.Run(name, func(t *testing.T) {
-
 			err := tc.input.validate()
 			if tc.err != nil {
 				test.Error(t, err)
@@ -90,7 +89,6 @@ func Test_Validation(t *testing.T) {
 				return
 			}
 			test.NoError(t, err)
-
 		})
 	}
 }
@@ -124,7 +122,7 @@ func Test_ReadFile(t *testing.T) {
 		},
 		"ClientIDJson": {
 			json:   true,
-			config: fmt.Sprintf(`{"cloud":{"client_id":"%s"}}`, clientid),
+			config: fmt.Sprintf(`{"cloud":{"client_id":%q}}`, clientid),
 			expect: &Config{
 				Cloud: &Cloud{
 					ClientID: clientid,
@@ -132,7 +130,7 @@ func Test_ReadFile(t *testing.T) {
 			},
 		},
 		"ClientId": {
-			config: fmt.Sprintf(`cloud {client_id = "%s" }`, clientid),
+			config: fmt.Sprintf(`cloud {client_id = %q }`, clientid),
 			expect: &Config{
 				Cloud: &Cloud{
 					ClientID: clientid,
@@ -218,13 +216,12 @@ func Test_ReadFile(t *testing.T) {
 		},
 		"InvalidConfigFile": {
 			config: `cloud = {}`,
-			err:    errors.New("Unsupported argument"),
+			err:    errors.New(`Unsupported argument; An argument named "cloud" is not expected here. Did you mean to define a block of type "cloud"?`),
 		},
 	}
 
 	for name, tc := range testcases {
 		t.Run(name, func(t *testing.T) {
-
 			r := strings.NewReader(tc.config)
 			filename := "config.hcl"
 			if tc.json {
@@ -239,7 +236,6 @@ func Test_ReadFile(t *testing.T) {
 			}
 			test.NoError(t, err)
 			test.Eq(t, outputConfig, tc.expect)
-
 		})
 	}
 }

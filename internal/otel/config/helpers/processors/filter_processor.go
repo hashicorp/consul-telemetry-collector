@@ -4,38 +4,38 @@ import (
 	"fmt"
 	"regexp"
 
-	"github.com/hashicorp/go-hclog"
 	"go.opentelemetry.io/collector/component"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
+	"github.com/hashicorp/go-hclog"
 )
 
 const filterProcessorName = "filter"
 
-// FilterProcessorID is the component id of the filter processor
+// FilterProcessorID is the component id of the filter processor.
 var FilterProcessorID component.ID = component.NewID(filterProcessorName)
 
 const (
 	regexpMatchType = "regexp"
 )
 
-// FilterProcessorConfig creates the filter processor configuration
+// FilterProcessorConfig creates the filter processor configuration.
 type FilterProcessorConfig struct {
 	Metrics *MetricFilters `mapstructure:"metrics"`
 }
 
-// MetricFilters is the filter configuration for metrics
+// MetricFilters is the filter configuration for metrics.
 type MetricFilters struct {
 	Include *MatchProperties `mapstructure:"include"`
 }
 
-// MatchProperties specifies how to match against a set of metric names for filtering signals
+// MatchProperties specifies how to match against a set of metric names for filtering signals.
 type MatchProperties struct {
 	MatchType   string   `mapstructure:"match_type"`
 	MetricNames []string `mapstructure:"metric_names"`
 }
 
-// FilterProcessorCfg generates the config for a filter processor
+// FilterProcessorCfg generates the config for a filter processor.
 func FilterProcessorCfg(client hcp.TelemetryClient) *FilterProcessorConfig {
 	usableFilters := []string{}
 	filters, err := client.MetricFilters()

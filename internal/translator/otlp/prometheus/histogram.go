@@ -7,7 +7,7 @@ import (
 	"go.opentelemetry.io/collector/pdata/pmetric"
 )
 
-// AddHistogram converts a prometheus histogram to an OTLP histogram
+// AddHistogram converts a prometheus histogram to an OTLP histogram.
 func (b *Builder) AddHistogram(family *prompb.MetricFamily) {
 	otlpMetric := pmetric.NewMetric()
 
@@ -17,7 +17,6 @@ func (b *Builder) AddHistogram(family *prompb.MetricFamily) {
 	emptyHistogram := otlpMetric.SetEmptyHistogram()
 	emptyHistogram.SetAggregationTemporality(pmetric.AggregationTemporalityDelta)
 	for _, metric := range family.GetMetric() {
-
 		histogram := metric.GetHistogram()
 
 		if !isValidHistogram(histogram) {

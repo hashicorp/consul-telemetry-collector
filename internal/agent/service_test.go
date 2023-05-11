@@ -38,5 +38,4 @@ func Test_runSvc(t *testing.T) {
 			must.NoError(t, err)
 		})
 	}
-
 }

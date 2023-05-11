@@ -12,7 +12,7 @@ import (
 )
 
 // Params are the inputs to the configuration building process. Only some config requires
-// these inputs
+// these inputs.
 type Params struct {
 	OtlpHTTPEndpoint string
 	Client           hcp.TelemetryClient
@@ -21,7 +21,7 @@ type Params struct {
 	ResourceID       string
 }
 
-// PipelineConfigBuilder defines a basic list of pipeline component IDs for a service.PipelineConfig
+// PipelineConfigBuilder defines a basic list of pipeline component IDs for a service.PipelineConfig.
 func PipelineConfigBuilder(p *Params) service.PipelineConfig {
 	baseCfg := service.PipelineConfig{
 		Processors: []component.ID{
@@ -45,11 +45,11 @@ func PipelineConfigBuilder(p *Params) service.PipelineConfig {
 	return baseCfg
 }
 
-// Opts is a variadic type passed in as a way  of manipulating a list of components
+// Opts is a variadic type passed in as a way  of manipulating a list of components.
 type Opts func([]component.ID) []component.ID
 
 // WithExtOauthClientID is an Opt function to add the oauthclient id to the list of extensions
-// NOTE: this extension will require
+// NOTE: this extension will require.
 func WithExtOauthClientID(ext []component.ID) []component.ID {
 	return append(ext, extensions.OauthClientID)
 }
@@ -59,12 +59,12 @@ func WithFilterProcessor(procesors []component.ID) []component.ID {
 	return append(procesors, processors.FilterProcessorID)
 }
 
-// WithResourceProcessor adds the resource processor to a list of processors. It should go after the filter processor to ensure that we do not operate on signals that we won't forward
+// WithResourceProcessor adds the resource processor to a list of processors. It should go after the filter processor to ensure that we do not operate on signals that we won't forward.
 func WithResourceProcessor(prcs []component.ID) []component.ID {
 	return append(prcs, processors.ResourceProcessorID)
 }
 
-// ExtensionBuilder builds a list of extension IDs. Optionally we can include more ids with variadic opts
+// ExtensionBuilder builds a list of extension IDs. Optionally we can include more ids with variadic opts.
 func ExtensionBuilder(opts ...Opts) []component.ID {
 	base := []component.ID{
 		extensions.BallastID,
@@ -76,7 +76,7 @@ func ExtensionBuilder(opts ...Opts) []component.ID {
 }
 
 // ProcessorBuilder returns a list of processor IDs.
-// The provided IDs inserted between the memory limiter and batch processor
+// The provided IDs inserted between the memory limiter and batch processor.
 func ProcessorBuilder(opts ...Opts) []component.ID {
 	base := []component.ID{
 		processors.MemoryLimiterID,

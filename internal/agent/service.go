@@ -6,19 +6,18 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/hashicorp/go-hclog"
-
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel"
+	"github.com/hashicorp/go-hclog"
 )
 
-// Service runs a otel.Collector with a configured otel pipeline
+// Service runs a otel.Collector with a configured otel pipeline.
 type Service struct {
 	cfg       otel.CollectorCfg
 	collector otel.Collector
 }
 
-// NewService returns a new Service based off the past in configuration
+// NewService returns a new Service based off the past in configuration.
 func NewService(cfg *Config) (*Service, error) {
 	s := &Service{}
 	s.cfg = otel.CollectorCfg{ForwarderEndpoint: cfg.HTTPCollectorEndpoint}
@@ -46,7 +45,7 @@ func NewService(cfg *Config) (*Service, error) {
 	return s, nil
 }
 
-// Run will initialize and Start the consul-telemetry-collector Service
+// Run will initialize and Start the consul-telemetry-collector Service.
 func (s *Service) Run(ctx context.Context) error {
 	logger := hclog.FromContext(ctx)
 

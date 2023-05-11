@@ -15,7 +15,7 @@ type externalProvider struct {
 
 var _ confmap.Provider = (*externalProvider)(nil)
 
-// NewProvider creates a new static in memory configmap provider
+// NewProvider creates a new static in memory configmap provider.
 func NewProvider(forwarderEndpoint string) confmap.Provider {
 	return &externalProvider{
 		otlpHTTPEndpoint: forwarderEndpoint,
@@ -24,7 +24,6 @@ func NewProvider(forwarderEndpoint string) confmap.Provider {
 
 func (m *externalProvider) Retrieve(_ context.Context, _ string, _ confmap.WatcherFunc) (*confmap.Retrieved,
 	error) {
-
 	// Create new empty configuration
 	c := config.NewConfig()
 
