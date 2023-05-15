@@ -49,5 +49,4 @@ func Test_FilterProcessor(t *testing.T) {
 			require.Equal(t, cfg, unmarshalledCfg)
 		})
 	}
-
 }

@@ -26,11 +26,10 @@ The collector can also:
 ### Forward to HCP
 
 Use the CLIENT_ID, CLIENT_SECRET, and RESOURCE_ID created for observability
-from HCP Consul as configuration for. The collector will
-then use them to send metrics to HCP.
-```
-HCP_CLIENT_ID=<client-id> HCP_CLIENT_SECRET=<client-secret>
-HCP_RESOURCE_ID=<resource-id> consul-telemetry-collector agent
+from HCP Consul. The collector will use them to send metrics to HCP.
+
+```bash
+HCP_CLIENT_ID=<client_id> HCP_CLIENT_SECRET=<client_secret> HCP_RESOURCE_ID=<resource_id> consul-telemetry-collector agent
 ```
 
 ## Development
@@ -39,13 +38,13 @@ HCP_RESOURCE_ID=<resource-id> consul-telemetry-collector agent
 
 #### Binary
 
-```
+```bash
 make dev
 ```
 
 #### Docker Image
 
-```
+```bash
 make docker
 ```
 
@@ -53,6 +52,6 @@ make docker
 
 #### Unit Tests
 
-```
+```bash
 make unit-tests
 ```

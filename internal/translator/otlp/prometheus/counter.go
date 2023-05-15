@@ -5,7 +5,7 @@ import (
 	"go.opentelemetry.io/collector/pdata/pmetric"
 )
 
-// AddCounter converts a prometheus counter to an OTLP monotonic Sum and adds it to the metrics builder
+// AddCounter converts a prometheus counter to an OTLP monotonic Sum and adds it to the metrics builder.
 func (b *Builder) AddCounter(family *prompb.MetricFamily) {
 	otlpMetric := pmetric.NewMetric()
 

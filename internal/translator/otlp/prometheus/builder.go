@@ -5,13 +5,13 @@ import (
 	"go.opentelemetry.io/collector/pdata/pmetric"
 )
 
-// Builder is an OTLP metric builder
+// Builder is an OTLP metric builder.
 type Builder struct {
 	identity pcommon.Resource
 	metrics  []pmetric.Metric
 }
 
-// NewBuilder creates a new OTLP metric builder to convert prometheus metrics to OTLP metrics
+// NewBuilder creates a new OTLP metric builder to convert prometheus metrics to OTLP metrics.
 func NewBuilder(identityLabels map[string]string) *Builder {
 	resource := pcommon.NewResource()
 
@@ -25,7 +25,7 @@ func NewBuilder(identityLabels map[string]string) *Builder {
 	return b
 }
 
-// Build adds converted metrics to a new pmetric.Metrics
+// Build adds converted metrics to a new pmetric.Metrics.
 func (b *Builder) Build() pmetric.Metrics {
 	metricsSlice := pmetric.NewMetricSlice()
 

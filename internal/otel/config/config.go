@@ -3,7 +3,6 @@ package config
 import (
 	"errors"
 
-	"github.com/hashicorp/go-multierror"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/service"
 
@@ -11,9 +10,10 @@ import (
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/extensions"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/processors"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/receivers"
+	"github.com/hashicorp/go-multierror"
 )
 
-// componentMap is a way of identifying a component and it's specific configuration
+// componentMap is a way of identifying a component and it's specific configuration.
 type componentMap map[component.ID]any
 
 // Config is a helper type to create a new opentelemetry server configuration.
@@ -28,7 +28,7 @@ type Config struct {
 	Service    service.Config `mapstructure:"service"`
 }
 
-// NewConfig creates a new config object with all types initialized
+// NewConfig creates a new config object with all types initialized.
 func NewConfig() *Config {
 	svcConfig := service.Config{}
 	svcConfig.Pipelines = make(map[component.ID]*service.PipelineConfig)
@@ -44,7 +44,7 @@ func NewConfig() *Config {
 
 // EnrichWithPipelineCfg enrichs a Config by taking the IDs specified in a pipeline config
 // and builds the corresponding configuration for each component ID. Some of these components
-// require a set of params
+// require a set of params.
 func (c *Config) EnrichWithPipelineCfg(
 	pCfg service.PipelineConfig,
 	p *Params,
@@ -84,7 +84,7 @@ func (c *Config) EnrichWithExtensions(
 // buildComponents takes a componentMap (map[component.ID]any) and a list
 // of componentIDs. If the componentMap doesn't yet have that component we
 // will build it and attach it to the componentMap for that ID. Otherwise we move
-// on
+// on.
 func buildComponents(
 	componentMap componentMap,
 	componentIDs []component.ID,
@@ -102,7 +102,7 @@ func buildComponents(
 	return nil
 }
 
-// buildComponent returns a configuration type for a specific ID
+// buildComponent returns a configuration type for a specific ID.
 func buildComponent(id component.ID, p *Params) (any, error) {
 	switch id {
 	// receivers

@@ -1,29 +1,132 @@
+run:
+  timeout: 5m
+  tests: true
+
 linters:
   enable:
-    - errcheck
-    - govet
-    - ineffassign
-    - unused
+    - asasalint # checks for pass []any as any in variadic func(...any)
+    - asciicheck # checks that your code does not contain non-ASCII identifiers
+    - bidichk # checks for dangerous unicode character sequences
     - bodyclose
-    - gocritic
-    - misspell
-    - unconvert
-    - staticcheck
-    - gosimple
-    - stylecheck
-    - goimports
+    - containedctx
+    - decorder # checks declaration order and count of types, constants, variables and functions
     - depguard
-    - gofmt
+    - dogsled
+    - durationcheck # checks for two durations multiplied together
+    - errcheck
+    - errname
+    - errorlint
+    - exportloopref # checks for pointers to enclosing loop variables
+    - gci
+    - gochecknoinits # checks that no init functions are present in Go code
+    - gocritic
+    - godot # all comments should end in a period
+    - gosimple
+    - govet
+    - importas # enforces consistent import aliases
+    - ineffassign
+    - loggercheck
+    - makezero # finds slice declarations with non-zero initial length
+    - misspell
+    - nakedret
+    - nestif
+    - nilerr # finds the code that returns nil even if it checks that the error is not nil
+    - nilnil # checks that there is no simultaneous return of nil error and an invalid value
+    - noctx # finds sending http request without context.Context
+    - nolintlint
+    - predeclared # finds code that shadows one of Go's predeclared identifiers
+    - reassign # checks that package variables are not reassigned
     - revive
+    - rowserrcheck
+    - sqlclosecheck
+    - staticcheck
+    - stylecheck
+    - tagliatelle # checks the struct tags
+    - tenv
+    - thelper # detects golang test helpers without t.Helper() call and checks the consistency of test helpers
+    - unconvert # removes unnecessary type conversions
+    - unparam # reports unused function parameters
+    - unused
+    - usestdlibvars # detects the possibility to use variables/constants from the Go standard library
+    - wastedassign # finds wasted assignment statements
+    - whitespace # detects leading and trailing whitespace
+
+linters-settings:
+  gci:
+    skip-generated: true
+    custom-order: true
+    sections:
+      - standard # Standard section: captures all standard packages.
+      - default # Default section: contains all imports that could not be matched to another section type.
+      - prefix(github.com/hashicorp)
+
+  gocritic:
+    enabled-tags:
+      - diagnostic
+      - style
+      - performance
+      - experimental
+      - opinionated
+    disabled-checks:
+      - hugeParam # conflicts with some cloud-sdk interfaces
+      - importShadow # noisy
+    settings:
+      captLocal:
+        # Whether to restrict checker to params only.
+        # Default: true
+        paramsOnly: false
+      underef:
+        # Whether to skip (*x).method() calls where x is a pointer receiver.
+        # Default: true
+        skipRecvDeref: false
+      unnamedResult:
+        # Whether to check exported functions.
+        # Default: false
+        checkExported: true
+
+  govet:
+    enable-all: true
+    disable:
+      - fieldalignment # too strict
+      - shadow # conflicts with gocritic
+
+  misspell:
+    locale: US
+
+  nakedret:
+    max-func-lines: 0
+
+  nestif:
+    # Minimal complexity of if statements to report.
+    # Default: 5
+    min-complexity: 4
+
+  nolintlint:
+    # Enable to require an explanation of nonzero length after each nolint directive.
+    # Default: false
+    require-explanation: true
+
+  rowserrcheck:
+    # database/sql is always checked
+    # Default: []
+    packages:
+      - github.com/jmoiron/sqlx
+
+  stylecheck:
+    checks: ["all"]
 
 issues:
+  include:
+    - EXC0001 # Error return value of x is not checked
+    - EXC0004 # possible misuse of unsafe.Pointer|should have signature
+    - EXC0009 # Expect directory permissions to be 0750 or less|Expect file permissions to be 0600 or less
+    - EXC0010 # Potential file inclusion via variable
+    - EXC0012 # exported (.+) should have comment( \(or a comment on this block\))? or be unexported
+    - EXC0013 # package comment should be of the form "(.+)...
+    - EXC0014 # comment on exported (.+) should be of the form "(.+)..."
+    - EXC0015 # should have a package comment
+
   exclude-rules:
     - path: _test\.go
       linters:
-        - revive
-    - path: mock.*.go
-      linters:
-        - revive
-  include:
-    - EXC0011 # https://golangci-lint.run/usage/false-positives/#exc0011
-    - EXC0012 # https://golangci-lint.run/usage/false-positives/#exc0012
+        - revive # revive checks errors and some validation errors from hclsimple run afoul

@@ -11,7 +11,7 @@ const ( // supported trace propagators
 	b3Propagator           = "b3"
 )
 
-// Telemetry returns our basic telemetry configuration
+// Telemetry returns our basic telemetry configuration.
 func Telemetry() telemetry.Config {
 	return telemetry.Config{
 		Logs: telemetry.LogsConfig{

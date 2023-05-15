@@ -14,7 +14,7 @@ const (
 	oauth2ClientName = "oauth2client"
 )
 
-// OauthClientID is the component.ID used by the oauth2client extension
+// OauthClientID is the component.ID used by the oauth2client extension.
 var OauthClientID component.ID = component.NewIDWithName(oauth2ClientName, "hcp")
 
 // OauthClientConfig is a base wrapper around the oauth2clientauthextension.Config which
@@ -38,8 +38,8 @@ type OauthClientConfig struct {
 	TokenURL string `mapstructure:"token_url"`
 }
 
-// OauthClientCfg returns a component ID and oauth config
-func OauthClientCfg(clientID string, clientSecret string) *OauthClientConfig {
+// OauthClientCfg returns a component ID and oauth config.
+func OauthClientCfg(clientID, clientSecret string) *OauthClientConfig {
 	return &OauthClientConfig{
 		ClientID:       clientID,
 		ClientSecret:   clientSecret,

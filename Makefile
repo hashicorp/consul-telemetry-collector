@@ -51,6 +51,14 @@ go/lint:
 		cd - > /dev/null; \
 	done
 
+go/fix:
+	@ for mod in $(GO_MODULE_DIRS) ; do \
+		cd $$mod > /dev/null; \
+		echo "linting $$mod"; \
+		golangci-lint run --timeout 5m --config $(GOLANGCI_CONFIG_DIR)/.golangci.yml --fix ;\
+		cd - > /dev/null; \
+	done
+
 .PHONY: deps
 deps:
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.50.1
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2

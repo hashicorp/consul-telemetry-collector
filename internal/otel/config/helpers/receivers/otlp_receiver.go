@@ -3,15 +3,14 @@ package receivers
 
 import (
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/receiver/otlpreceiver"
-
 	"go.opentelemetry.io/collector/config/configgrpc"
 	"go.opentelemetry.io/collector/config/confighttp"
+	"go.opentelemetry.io/collector/receiver/otlpreceiver"
 )
 
 const otlpReceiverName = "otlp"
 
-// OtlpReceiverID is the component id of the otlp receiver
+// OtlpReceiverID is the component id of the otlp receiver.
 var OtlpReceiverID component.ID = component.NewID(otlpReceiverName)
 
 // Protocols is the configuration for the supported protocols.
@@ -26,10 +25,8 @@ type OtlpReceiverConfig struct {
 	Protocols `mapstructure:"protocols"`
 }
 
-// OtlpReceiverCfg  generates the config for an otlp receiver
+// OtlpReceiverCfg  generates the config for an otlp receiver.
 func OtlpReceiverCfg() *OtlpReceiverConfig {
-	// cfg := otlpreceiver.Config{}
-	// cfg.HTTP = &confighttp.HTTPServerSettings{}
 	defaults := otlpreceiver.NewFactory().CreateDefaultConfig().(*otlpreceiver.Config)
 
 	return &OtlpReceiverConfig{

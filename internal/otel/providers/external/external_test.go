@@ -22,6 +22,8 @@ func Test_InMem(t *testing.T) {
 }
 
 func asMap(t *testing.T, a any) map[string]any {
+	t.Helper()
+
 	m, ok := a.(map[string]any)
 	must.True(t, ok)
 	return m

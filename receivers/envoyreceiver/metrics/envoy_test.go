@@ -111,7 +111,7 @@ func (c ContainsFunc[T]) Contains(v T) bool {
 }
 
 // ContainsMetric returns a ContainsFunc that looks through a pmetric.MetricSlice to see if the name,
-// attributes and value match. It expects each datapoint slice to have 1 value
+// attributes and value match. It expects each datapoint slice to have 1 value.
 func ContainsMetric(ms pmetric.MetricSlice) ContainsFunc[pmetric.Metric] {
 	return func(needle pmetric.Metric) bool {
 		for i := 0; i < ms.Len(); i++ {
@@ -167,6 +167,8 @@ func ContainsMetric(ms pmetric.MetricSlice) ContainsFunc[pmetric.Metric] {
 }
 
 func verifyPMetrics(t *testing.T, metrics pmetric.Metrics) pmetric.MetricSlice {
+	t.Helper()
+
 	must.Eq(t, 1, metrics.ResourceMetrics().Len())
 	must.Eq(t, 1, metrics.ResourceMetrics().At(0).ScopeMetrics().Len())
 
