@@ -61,9 +61,8 @@ func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsSe
 			identifier = metricsMessage.GetIdentifier()
 
 			labels = map[string]string{
-				"envoy.cluster": identifier.GetNode().GetCluster(),
-				"envoy.id":      identifier.GetNode().GetId(),
-				"__replica__":   identifier.GetNode().GetId(),
+				"node.id":     identifier.GetNode().GetId(),
+				"__replica__": identifier.GetNode().GetId(),
 			}
 
 			fields := identifier.GetNode().GetMetadata().AsMap()
