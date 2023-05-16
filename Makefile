@@ -14,18 +14,21 @@ ifeq ($(ARCH),aarch64)
 endif
 OS       = $(shell uname | tr [[:upper:]] [[:lower:]])
 PLATFORM = $(OS)/$(ARCH)
+BIN_PATH ?= dist/$(PLATFORM)
 
 GO_MODULE_DIRS ?= $(shell go list -m -f "{{ .Dir }}" | grep -v mod-vendor)
 
 .PHONY: version
 version:
-	@bin/$(PLATFORM)/$(BIN_NAME) --version
+	@cat internal/version/VERSION
 
-.PHONY: bin
-bin:
-	@ GOARCH=amd64 GOOS=linux CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="$(GOLDFLAGS)" -o bin/linux/amd64/$(BIN_NAME) ./cmd/$(BIN_NAME)
-	@ GOARCH=amd64 GOOS=darwin CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="$(GOLDFLAGS)" -o bin/darwin/x86_64/$(BIN_NAME) ./cmd/$(BIN_NAME)
-	@ GOARCH=arm64 GOOS=darwin CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="$(GOLDFLAGS)" -o bin/darwin/arm64/$(BIN_NAME) ./cmd/$(BIN_NAME)
+.PHONY: dev
+dev:
+	CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="-X github.com/hashicorp/consul-telemetery-collector/internal/version.GitCommit=${GITHUB_SHA::8}" -o $(BIN_NAME) ./cmd/$(BIN_NAME)
+
+.PHONY: build
+build:
+	CGO_ENABLED=0 go build -trimpath -buildvcs=false -ldflags="-X github.com/hashicorp/consul-telemetery-collector/internal/version.GitCommit=${GITHUB_SHA::8}" -o $(BIN_PATH) ./cmd/$(BIN_NAME)
 
 go/test:
 	@ for mod in $(GO_MODULE_DIRS) ; do \
@@ -58,6 +61,9 @@ go/fix:
 		golangci-lint run --timeout 5m --config $(GOLANGCI_CONFIG_DIR)/.golangci.yml --fix ;\
 		cd - > /dev/null; \
 	done
+
+build/docker:
+	DOCKER_BUILDKIT=1 docker build -t consul-telemetry-collector --build-arg BIN_NAME=consul-telemetry-collector .
 
 .PHONY: deps
 deps:

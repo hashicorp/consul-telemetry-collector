@@ -2,13 +2,17 @@
 // components
 package version
 
-import "fmt"
+import (
+	_ "embed" // import embed package to embed Version file
+	"fmt"
+)
 
 var (
 	// GitCommit is the current Git SHA of the built project. It is set by LD flags.
 	GitCommit string
 
-	// Version is the static version tag of the project.
+	// Version is the static version tag of the project
+	//embed: VERSION
 	Version = "0.0.1"
 
 	// VersionPrerelease is the prerelease version string.
