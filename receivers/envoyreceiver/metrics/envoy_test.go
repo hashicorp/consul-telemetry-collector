@@ -99,7 +99,7 @@ func TestReceiver_StreamMetrics(t *testing.T) {
 	goldenMetricSlice := verifyPMetrics(t, goldenMetrics)
 
 	for i := 0; i < testMetrics.Len(); i++ {
-		must.Contains[pmetric.Metric](t, testMetrics.At(i), ContainsMetric(goldenMetricSlice),
+		must.Contains[pmetric.Metric](t, testMetrics.At(i), containsMetric(goldenMetricSlice),
 			must.Sprintf("metric %d is missing %s", i, spew.Sdump(testMetrics.At(i))))
 	}
 }
@@ -110,9 +110,9 @@ func (c ContainsFunc[T]) Contains(v T) bool {
 	return (c)(v)
 }
 
-// ContainsMetric returns a ContainsFunc that looks through a pmetric.MetricSlice to see if the name,
+// containsMetric returns a ContainsFunc that looks through a pmetric.MetricSlice to see if the name,
 // attributes and value match. It expects each datapoint slice to have 1 value.
-func ContainsMetric(ms pmetric.MetricSlice) ContainsFunc[pmetric.Metric] {
+func containsMetric(ms pmetric.MetricSlice) ContainsFunc[pmetric.Metric] {
 	return func(needle pmetric.Metric) bool {
 		for i := 0; i < ms.Len(); i++ {
 			m := ms.At(i)
