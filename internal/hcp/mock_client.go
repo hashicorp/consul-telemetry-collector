@@ -1,6 +1,6 @@
 package hcp
 
-// MockClient fulfills the TelemetryClient interface and returns static values. Used for testing
+// MockClient fulfills the TelemetryClient interface and returns static values. Used for testing.
 type MockClient struct {
 	MockMetricsEndpoint string
 	MockMetricFilters   []string

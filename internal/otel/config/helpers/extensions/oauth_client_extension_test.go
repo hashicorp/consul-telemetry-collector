@@ -26,8 +26,8 @@ func Test_OauthClient(t *testing.T) {
 	require.Equal(t, cfg, unmarshalledCfg)
 }
 
-// The purpose of this test is so that if the package ever supports marshalling with an opaque
-// client secret we might be able to use it. Since our configuration is marshalled we can't
+// The purpose of this test is so that if the package ever supports marshaling with an opaque
+// client secret we might be able to use it. Since our configuration is marshaled we can't
 // use it as it gets exported unfortunately.
 func Test_OauthClientPkg(t *testing.T) {
 	cfg := oauth2clientauthextension.Config{
@@ -44,5 +44,4 @@ func Test_OauthClientPkg(t *testing.T) {
 	require.NoError(t, err)
 
 	require.NotEqual(t, cfg, unmarshalledCfg)
-
 }

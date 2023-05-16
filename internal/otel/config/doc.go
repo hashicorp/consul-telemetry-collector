@@ -1,6 +1,6 @@
 // Package config manages helpers to generate opentelemetry-collector configuration.
 //
-// Currently the Config struct is the overarching configuration that is generated and marshalled to a confmap
+// Currently the Config struct is the overarching configuration that is generated and marshaled to a confmap
 // to be used by the providers in the otel/collector package.
 //
 //	type Config struct {
@@ -32,7 +32,7 @@
 //		}
 //		*/
 //
-// All of this is marshalled to a configuration that the otel collector sdk will run. The goal of this package is to help
+// All of this is marshaled to a configuration that the otel collector sdk will run. The goal of this package is to help
 // build a configuration that the marshaller will run with our defaults. We setup specific IDs for each pipeline
 //
 //	/*

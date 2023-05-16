@@ -24,13 +24,13 @@ type LoggingConfig struct {
 	SamplingThereafter int `mapstructure:"sampling_thereafter"`
 }
 
-// loggingExporterName is the component.ID value used by the logging exporter
+// loggingExporterName is the component.ID value used by the logging exporter.
 const loggingExporterName = "logging"
 
-// LoggingExporterID is the component.ID value used by the logging exporter
+// LoggingExporterID is the component.ID value used by the logging exporter.
 var LoggingExporterID component.ID = component.NewID(loggingExporterName)
 
-// LogExporterCfg generates the configuration for a logging exporter
+// LogExporterCfg generates the configuration for a logging exporter.
 func LogExporterCfg() *LoggingConfig {
 	defaults := loggingexporter.NewFactory().CreateDefaultConfig().(*loggingexporter.Config)
 

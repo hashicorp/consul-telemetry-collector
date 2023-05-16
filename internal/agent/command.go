@@ -9,11 +9,11 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/hashicorp/go-hclog"
 	"github.com/imdario/mergo"
 	"github.com/mitchellh/cli"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/flags"
+	"github.com/hashicorp/go-hclog"
 )
 
 const (
@@ -27,7 +27,7 @@ Usage: consul-telemetry-collector agent [options]
 `
 )
 
-// Command is the interface for running the collector
+// Command is the interface for running the collector.
 type Command struct {
 	// ui is used for output. It should only be used if the logger has yet to
 	// initialize. Otherwise always prefer the logger.
@@ -41,9 +41,8 @@ type Command struct {
 }
 
 // NewAgentCmd returns a new Agent command. It's mean to be only be called once
-// to load configuration
+// to load configuration.
 func NewAgentCmd(ui cli.Ui) (*Command, error) {
-
 	c := &Command{
 		ui: ui,
 	}
@@ -101,7 +100,7 @@ func (c *Command) loadConfiguration(ctx context.Context, args []string, filePars
 		}
 
 		// file configuration will be overridden by the f+env variable config
-		if err = mergo.Merge(fileConfig, cfg, mergo.WithOverride); err != nil {
+		if err := mergo.Merge(fileConfig, cfg, mergo.WithOverride); err != nil {
 			return nil, err
 		}
 		return fileConfig, nil
@@ -110,17 +109,17 @@ func (c *Command) loadConfiguration(ctx context.Context, args []string, filePars
 	return cfg, nil
 }
 
-// Synopsis gives details on how the collector runs
+// Synopsis gives details on how the collector runs.
 func (c *Command) Synopsis() string {
 	return synopsis
 }
 
-// Help provides specifications on how to run the collector
+// Help provides specifications on how to run the collector.
 func (c *Command) Help() string {
 	return c.help
 }
 
-// Run takes in args and runs the collector agent as an OTEL collector
+// Run takes in args and runs the collector agent as an OTEL collector.
 func (c *Command) Run(args []string) int {
 	logger := hclog.Default().Named("consul-collector")
 	ctx := hclog.WithContext(context.Background(), logger)

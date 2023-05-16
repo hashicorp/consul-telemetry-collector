@@ -6,10 +6,11 @@ import (
 
 	oErrors "github.com/go-openapi/errors"
 	"github.com/google/uuid"
+	"github.com/shoenig/test/must"
+
 	"github.com/hashicorp/hcp-sdk-go/clients/cloud-consul-telemetry-gateway/preview/2023-04-14/client/consul_telemetry_service"
 	"github.com/hashicorp/hcp-sdk-go/clients/cloud-consul-telemetry-gateway/preview/2023-04-14/models"
 	"github.com/hashicorp/hcp-sdk-go/resource"
-	"github.com/shoenig/test/must"
 )
 
 func testResource() *resource.Resource {
@@ -41,7 +42,6 @@ func Test_ParseResource(t *testing.T) {
 			}
 			must.NoError(t, err)
 			must.NotNil(t, res)
-
 		})
 	}
 }
@@ -73,7 +73,6 @@ func Test_ParseConfig(t *testing.T) {
 			}
 			must.NoError(t, err)
 			must.NotNil(t, config)
-
 		})
 	}
 }

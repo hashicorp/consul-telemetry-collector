@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/go-openapi/runtime"
+
 	"github.com/hashicorp/hcp-sdk-go/clients/cloud-consul-telemetry-gateway/preview/2023-04-14/client/consul_telemetry_service"
 	hcpconfig "github.com/hashicorp/hcp-sdk-go/config"
 	"github.com/hashicorp/hcp-sdk-go/httpclient"
@@ -12,7 +13,7 @@ import (
 	"github.com/hashicorp/hcp-sdk-go/resource"
 )
 
-// Params is structure used to hold parameters to generate a new client
+// Params is structure used to hold parameters to generate a new client.
 type Params struct {
 	ClientID, ClientSecret, ResourceURL string
 }
@@ -27,7 +28,7 @@ type telemetryConfig struct {
 }
 
 // Client provides a TelemetryClient that lazily retrieves configuration from HCP.
-// TelemtryConfiguration can be loaded on-demand using the ReloadConfig() function
+// TelemtryConfiguration can be loaded on-demand using the ReloadConfig() function.
 type Client struct {
 	metricCfg     *telemetryConfig
 	hcpResource   *resource.Resource
@@ -39,7 +40,7 @@ var _ TelemetryClient = (*Client)(nil)
 // agentTelemetryConfigClient is the interface we expect from the client we
 // create. If additional endpoints are needed this interface should expand to
 // handle those additional endpoints. Unfortunately the hcp-sdk does not generate
-// a mocked client so we use this to build our own mocks as necessary
+// a mocked client so we use this to build our own mocks as necessary.
 type agentTelemetryConfigClient interface {
 	AgentTelemetryConfig(
 		params *consul_telemetry_service.AgentTelemetryConfigParams,
@@ -72,7 +73,7 @@ func New(p *Params) (*Client, error) {
 	return newClient(p, client)
 }
 
-// newClient is an internal implementation that takes a clientFn to do deped
+// newClient is an internal implementation that takes a clientFn to do deped.
 func newClient(p *Params, gnmClient agentTelemetryConfigClient) (*Client, error) {
 	r, err := parseResource(p.ResourceURL)
 	if err != nil {
@@ -135,7 +136,7 @@ func (c *Client) ReloadConfig() error {
 	return nil
 }
 
-// MetricsEndpoint returns the metrics endpoint from the TelemetryConfig
+// MetricsEndpoint returns the metrics endpoint from the TelemetryConfig.
 func (c *Client) MetricsEndpoint() (string, error) {
 	if c.metricCfg == nil {
 		if err := c.ReloadConfig(); err != nil {
@@ -145,7 +146,7 @@ func (c *Client) MetricsEndpoint() (string, error) {
 	return c.metricCfg.endpoint, nil
 }
 
-// MetricFilters returns the metric inclusion filters from the TelemetryConfig
+// MetricFilters returns the metric inclusion filters from the TelemetryConfig.
 func (c *Client) MetricFilters() ([]string, error) {
 	if c.metricCfg == nil {
 		if err := c.ReloadConfig(); err != nil {

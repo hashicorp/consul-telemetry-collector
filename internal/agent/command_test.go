@@ -13,12 +13,18 @@ import (
 
 func setupEnv(t *testing.T, env map[string]string) {
 	t.Helper()
+
 	for k, v := range env {
-		os.Setenv(k, v)
+		if err := os.Setenv(k, v); err != nil {
+			t.Fatalf("failed to set test env var: %q: %q", k, v)
+		}
 	}
+
 	t.Cleanup(func() {
 		for k := range env {
-			os.Unsetenv(k)
+			if err := os.Unsetenv(k); err != nil {
+				t.Fatalf("failed to unset test env var: %q", k)
+			}
 		}
 	})
 }
@@ -34,7 +40,6 @@ func wrapOpt(s string) string {
 }
 
 func Test_loadConfiguration(t *testing.T) {
-
 	for name, tc := range map[string]struct {
 		configPath string
 		// this is the file config returned from file parsing.
@@ -49,7 +54,7 @@ func Test_loadConfiguration(t *testing.T) {
 
 		err error
 	}{
-		"Invalidflags": {
+		"InvalidFlags": {
 			args: []string{"-hcp-client-id 123"},
 			err:  errors.New("flag provided but not defined: -hcp-client-id 123"),
 		},

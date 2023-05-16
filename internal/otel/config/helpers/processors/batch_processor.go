@@ -7,10 +7,10 @@ import (
 
 const batchProcessorName = "batch"
 
-// BatchProcessorID is the component id of the batch processor
+// BatchProcessorID is the component id of the batch processor.
 var BatchProcessorID component.ID = component.NewID(batchProcessorName)
 
-// BatchProcessorCfg  generates the config for a batch processor
+// BatchProcessorCfg  generates the config for a batch processor.
 func BatchProcessorCfg() *batchprocessor.Config {
 	factory := batchprocessor.NewFactory()
 	cfg := factory.CreateDefaultConfig().(*batchprocessor.Config)

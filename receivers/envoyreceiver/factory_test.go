@@ -87,6 +87,8 @@ func TestCreateMetricReceiver(t *testing.T) {
 }
 
 func localEndpoint(t *testing.T) string {
+	t.Helper()
+
 	grabber := portal.New(t, portal.WithAddress("127.0.0.1"))
 	port := grabber.One()
 	return fmt.Sprintf("127.0.0.1:%d", port)

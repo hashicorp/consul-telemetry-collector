@@ -3,10 +3,11 @@ package main
 import (
 	"os"
 
+	"github.com/mitchellh/cli"
+
 	"github.com/hashicorp/consul-telemetry-collector/internal/agent"
 	"github.com/hashicorp/consul-telemetry-collector/internal/version"
 	"github.com/hashicorp/go-hclog"
-	"github.com/mitchellh/cli"
 )
 
 const (
@@ -44,5 +45,4 @@ func main() {
 	}
 
 	os.Exit(exitStatus)
-
 }

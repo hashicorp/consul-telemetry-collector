@@ -16,6 +16,11 @@ processors:
         metric_names:
           - "^a"
           - "b$"
+  resource:
+    attributes:
+      - key: cluster
+        action: upsert
+        value: "organization/00000000-0000-0000-0000-000000000003/project/00000000-0000-0000-0000-000000000004/hashicorp.consul.cluster/otel-with-cluster"
 
 extensions:
   oauth2client/hcp:
@@ -58,5 +63,5 @@ service:
       exporters: [logging,otlphttp]
     metrics/hcp:
       receivers: [otlp]
-      processors: [memory_limiter,filter,batch]
+      processors: [memory_limiter,filter,resource,batch]
       exporters: [logging,otlphttp/hcp]

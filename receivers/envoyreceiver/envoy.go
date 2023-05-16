@@ -29,14 +29,13 @@ var _ component.Component = (*envoyReceiver)(nil)
 
 var _ component.Config = (*Config)(nil)
 
-// Config is the configuration for the envoy receiver
+// Config is the configuration for the envoy receiver.
 type Config struct {
 	GRPC *configgrpc.GRPCServerSettings `mapstructure:"grpc"`
 }
 
 func newEnvoyReceiver(set receiver.CreateSettings,
 	cfg *Config) *envoyReceiver {
-
 	receiver := &envoyReceiver{
 		cfg:      cfg,
 		settings: set,
@@ -65,7 +64,7 @@ func (r *envoyReceiver) Start(_ context.Context, host component.Host) error {
 
 	r.shutdownCh = make(chan struct{})
 	go func() {
-		if grpcErr := r.grpcServer.Serve(listener); err != nil {
+		if grpcErr := r.grpcServer.Serve(listener); grpcErr != nil {
 			switch {
 			case errors.Is(grpcErr, grpc.ErrServerStopped):
 				// ignore ErrServerStopped because it's expected
@@ -80,7 +79,7 @@ func (r *envoyReceiver) Start(_ context.Context, host component.Host) error {
 	return nil
 }
 
-func (r *envoyReceiver) Shutdown(ctx context.Context) error {
+func (r *envoyReceiver) Shutdown(_ context.Context) error {
 	r.grpcServer.GracefulStop()
 	<-r.shutdownCh
 	return nil
@@ -88,5 +87,4 @@ func (r *envoyReceiver) Shutdown(ctx context.Context) error {
 
 func (r *envoyReceiver) registerMetrics(nextConsumer consumer.Metrics) {
 	r.metricsReceiver = metrics.New(nextConsumer, r.logger)
-
 }
