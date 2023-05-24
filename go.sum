@@ -373,6 +373,8 @@ github.com/hashicorp/hcl/v2 v2.16.1 h1:BwuxEMD/tsYgbhIW7UuI3crjovf3MzuFWiVgiv57i
 github.com/hashicorp/hcl/v2 v2.16.1/go.mod h1:JRmR89jycNkrrqnMmvPDMd56n1rQJ2Q6KocSLCMCXng=
 github.com/hashicorp/hcp-sdk-go v0.42.1-0.20230421152652-ecdf1b988cc0 h1:lYZQk9Peqk65mBOPj2a9ZQgSiQydPhNqpwP2dr8mVyc=
 github.com/hashicorp/hcp-sdk-go v0.42.1-0.20230421152652-ecdf1b988cc0/go.mod h1:hZqky4HEzsKwvLOt4QJlZUrjeQmb4UCZUhDP2HyQFfc=
+github.com/hashicorp/hcp-sdk-go v0.48.0 h1:LWpFR7YVDz4uG4C/ixcy2tRbg7/BgjMcTh1bRkKaeBQ=
+github.com/hashicorp/hcp-sdk-go v0.48.0/go.mod h1:hZqky4HEzsKwvLOt4QJlZUrjeQmb4UCZUhDP2HyQFfc=
 github.com/hashicorp/logutils v1.0.0/go.mod h1:QIAnNjmIWmVIIkWDTG1z5v++HQmx9WQRO+LraFDTW64=
 github.com/hashicorp/mdns v1.0.4/go.mod h1:mtBihi+LeNXGtG8L9dX59gAEa12BDtBQSp4v/YAJqrc=
 github.com/hashicorp/memberlist v0.3.0/go.mod h1:MS2lj3INKhZjWNqd3N0m3J+Jxf3DAOnAH9VT3Sh9MUE=
