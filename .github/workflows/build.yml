@@ -268,8 +268,8 @@ jobs:
           # will fail to any other DockerHub org or registry. You can optionally
           # prepend docker.io
           dev_tags: |
-            docker.io/hashicorppreview/${{ env.repo }}:${{ env.base-version }}-dev
-            docker.io/hashicorppreview/${{ env.repo }}:${{ env.version }}-${{ github.sha }}
+            docker.io/hashicorpdev/${{ env.repo }}:${{ env.base-version }}-dev
+            docker.io/hashicorpdev/${{ env.repo }}:${{ env.version }}-${{ github.sha }}
 
   # build-docker-redhat is an example of how to build a Red Hat Certified Container (RHCC) Image.
   # This means it uses the 'redhat_tag' input, instead of 'tags' and 'dev_tags'.
