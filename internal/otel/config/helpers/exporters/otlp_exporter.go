@@ -3,9 +3,10 @@ package exporters
 import (
 	"fmt"
 
-	"github.com/hashicorp/consul-telemetry-collector/internal/version"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/configauth"
+
+	"github.com/hashicorp/consul-telemetry-collector/internal/version"
 )
 
 // otlpHTTPExporterName is the component.ID value used by the otlphttp exporter.
@@ -41,7 +42,7 @@ func OtlpExporterCfg(endpoint string) *ExporterConfig {
 }
 
 // OtlpExporterHCPCfg generates the config for an otlp exporter to HCP.
-func OtlpExporterHCPCfg(endpoint string, resourceID string, authID component.ID) *ExporterConfig {
+func OtlpExporterHCPCfg(endpoint, resourceID string, authID component.ID) *ExporterConfig {
 	// TODO: unfortunately we can't use the exporter config that comes form the otlphttpexporter.Config
 	// due to unmarshalling issues. This is unfortunate but for now it's not the end of the world to ship our own config. Leaving this here as a reference
 	// to get to the defaultCfg if it's needed.
