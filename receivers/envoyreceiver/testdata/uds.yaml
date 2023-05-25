@@ -1,3 +1,4 @@
-grpc:
-  transport: unix
-  endpoint: /tmp/grpc_otlp.sock
+protocols:
+  grpc:
+    transport: unix
+    endpoint: /tmp/grpc_otlp.sock

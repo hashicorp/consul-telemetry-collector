@@ -46,21 +46,23 @@ func createMetrics(_ context.Context,
 // createDefaultConfig creates the default configuration for receiver.
 func createDefaultConfig() component.Config {
 	return &Config{
-		GRPC: &configgrpc.GRPCServerSettings{
-			NetAddr: confignet.NetAddr{
-				Endpoint:  defaultGRPCEndpoint,
-				Transport: "tcp",
-			},
-			// We almost write 0 bytes, so no need to tune WriteBufferSize.
-			ReadBufferSize: 512 * 1024,
-			Keepalive: &configgrpc.KeepaliveServerConfig{
-				ServerParameters: &configgrpc.KeepaliveServerParameters{
-					MaxConnectionIdle: 5 * time.Second,
-					MaxConnectionAge:  1 * time.Minute,
-					Time:              30 * time.Second,
+		Protocols: Protocols{
+			GRPC: &configgrpc.GRPCServerSettings{
+				NetAddr: confignet.NetAddr{
+					Endpoint:  defaultGRPCEndpoint,
+					Transport: "tcp",
 				},
-				EnforcementPolicy: &configgrpc.KeepaliveEnforcementPolicy{
-					MinTime: 5 * time.Second,
+				// We almost write 0 bytes, so no need to tune WriteBufferSize.
+				ReadBufferSize: 512 * 1024,
+				Keepalive: &configgrpc.KeepaliveServerConfig{
+					ServerParameters: &configgrpc.KeepaliveServerParameters{
+						MaxConnectionIdle: 5 * time.Second,
+						MaxConnectionAge:  1 * time.Minute,
+						Time:              30 * time.Second,
+					},
+					EnforcementPolicy: &configgrpc.KeepaliveEnforcementPolicy{
+						MinTime: 5 * time.Second,
+					},
 				},
 			},
 		},

@@ -29,9 +29,15 @@ var _ component.Component = (*envoyReceiver)(nil)
 
 var _ component.Config = (*Config)(nil)
 
+type Protocols struct {
+	GRPC *configgrpc.GRPCServerSettings `mapstructure:"grpc"`
+	// HTTP *confighttp.HTTPServerSettings `mapstructure:"http"`
+}
+
 // Config is the configuration for the envoy receiver.
 type Config struct {
-	GRPC *configgrpc.GRPCServerSettings `mapstructure:"grpc"`
+	// Protocols is the configuration for the supported protocols, currently gRPC and HTTP (Proto and JSON).
+	Protocols `mapstructure:"protocols"`
 }
 
 func newEnvoyReceiver(set receiver.CreateSettings,

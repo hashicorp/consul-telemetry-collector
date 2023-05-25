@@ -50,16 +50,20 @@ func TestCreateMetricReceiver(t *testing.T) {
 		{
 			name: "default",
 			cfg: &Config{
-				GRPC: defaultGRPCSettings,
+				Protocols: Protocols{
+					GRPC: defaultGRPCSettings,
+				},
 			},
 		},
 		{
 			name: "invalid_grpc_address",
 			cfg: &Config{
-				GRPC: &configgrpc.GRPCServerSettings{
-					NetAddr: confignet.NetAddr{
-						Endpoint:  "327.0.0.1:1122",
-						Transport: "tcp",
+				Protocols: Protocols{
+					GRPC: &configgrpc.GRPCServerSettings{
+						NetAddr: confignet.NetAddr{
+							Endpoint:  "327.0.0.1:1122",
+							Transport: "tcp",
+						},
 					},
 				},
 			},
