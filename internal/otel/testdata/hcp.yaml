@@ -40,6 +40,9 @@ exporters:
     endpoint: https://hcp-metrics-endpoint
     auth:
       authenticator: oauth2client/hcp
+    headers:
+      x-channel: consul-telemetry-collector/0.0.1-dev
+      x-hcp-resource-id: "organization/00000000-0000-0000-0000-000000000000/project/00000000-0000-0000-0000-000000000001/hashicorp.consul.cluster/otel-cluster"
 
 
 service:

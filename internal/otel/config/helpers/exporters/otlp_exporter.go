@@ -1,12 +1,18 @@
 package exporters
 
 import (
+	"fmt"
+
+	"github.com/hashicorp/consul-telemetry-collector/internal/version"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/configauth"
 )
 
 // otlpHTTPExporterName is the component.ID value used by the otlphttp exporter.
 const otlpHTTPExporterName = "otlphttp"
+const channelName = "x-channel"
+const channelValue = "consul-telemetry-collector"
+const resourceIDHeader = "x-hcp-resource-id"
 
 var (
 	// HCPExporterID is the id of the HCP otel exporter.
@@ -23,6 +29,8 @@ type ExporterConfig struct {
 	Endpoint string `mapstructure:"endpoint"`
 	// Auth configuration for the exporter
 	Auth *configauth.Authentication `mapstructure:"auth"`
+	// Headers are the explicit extra headers that should be sent with the exporter
+	Headers map[string]string `mapstructure:"headers,omitempty"`
 }
 
 // OtlpExporterCfg generates the configuration for a otlp exporter.
@@ -33,7 +41,7 @@ func OtlpExporterCfg(endpoint string) *ExporterConfig {
 }
 
 // OtlpExporterHCPCfg generates the config for an otlp exporter to HCP.
-func OtlpExporterHCPCfg(endpoint string, authID component.ID) *ExporterConfig {
+func OtlpExporterHCPCfg(endpoint string, resourceID string, authID component.ID) *ExporterConfig {
 	// TODO: unfortunately we can't use the exporter config that comes form the otlphttpexporter.Config
 	// due to unmarshalling issues. This is unfortunate but for now it's not the end of the world to ship our own config. Leaving this here as a reference
 	// to get to the defaultCfg if it's needed.
@@ -42,9 +50,13 @@ func OtlpExporterHCPCfg(endpoint string, authID component.ID) *ExporterConfig {
 	// defaultCfg.HTTPClientSettings.Endpoint = endpoint
 	// defaultCfg.HTTPClientSettings.Auth = &configauth.Authentication{AuthenticatorID: authId}
 
-	cfg := ExporterConfig{}
+	cfg := ExporterConfig{
+		Headers: make(map[string]string),
+	}
 	cfg.Endpoint = endpoint
 	cfg.Auth = &configauth.Authentication{AuthenticatorID: authID}
+	cfg.Headers[channelName] = fmt.Sprintf("%s/%s", channelValue, version.GetHumanVersion())
+	cfg.Headers[resourceIDHeader] = resourceID
 
 	return &cfg
 }

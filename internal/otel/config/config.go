@@ -131,7 +131,7 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 			return nil, err
 		}
 
-		return exporters.OtlpExporterHCPCfg(metricsEndpoint, extensions.OauthClientID), nil
+		return exporters.OtlpExporterHCPCfg(metricsEndpoint, p.ResourceID, extensions.OauthClientID), nil
 	// extensions
 	case extensions.BallastID:
 		return extensions.BallastCfg(), nil
