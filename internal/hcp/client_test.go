@@ -136,11 +136,11 @@ func TestLoadConfig(t *testing.T) {
 	}{
 		"GoodGlobalEndpoint": {
 			resp: &consul_telemetry_service.AgentTelemetryConfigOK{
-				Payload: &models.HashicorpCloudConsulTelmetry20230414AgentTelemetryConfigResponse{
-					TelemetryConfig: &models.HashicorpCloudConsulTelmetry20230414TelemetryConfig{
+				Payload: &models.HashicorpCloudConsulTelemetry20230414AgentTelemetryConfigResponse{
+					TelemetryConfig: &models.HashicorpCloudConsulTelemetry20230414TelemetryConfig{
 						Endpoint: "https://global.metrics.com",
 						Labels:   nil,
-						Metrics: &models.HashicorpCloudConsulTelmetry20230414TelemetryMetricsConfig{
+						Metrics: &models.HashicorpCloudConsulTelemetry20230414TelemetryMetricsConfig{
 							Endpoint:    "",
 							IncludeList: []string{"a", "b"},
 						},
@@ -152,11 +152,12 @@ func TestLoadConfig(t *testing.T) {
 		},
 		"GoodMetricsEndpoint": {
 			resp: &consul_telemetry_service.AgentTelemetryConfigOK{
-				Payload: &models.HashicorpCloudConsulTelmetry20230414AgentTelemetryConfigResponse{
-					TelemetryConfig: &models.HashicorpCloudConsulTelmetry20230414TelemetryConfig{
+				// Payload: &models.HashicorpCloudConsulTelmetry20230414AgentTelemetryConfigResponse{
+				Payload: &models.HashicorpCloudConsulTelemetry20230414AgentTelemetryConfigResponse{
+					TelemetryConfig: &models.HashicorpCloudConsulTelemetry20230414TelemetryConfig{
 						Endpoint: "https://global.metrics.com",
 						Labels:   nil,
-						Metrics: &models.HashicorpCloudConsulTelmetry20230414TelemetryMetricsConfig{
+						Metrics: &models.HashicorpCloudConsulTelemetry20230414TelemetryMetricsConfig{
 							Endpoint:    "https://local.metrics.com",
 							IncludeList: []string{"a"},
 						},

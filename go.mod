@@ -10,7 +10,7 @@ require (
 	github.com/hashicorp/go-hclog v1.4.0
 	github.com/hashicorp/go-multierror v1.1.0
 	github.com/hashicorp/hcl/v2 v2.16.1
-	github.com/hashicorp/hcp-sdk-go v0.42.1-0.20230421152652-ecdf1b988cc0
+	github.com/hashicorp/hcp-sdk-go v0.48.0
 	github.com/imdario/mergo v0.3.11
 	github.com/kr/text v0.2.0
 	github.com/mitchellh/cli v1.1.5
