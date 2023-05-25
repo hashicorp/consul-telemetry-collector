@@ -160,7 +160,7 @@ event "bump-version-patch" {
 
   action "bump-version" {
     organization = "HashiCorp"
-    repository   = "consul-telemetry-collector"
+    repository   = "crt-workflows-common"
     workflow     = "bump-version"
   }
 
