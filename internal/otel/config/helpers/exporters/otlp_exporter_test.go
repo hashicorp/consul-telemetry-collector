@@ -26,7 +26,7 @@ func Test_OtlpExporter(t *testing.T) {
 }
 
 func Test_OtlpExporterHCP(t *testing.T) {
-	cfg := OtlpExporterHCPCfg("foobar", component.NewID("foobarid"))
+	cfg := OtlpExporterHCPCfg("foobar", "resource-id", component.NewID("foobarid"))
 	require.NotNil(t, cfg)
 
 	// Marshall the configuration
@@ -35,7 +35,9 @@ func Test_OtlpExporterHCP(t *testing.T) {
 	require.NoError(t, err)
 
 	// Unmarshall and verify
-	unmarshalledCfg := &ExporterConfig{}
+	unmarshalledCfg := &ExporterConfig{
+		Headers: map[string]string{},
+	}
 	err = conf.Unmarshal(unmarshalledCfg)
 	require.NoError(t, err)
 	require.Equal(t, cfg, unmarshalledCfg)
