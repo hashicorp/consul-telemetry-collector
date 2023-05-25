@@ -4,7 +4,7 @@ package version
 
 import (
 	_ "embed" // import embed package to embed Version file
-	"fmt"
+	"strings"
 )
 
 var (
@@ -12,17 +12,13 @@ var (
 	GitCommit string
 
 	// Version is the static version tag of the project
-	//embed: VERSION
-	Version = "0.0.1"
-
-	// VersionPrerelease is the prerelease version string.
-	VersionPrerelease = "dev"
+	//go:embed VERSION
+	Version string
 )
 
 // GetHumanVersion returns the human read-able version of the project version information.
 func GetHumanVersion() string {
 	version := Version
-	release := VersionPrerelease
 
-	return fmt.Sprintf("%s-%s", version, release)
+	return strings.TrimSpace(version)
 }

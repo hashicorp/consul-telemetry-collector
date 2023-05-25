@@ -11,7 +11,7 @@ import (
 )
 
 const (
-	appName = "consul-collector"
+	appName = "consul-telemetry-collector"
 )
 
 func main() {
