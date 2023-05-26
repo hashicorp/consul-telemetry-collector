@@ -19,9 +19,7 @@ type action string
 const (
 	upsertAction action = "upsert"
 
-	// clusterKey is the label key for "cluster" section of the Cortex High Availability client labels: https
-	// ://cortexmetrics.io/docs/guides/ha-pair-handling/#client-side. The __replica__ label is added at the receiver
-	// side for envoy metrics. If we cannot add __replica__ at the receiver we will need to add it here in the future.
+	// clusterKey is the label key for "cluster" which is specific to this resource.
 	clusterKey = "cluster"
 )
 
