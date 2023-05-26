@@ -15,7 +15,7 @@ const (
 	// ID is the indentifier for the receiver.
 	ID = "envoy"
 
-	defaultGRPCEndpoint = "0.0.0.0:9356"
+	defaultGRPCEndpoint = "127.0.0.1:9356"
 )
 
 // NewFactory creates a new envoy receiver factory.
