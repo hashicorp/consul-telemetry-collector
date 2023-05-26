@@ -63,7 +63,6 @@ func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsSe
 			labels = map[string]string{
 				"envoy.cluster": identifier.GetNode().GetCluster(), // envoy.cluster is the service name in Consul
 				"node.id":       identifier.GetNode().GetId(),      // node.id delineate proxies
-				"__replica__":   identifier.GetNode().GetId(),      // __replica__ is used for Cortex HA metrics (deduplication)
 			}
 
 			fields := identifier.GetNode().GetMetadata().AsMap()
