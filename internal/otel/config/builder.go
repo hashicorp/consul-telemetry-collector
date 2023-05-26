@@ -29,7 +29,7 @@ func PipelineConfigBuilder(p *Params) service.PipelineConfig {
 			// add your processors here
 			processors.BatchProcessorID,
 		},
-		Receivers: []component.ID{receivers.OtlpReceiverID},
+		Receivers: []component.ID{receivers.EnvoyReceiverID},
 		Exporters: []component.ID{
 			exporters.LoggingExporterID,
 		},

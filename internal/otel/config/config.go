@@ -108,6 +108,8 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 	// receivers
 	case receivers.OtlpReceiverID:
 		return receivers.OtlpReceiverCfg(), nil
+	case receivers.EnvoyReceiverID:
+		return receivers.EnvoyReceiverCfg(), nil
 	// processors
 	case processors.MemoryLimiterID:
 		return processors.MemoryLimiterCfg(), nil
