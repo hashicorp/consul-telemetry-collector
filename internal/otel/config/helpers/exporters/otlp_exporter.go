@@ -82,8 +82,8 @@ func OtlpExporterHCPCfg(endpoint, resourceID string, authID component.ID) *Expor
 func tlsConfigForSetting() configtls.TLSClientSetting {
 	setting := os.Getenv(envVarOtlpExporterTLS)
 	switch setting {
-	case tlsSettingDisabled:
-		return configtls.TLSClientSetting{Insecure: true}
+	// case tlsSettingDisabled:
+	// 	return configtls.TLSClientSetting{Insecure: true}
 	case tlsSettingInsecure:
 		return configtls.TLSClientSetting{InsecureSkipVerify: true}
 	default:

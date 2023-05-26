@@ -1,7 +1,4 @@
 receivers:
-  otlp:
-    protocols:
-      http:
   envoy:
     grpc:
 
@@ -63,10 +60,10 @@ service:
       propagators: tracecontext,b3
   pipelines:
     metrics:
-      receivers: [otlp]
+      receivers: [envoy]
       processors: [memory_limiter,batch]
       exporters: [logging]
     metrics/hcp:
-      receivers: [otlp, envoy]
+      receivers: [envoy]
       processors: [memory_limiter,filter,resource,batch]
       exporters: [logging,otlphttp/hcp]

@@ -29,7 +29,7 @@ func PipelineConfigBuilder(p *Params) service.PipelineConfig {
 			// add your processors here
 			processors.BatchProcessorID,
 		},
-		Receivers: []component.ID{receivers.OtlpReceiverID},
+		Receivers: []component.ID{receivers.EnvoyReceiverID},
 		Exporters: []component.ID{
 			exporters.LoggingExporterID,
 		},
@@ -38,7 +38,6 @@ func PipelineConfigBuilder(p *Params) service.PipelineConfig {
 	includeHCPPipeline := p.ClientID != "" && p.ClientSecret != "" && p.Client != nil
 	if includeHCPPipeline {
 		baseCfg.Exporters = append(baseCfg.Exporters, exporters.HCPExporterID)
-		baseCfg.Receivers = append(baseCfg.Receivers, receivers.EnvoyReceiverID)
 	} else if p.OtlpHTTPEndpoint != "" {
 		baseCfg.Exporters = append(baseCfg.Exporters, exporters.BaseOtlpExporterID)
 	}
