@@ -34,13 +34,15 @@ type Config struct {
 	GRPC *configgrpc.GRPCServerSettings `mapstructure:"grpc"`
 }
 
-func newEnvoyReceiver(set receiver.CreateSettings,
-	cfg *Config) *envoyReceiver {
+func newEnvoyReceiver(
+	set receiver.CreateSettings,
+	cfg *Config,
+) *envoyReceiver {
 	receiver := &envoyReceiver{
 		cfg:      cfg,
 		settings: set,
 		logger: set.TelemetrySettings.Logger.Named("envoyreceiver").With(zap.String("kind", "receiver"),
-			zap.String("name", typeStr)),
+			zap.String("name", ID)),
 	}
 
 	return receiver

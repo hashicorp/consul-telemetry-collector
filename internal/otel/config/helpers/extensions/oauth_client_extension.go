@@ -3,15 +3,24 @@ package extensions
 import (
 	"fmt"
 	"net/url"
+	"os"
 
 	"go.opentelemetry.io/collector/component"
+	"go.opentelemetry.io/collector/config/configtls"
 )
 
 const (
 	defaultIssuerURL = "https://auth.idp.hashicorp.com"
 	audienceKey      = "audience"
-	audience         = "https://api.hashicorp.com"
+	defaultAudience  = "https://api.hashicorp.com"
 	oauth2ClientName = "oauth2client"
+
+	envVarAuthURL    = "HCP_AUTH_URL"
+	envVarAPIAddress = "HCP_API_ADDRESS"
+	envVarAuthTLS    = "HCP_AUTH_TLS"
+
+	tlsSettingInsecure = "insecure"
+	tlsSettingDisabled = "disabled"
 )
 
 // OauthClientID is the component.ID used by the oauth2client extension.
@@ -20,7 +29,7 @@ var OauthClientID component.ID = component.NewIDWithName(oauth2ClientName, "hcp"
 // OauthClientConfig is a base wrapper around the oauth2clientauthextension.Config which
 // we cannot use directly since the opaque client secret string gets changed to REDACTED when unmarshalling
 //
-//	github.com/open-telemetry/opentelemetry-collector-contrib/extension/oauth2clientauthextension
+//	https://github.com/open-telemetry/opentelemetry-collector-contrib/tree/main/extension/oauth2clientauthextension
 type OauthClientConfig struct {
 
 	// ClientID is the application's ID.
@@ -36,14 +45,41 @@ type OauthClientConfig struct {
 	// URL. This is a constant specific to each server.
 	// See https://datatracker.ietf.org/doc/html/rfc6749#section-3.2
 	TokenURL string `mapstructure:"token_url"`
+
+	// TLSSetting struct exposes TLS client configuration for the underneath client to authorization server.
+	TLSSetting configtls.TLSClientSetting `mapstructure:"tls,omitempty"`
 }
 
 // OauthClientCfg returns a component ID and oauth config.
 func OauthClientCfg(clientID, clientSecret string) *OauthClientConfig {
+	authURL, ok := os.LookupEnv(envVarAuthURL)
+	if !ok {
+		authURL = defaultIssuerURL
+	}
+
+	audience, ok := os.LookupEnv(envVarAPIAddress)
+	if !ok {
+		audience = defaultAudience
+	}
+	authTLSConfig := tlsConfigForSetting()
+
 	return &OauthClientConfig{
 		ClientID:       clientID,
 		ClientSecret:   clientSecret,
-		TokenURL:       fmt.Sprintf("%s/oauth2/token", defaultIssuerURL),
+		TokenURL:       fmt.Sprintf("%s/oauth2/token", authURL),
 		EndpointParams: url.Values{audienceKey: []string{audience}},
+		TLSSetting:     authTLSConfig,
+	}
+}
+
+func tlsConfigForSetting() configtls.TLSClientSetting {
+	setting := os.Getenv(envVarAuthTLS)
+	switch setting {
+	case tlsSettingDisabled:
+		return configtls.TLSClientSetting{Insecure: true}
+	case tlsSettingInsecure:
+		return configtls.TLSClientSetting{InsecureSkipVerify: true}
+	default:
+		return configtls.TLSClientSetting{}
 	}
 }

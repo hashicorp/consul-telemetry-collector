@@ -2,6 +2,8 @@ receivers:
   otlp:
     protocols:
       http:
+  envoy:
+    grpc:
 
 processors:
   memory_limiter:
@@ -45,6 +47,7 @@ exporters:
     headers:
       x-channel: "consul-telemetry-collector/0.0.0-alpha"
       x-hcp-resource-id: "organization/00000000-0000-0000-0000-000000000003/project/00000000-0000-0000-0000-000000000004/hashicorp.consul.cluster/otel-with-cluster"
+      user-agent: "Go-http-client/1.1"
 
 service:
   extensions: [memory_ballast, oauth2client/hcp]
@@ -65,6 +68,6 @@ service:
       processors: [memory_limiter,batch]
       exporters: [logging,otlphttp]
     metrics/hcp:
-      receivers: [otlp]
+      receivers: [otlp, envoy]
       processors: [memory_limiter,filter,resource,batch]
       exporters: [logging,otlphttp/hcp]

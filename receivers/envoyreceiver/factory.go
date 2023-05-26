@@ -12,7 +12,8 @@ import (
 )
 
 const (
-	typeStr = "envoy"
+	// ID is the indentifier for the receiver.
+	ID = "envoy"
 
 	defaultGRPCEndpoint = "0.0.0.0:9356"
 )
@@ -20,8 +21,8 @@ const (
 // NewFactory creates a new envoy receiver factory.
 func NewFactory() receiver.Factory {
 	return receiver.NewFactory(
-		typeStr,
-		createDefaultConfig,
+		ID,
+		CreateDefaultConfig,
 		receiver.WithMetrics(createMetrics, component.StabilityLevelDevelopment),
 	)
 }
@@ -43,8 +44,8 @@ func createMetrics(_ context.Context,
 	return receiver.Metrics(envoy), nil
 }
 
-// createDefaultConfig creates the default configuration for receiver.
-func createDefaultConfig() component.Config {
+// CreateDefaultConfig creates the default configuration for receiver.
+func CreateDefaultConfig() component.Config {
 	return &Config{
 		GRPC: &configgrpc.GRPCServerSettings{
 			NetAddr: confignet.NetAddr{

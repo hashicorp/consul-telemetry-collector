@@ -2,18 +2,29 @@ package exporters
 
 import (
 	"fmt"
+	"os"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/configauth"
+	"go.opentelemetry.io/collector/config/configtls"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/version"
 )
 
-// otlpHTTPExporterName is the component.ID value used by the otlphttp exporter.
-const otlpHTTPExporterName = "otlphttp"
-const channelName = "x-channel"
-const channelValue = "consul-telemetry-collector"
-const resourceIDHeader = "x-hcp-resource-id"
+const (
+	// otlpHTTPExporterName is the component.ID value used by the otlphttp exporter.
+	otlpHTTPExporterName = "otlphttp"
+	channelName          = "x-channel"
+	channelValue         = "consul-telemetry-collector"
+	resourceIDHeader     = "x-hcp-resource-id"
+
+	userAgentHeader  = "user-agent"
+	defaultUserAgent = "Go-http-client/1.1"
+
+	envVarOtlpExporterTLS = "OTLP_EXPORTER_TLS"
+	tlsSettingInsecure    = "insecure"
+	tlsSettingDisabled    = "disabled"
+)
 
 var (
 	// HCPExporterID is the id of the HCP otel exporter.
@@ -32,6 +43,9 @@ type ExporterConfig struct {
 	Auth *configauth.Authentication `mapstructure:"auth"`
 	// Headers are the explicit extra headers that should be sent with the exporter
 	Headers map[string]string `mapstructure:"headers,omitempty"`
+
+	// TLSSetting struct exposes TLS client configuration.
+	TLSSetting configtls.TLSClientSetting `mapstructure:"tls"`
 }
 
 // OtlpExporterCfg generates the configuration for a otlp exporter.
@@ -52,12 +66,27 @@ func OtlpExporterHCPCfg(endpoint, resourceID string, authID component.ID) *Expor
 	// defaultCfg.HTTPClientSettings.Auth = &configauth.Authentication{AuthenticatorID: authId}
 
 	cfg := ExporterConfig{
-		Headers: make(map[string]string),
+		Headers: map[string]string{
+			channelName:      fmt.Sprintf("%s/%s", channelValue, version.GetHumanVersion()),
+			resourceIDHeader: resourceID,
+			userAgentHeader:  defaultUserAgent,
+		},
+		Auth:       &configauth.Authentication{AuthenticatorID: authID},
+		Endpoint:   endpoint,
+		TLSSetting: tlsConfigForSetting(),
 	}
-	cfg.Endpoint = endpoint
-	cfg.Auth = &configauth.Authentication{AuthenticatorID: authID}
-	cfg.Headers[channelName] = fmt.Sprintf("%s/%s", channelValue, version.GetHumanVersion())
-	cfg.Headers[resourceIDHeader] = resourceID
 
 	return &cfg
+}
+
+func tlsConfigForSetting() configtls.TLSClientSetting {
+	setting := os.Getenv(envVarOtlpExporterTLS)
+	switch setting {
+	case tlsSettingDisabled:
+		return configtls.TLSClientSetting{Insecure: true}
+	case tlsSettingInsecure:
+		return configtls.TLSClientSetting{InsecureSkipVerify: true}
+	default:
+		return configtls.TLSClientSetting{}
+	}
 }
