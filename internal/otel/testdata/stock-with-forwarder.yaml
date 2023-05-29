@@ -17,6 +17,7 @@ exporters:
   logging:
   otlphttp:
     endpoint: https://test-forwarder-endpoint:4138
+    compression: "none"
 
 connectors: {}
 

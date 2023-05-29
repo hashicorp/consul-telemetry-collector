@@ -53,7 +53,9 @@ type ExporterConfig struct {
 
 // OtlpExporterCfg generates the configuration for a otlp exporter.
 func OtlpExporterCfg(endpoint string) *ExporterConfig {
-	cfg := ExporterConfig{}
+	cfg := ExporterConfig{
+		Compression: "none",
+	}
 	cfg.Endpoint = endpoint
 	return &cfg
 }
