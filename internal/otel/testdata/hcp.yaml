@@ -26,7 +26,7 @@ extensions:
     client_id: cid
     client_secret: "csec"
     endpoint_params:
-      audience: https://api.hashicorp.com
+      audience: https://api.hashicorp.cloud
     token_url: https://auth.idp.hashicorp.com/oauth2/token
   memory_ballast:
     size_in_percentage: 10
@@ -43,6 +43,7 @@ exporters:
       x-channel: consul-telemetry-collector/0.0.0-alpha
       x-hcp-resource-id: "organization/00000000-0000-0000-0000-000000000000/project/00000000-0000-0000-0000-000000000001/hashicorp.consul.cluster/otel-cluster"
       user-agent: "Go-http-client/1.1"
+    compression: "none"
 
 
 service:

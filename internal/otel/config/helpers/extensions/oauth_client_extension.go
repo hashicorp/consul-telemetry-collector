@@ -12,12 +12,11 @@ import (
 const (
 	defaultIssuerURL = "https://auth.idp.hashicorp.com"
 	audienceKey      = "audience"
-	defaultAudience  = "https://api.hashicorp.com"
+	defaultAudience  = "https://api.hashicorp.cloud"
 	oauth2ClientName = "oauth2client"
 
-	envVarAuthURL    = "HCP_AUTH_URL"
-	envVarAPIAddress = "HCP_API_ADDRESS"
-	envVarAuthTLS    = "HCP_AUTH_TLS"
+	envVarAuthURL = "HCP_AUTH_URL"
+	envVarAuthTLS = "HCP_AUTH_TLS"
 
 	tlsSettingInsecure = "insecure"
 	tlsSettingDisabled = "disabled"
@@ -57,17 +56,13 @@ func OauthClientCfg(clientID, clientSecret string) *OauthClientConfig {
 		authURL = defaultIssuerURL
 	}
 
-	audience, ok := os.LookupEnv(envVarAPIAddress)
-	if !ok {
-		audience = defaultAudience
-	}
 	authTLSConfig := tlsConfigForSetting()
 
 	return &OauthClientConfig{
 		ClientID:       clientID,
 		ClientSecret:   clientSecret,
 		TokenURL:       fmt.Sprintf("%s/oauth2/token", authURL),
-		EndpointParams: url.Values{audienceKey: []string{audience}},
+		EndpointParams: url.Values{audienceKey: []string{defaultAudience}},
 		TLSSetting:     authTLSConfig,
 	}
 }

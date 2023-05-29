@@ -109,7 +109,7 @@ func parseConfig(p *Params, r *resource.Resource) (hcpconfig.HCPConfig, error) {
 		}),
 	)
 	if err != nil {
-		return nil, errors.New("failed to build hcp config")
+		return nil, fmt.Errorf("failed to build hcp config: %w", err)
 	}
 	return hcpconfig, nil
 }

@@ -15,7 +15,7 @@ func (b *Builder) AddHistogram(family *prompb.MetricFamily) {
 	otlpMetric.SetDescription(family.GetHelp())
 
 	emptyHistogram := otlpMetric.SetEmptyHistogram()
-	emptyHistogram.SetAggregationTemporality(pmetric.AggregationTemporalityDelta)
+	emptyHistogram.SetAggregationTemporality(pmetric.AggregationTemporalityCumulative)
 	for _, metric := range family.GetMetric() {
 		histogram := metric.GetHistogram()
 
