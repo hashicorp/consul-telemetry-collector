@@ -46,6 +46,9 @@ type ExporterConfig struct {
 
 	// TLSSetting struct exposes TLS client configuration.
 	TLSSetting configtls.TLSClientSetting `mapstructure:"tls"`
+
+	// The compression key for supported compression types within collector.
+	Compression string `mapstructure:"compression"`
 }
 
 // OtlpExporterCfg generates the configuration for a otlp exporter.
@@ -71,9 +74,10 @@ func OtlpExporterHCPCfg(endpoint, resourceID string, authID component.ID) *Expor
 			resourceIDHeader: resourceID,
 			userAgentHeader:  defaultUserAgent,
 		},
-		Auth:       &configauth.Authentication{AuthenticatorID: authID},
-		Endpoint:   endpoint,
-		TLSSetting: tlsConfigForSetting(),
+		Auth:        &configauth.Authentication{AuthenticatorID: authID},
+		Endpoint:    endpoint,
+		TLSSetting:  tlsConfigForSetting(),
+		Compression: "none",
 	}
 
 	return &cfg

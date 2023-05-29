@@ -49,7 +49,7 @@ func generateMetricsDefinition(resourceLabels pcommon.Resource, metricsRef pmetr
 	// copy our identity labels onto the resource metrics
 	resourceLabels.CopyTo(resourceMetrics.Resource())
 
-	// TODO leave link describing wtf scoped metrics are
+	// TODO leave link describing what scoped metrics are
 	scopedMetrics := resourceMetrics.ScopeMetrics().AppendEmpty()
 
 	// copy our metrics reference into the scope metrics
