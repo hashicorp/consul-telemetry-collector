@@ -17,7 +17,7 @@ Configuration will be loaded in the following order of precedence:
 
 ### Kubernetes
 
-We recommend using the Consul helm chart to install the consul-telemetry-collector. A few small changes to the helm chart are all that are necessary to enable the telemetry-collector and forward metrics to HCP.
+We recommend using the Consul helm chart to install the consul-telemetry-collector. If you aren't already using the Consul Helm chart you can find instructions and documentation for using it [in the Consul Documentation](https://developer.hashicorp.com/consul/docs/k8s/installation/install) A few small changes to the helm chart are all that are necessary to enable the telemetry-collector and forward metrics to HCP.
 
 ```yaml
 globals:
@@ -34,7 +34,7 @@ telemetryCollector:
       secretKey: client-secret
 ```
 
-Use the custom config to forward metrics to another telemetry-collector
+Use the custom config to forward metrics to another telemetry-collector.
 
 ```yaml
 globals:
