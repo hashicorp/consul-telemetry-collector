@@ -13,6 +13,39 @@ Configuration will be loaded in the following order of precedence:
     2. env variables if specified
     3. file configuration
 
+## Installation
+
+### Kubernetes
+
+We recommend using the Consul helm chart to install the consul-telemetry-collector. A few small changes to the helm chart are all that are necessary to enable the telemetry-collector and forward metrics to HCP.
+
+```yaml
+globals:
+  metrics:
+    enableTelemetryCollector: true
+telemetryCollector:
+  enabled: true
+  cloud:
+    clientId: # These should match the Kubernetes Secret's for the HCP ClientID and HCP ClientSecret
+      secretName: hcp-client-id
+      secretKey: client-id
+    clientSecret:
+      secretName: hcp-client-secret
+      secretKey: client-secret
+```
+
+Use the custom config to forward metrics to another telemetry-collector
+
+```yaml
+globals:
+  metrics:
+    enableTelemetryCollector: true
+telemetryCollector:
+  enabled: true
+  customExporterConfig: |
+    {"http_collector_endpoint": "otel-collector:4187"
+```
+
 ## Usage
 
 To get started run `consul-telemetry-collector agent -dev`. The collector
