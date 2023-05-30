@@ -17,33 +17,110 @@ Configuration will be loaded in the following order of precedence:
 
 ### Kubernetes
 
-We recommend using the Consul helm chart to install the consul-telemetry-collector. If you aren't already using the Consul Helm chart you can find instructions and documentation for using it [in the Consul Documentation](https://developer.hashicorp.com/consul/docs/k8s/installation/install) A few small changes to the helm chart are all that are necessary to enable the telemetry-collector and forward metrics to HCP.
+We recommend using the Consul helm chart to install the consul-telemetry-collector. If you aren't already using the Consul Helm chart you can find instructions and documentation for using it [in the Consul Documentation](https://developer.hashicorp.com/consul/docs/k8s/installation/install) A few small changes to the helm chart are all that are necessary to enable the telemetry-collector and forward metrics to HCP. This assumes that this cluster is already linked with HCP.
 
 ```yaml
-globals:
-  metrics:
-    enableTelemetryCollector: true
-telemetryCollector:
-  enabled: true
-  cloud:
-    clientId: # These should match the Kubernetes Secret's for the HCP ClientID and HCP ClientSecret
-      secretName: hcp-client-id
-      secretKey: client-id
-    clientSecret:
-      secretName: hcp-client-secret
-      secretKey: client-secret
+  connectInject:
+    enabled: true
+  controller:
+    enabled: true
+  global:
+    metrics:
++     enableTelemetryCollector: true
+    acls:
+      bootstrapToken:
+        secretKey: token
+        secretName: consul-bootstrap-token
+      manageSystemACLs: true
+    cloud:
+      clientId:
+        secretKey: client-id
+        secretName: consul-hcp-client-id
+      clientSecret:
+        secretKey: client-secret
+        secretName: consul-hcp-client-secret
+      enabled: true
+      resourceId:
+        secretKey: resource-id
+        secretName: consul-hcp-resource-id
+    datacenter: mesh-metrics
+    gossipEncryption:
+      secretKey: key
+      secretName: consul-gossip-key
+    name: consul
+    tls:
+      caCert:
+        secretKey: tls.crt
+        secretName: consul-server-ca
+      enableAutoEncrypt: true
+      enabled: true
+  server:
+    affinity: null
+    replicas: 3
+    serverCert:
+      secretName: consul-server-cert
++ telemetryCollector:
++   clientId:
++     secretKey: client-id
++     secretName: consul-hcp-client-id
++   clientSecret:
++     secretKey: client-secret
++     secretName: consul-hcp-client-secret
++   enabled: true
 ```
 
 Use the custom config to forward metrics to another telemetry-collector.
 
 ```yaml
-globals:
-  metrics:
-    enableTelemetryCollector: true
-telemetryCollector:
-  enabled: true
-  customExporterConfig: |
-    {"http_collector_endpoint": "otel-collector:4187"
+  connectInject:
+    enabled: true
+  controller:
+    enabled: true
+  global:
+    metrics:
++     enableTelemetryCollector: true
+    acls:
+      bootstrapToken:
+        secretKey: token
+        secretName: consul-bootstrap-token
+      manageSystemACLs: true
+    cloud:
+      clientId:
+        secretKey: client-id
+        secretName: consul-hcp-client-id
+      clientSecret:
+        secretKey: client-secret
+        secretName: consul-hcp-client-secret
+      enabled: true
+      resourceId:
+        secretKey: resource-id
+        secretName: consul-hcp-resource-id
+    datacenter: mesh-metrics
+    gossipEncryption:
+      secretKey: key
+      secretName: consul-gossip-key
+    name: consul
+    tls:
+      caCert:
+        secretKey: tls.crt
+        secretName: consul-server-ca
+      enableAutoEncrypt: true
+      enabled: true
+  server:
+    affinity: null
+    replicas: 3
+    serverCert:
+      secretName: consul-server-cert
++ telemetryCollector:
++   clientId:
++     secretKey: client-id
++     secretName: consul-hcp-client-id
++   clientSecret:
++     secretKey: client-secret
++     secretName: consul-hcp-client-secret
++   enabled: true
++   customExporterConfig: |
++     {"http_collector_endpoint": "otel-collector:4187"
 ```
 
 ## Usage
