@@ -17,7 +17,7 @@ Configuration will be loaded in the following order of precedence:
 
 ### Kubernetes
 
-We recommend using the Consul helm chart to install the consul-telemetry-collector. If you aren't already using the Consul Helm chart you can find instructions and documentation for using it [in the Consul Documentation](https://developer.hashicorp.com/consul/docs/k8s/installation/install) A few small changes to the helm chart are all that are necessary to enable the telemetry-collector and forward metrics to HCP. This assumes that this cluster is already linked with HCP.
+We recommend using the Consul helm chart to install the consul-telemetry-collector. If you aren't already using the Consul Helm chart you can find instructions and documentation for using it [in the Consul Documentation](https://developer.hashicorp.com/consul/docs/k8s/installation/install). A few small changes to the helm chart enable the telemetry-collector to forward metrics to HCP. This assumes that this cluster is already [linked with HCP's Consul management plane](https://developer.hashicorp.com/hcp/docs/consul/usage/management-plane).
 
 ```yaml
   connectInject:
@@ -120,10 +120,10 @@ Use the custom config to forward metrics to another telemetry-collector.
 +     secretName: consul-hcp-client-secret
 +   enabled: true
 +   customExporterConfig: |
-+     {"http_collector_endpoint": "otel-collector:4187"
++     {"http_collector_endpoint": "otel-collector:4187"}
 ```
 
-## Usage
+## Development
 
 To get started run `consul-telemetry-collector agent -dev`. The collector
 will run in dev mode and write all collected metrics to the console.
