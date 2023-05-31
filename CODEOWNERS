@@ -1,5 +1,6 @@
-# The cloud-consul-observability team will be automatically requested for reviews.
-*       @hashicorp/cloud-consul-observability
+# Although cloud-consul-observability is a subset of cloud-consul team, only members of
+# the cloud-consul-observability team will be automatically requested for reviews.
+* @hashicorp/cloud-consul-observability @hashicorp/cloud-consul
 
 # release configuration
 /.release/                              @hashicorp/release-engineering
