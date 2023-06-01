@@ -55,6 +55,9 @@ type ExporterConfig struct {
 func OtlpExporterCfg(endpoint string) *ExporterConfig {
 	cfg := ExporterConfig{
 		Compression: "none",
+		Headers: map[string]string{
+			userAgentHeader: defaultUserAgent,
+		},
 	}
 	cfg.Endpoint = endpoint
 	return &cfg
