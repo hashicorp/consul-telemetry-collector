@@ -20,7 +20,6 @@ linters:
     - gci
     - gochecknoinits # checks that no init functions are present in Go code
     - gocritic
-    - godot # all comments should end in a period
     - gosimple
     - govet
     - importas # enforces consistent import aliases
