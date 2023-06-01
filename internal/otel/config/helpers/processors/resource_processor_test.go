@@ -1,31 +1,59 @@
 package processors
 
 import (
+	"errors"
 	"testing"
 
-	"github.com/google/uuid"
 	"github.com/open-telemetry/opentelemetry-collector-contrib/processor/resourceprocessor"
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/confmap"
+
+	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 )
 
 func Test_ResourceProcessorCfg(t *testing.T) {
-	clusterVal := uuid.NewString()
-	cfg := ResourcesProcessorCfg(clusterVal)
-	require.NotNil(t, cfg)
+	for name, tc := range map[string]struct {
+		mockErr error
+	}{
+		"Success": {},
+		"GetError": {
+			mockErr: errors.New("boom"),
+		},
+	} {
+		t.Run(name, func(t *testing.T) {
+			clientM := &hcp.MockClient{
+				MockMetricAttributes: map[string]string{
+					"cluster": "name",
+					"org":     "fake-org",
+				},
+				Err: tc.mockErr,
+			}
 
-	// Marshall the configuration
-	conf := confmap.New()
-	err := conf.Marshal(cfg)
-	require.NoError(t, err)
+			cfg := ResourcesProcessorCfg(clientM)
+			require.NotNil(t, cfg)
 
-	// Unmarshall and verify
-	unmarshalledCfg := &resourceprocessor.Config{}
-	err = conf.Unmarshal(unmarshalledCfg)
-	require.NoError(t, err)
+			// Marshal the configuration
+			conf := confmap.New()
+			err := conf.Marshal(cfg)
+			require.NoError(t, err)
 
-	require.NoError(t, unmarshalledCfg.Validate())
-	require.Len(t, unmarshalledCfg.AttributesActions, 1)
-	require.Equal(t, unmarshalledCfg.AttributesActions[0].Key, "cluster")
-	require.Equal(t, unmarshalledCfg.AttributesActions[0].Value, clusterVal)
+			// Unmarshal and verify
+			unmarshalledCfg := &resourceprocessor.Config{}
+			err = conf.Unmarshal(unmarshalledCfg)
+			require.NoError(t, err)
+
+			if tc.mockErr != nil {
+				require.Empty(t, unmarshalledCfg.AttributesActions)
+				return
+			}
+
+			require.NoError(t, unmarshalledCfg.Validate())
+			require.Len(t, unmarshalledCfg.AttributesActions, 2)
+			for _, action := range unmarshalledCfg.AttributesActions {
+				require.Contains(t, []string{"cluster", "org"}, action.Key)
+				require.Contains(t, []string{"name", "fake-org"}, action.Value)
+			}
+		})
+	}
+
 }

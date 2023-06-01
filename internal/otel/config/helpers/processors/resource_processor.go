@@ -2,6 +2,9 @@ package processors
 
 import (
 	"go.opentelemetry.io/collector/component"
+
+	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
+	"github.com/hashicorp/go-hclog"
 )
 
 const resourceProcessorName = "resource"
@@ -16,12 +19,7 @@ type ResourceProcessorConfig struct {
 
 type action string
 
-const (
-	upsertAction action = "upsert"
-
-	// clusterKey is the label key for "cluster" which is specific to this resource.
-	clusterKey = "cluster"
-)
+const upsertAction action = "upsert"
 
 // Actions specifys the key, value and action that should be acted upon.
 type Actions struct {
@@ -54,12 +52,25 @@ type Actions struct {
 
 // ResourcesProcessorCfg generates the config for a resource processor.
 // The cluster's ResourceID is upserted as a label in all metrics.
-func ResourcesProcessorCfg(resourceID string) ResourceProcessorConfig {
-	return ResourceProcessorConfig{Attributes: []Actions{
-		{
-			Key:    clusterKey,
-			Value:  resourceID,
+func ResourcesProcessorCfg(client hcp.TelemetryClient) ResourceProcessorConfig {
+	logger := hclog.Default().Named("config/helpers")
+
+	metricAttributes, err := client.MetricAttributes()
+	if err != nil {
+		logger.Error("failed to retrieve metric labels from HCP", "error", err)
+		return ResourceProcessorConfig{}
+	}
+
+	actions := make([]Actions, 0, len(metricAttributes))
+	for key, value := range metricAttributes {
+		actions = append(actions, Actions{
+			Key:    key,
+			Value:  value,
 			Action: upsertAction,
-		},
-	}}
+		})
+	}
+
+	return ResourceProcessorConfig{
+		Attributes: actions,
+	}
 }
