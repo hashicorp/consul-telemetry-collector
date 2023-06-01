@@ -26,7 +26,7 @@ func (m *MockClient) MetricFilters() ([]string, error) {
 	return m.MockMetricFilters, nil
 }
 
-// MetricFilters returns the provided metric inclusion filters. Will never error.
+// MetricAttributes returns the provided metric inclusion filters. Will never error.
 func (m *MockClient) MetricAttributes() (map[string]string, error) {
 	if m.Err != nil {
 		return nil, m.Err

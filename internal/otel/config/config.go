@@ -133,7 +133,7 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		}
 		metricsEndpoint, err := p.Client.MetricsEndpoint()
 		if err != nil {
-			return nil, fmt.Errorf("failed to get metrics endpoint: %v", err)
+			return nil, fmt.Errorf("failed to get metrics endpoint: %w", err)
 		}
 
 		return exporters.OtlpExporterHCPCfg(metricsEndpoint, p.ResourceID, extensions.OauthClientID), nil
