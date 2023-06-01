@@ -27,7 +27,7 @@ processors:
     attributes:
       - key: cluster
         action: upsert
-        value: "organization/00000000-0000-0000-0000-000000000000/project/00000000-0000-0000-0000-000000000001/hashicorp.consul.cluster/otel-cluster"
+        value: "name"
 
 extensions:
   oauth2client/hcp:

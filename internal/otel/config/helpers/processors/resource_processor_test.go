@@ -55,5 +55,4 @@ func Test_ResourceProcessorCfg(t *testing.T) {
 			}
 		})
 	}
-
 }
