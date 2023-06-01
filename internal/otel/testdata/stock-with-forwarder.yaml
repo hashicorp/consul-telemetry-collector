@@ -1,6 +1,14 @@
 receivers:
   envoy:
     grpc:
+  prometheus:
+    config:
+      scrape_configs:
+      - job_name: consul-telemetry-collector
+        scrape_interval: 10s
+        static_configs:
+        - targets:
+          - localhost:9090
 
 processors:
   memory_limiter:
@@ -18,6 +26,8 @@ exporters:
   otlphttp:
     endpoint: https://test-forwarder-endpoint:4138
     compression: "none"
+    headers:
+      user-agent: "Go-http-client/1.1"
 
 connectors: {}
 
@@ -36,6 +46,6 @@ service:
       propagators: tracecontext,b3
   pipelines:
     metrics:
-      receivers: [envoy]
+      receivers: [envoy,prometheus]
       processors: [memory_limiter,batch]
       exporters: [logging,otlphttp]
