@@ -2,6 +2,7 @@ package external
 
 import (
 	"context"
+	"fmt"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/confmap"
@@ -46,7 +47,7 @@ func (m *externalProvider) Retrieve(_ context.Context, _ string, _ confmap.Watch
 	externalID := component.NewID(component.DataTypeMetrics)
 	err = c.EnrichWithPipelineCfg(externalCfg, externalParams, externalID)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("failed to add config to pipeline. provider:external, err: %w", err)
 	}
 
 	conf := confmap.New()

@@ -2,6 +2,7 @@ package config
 
 import (
 	"errors"
+	"fmt"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/service"
@@ -110,6 +111,8 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		return receivers.OtlpReceiverCfg(), nil
 	case receivers.EnvoyReceiverID:
 		return receivers.EnvoyReceiverCfg(), nil
+	case receivers.PrometheusReceiverID:
+		return receivers.PrometheusReceiverCfg(), nil
 	// processors
 	case processors.MemoryLimiterID:
 		return processors.MemoryLimiterCfg(), nil
@@ -143,6 +146,6 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		}
 		return extensions.OauthClientCfg(p.ClientID, p.ClientSecret), nil
 	default:
-		return nil, errors.New("unsupported component id")
+		return nil, fmt.Errorf("unsupported component id: %s", id)
 	}
 }
