@@ -5,10 +5,8 @@
 
 Consul Telemetry Collector is a lightweight OpenTelemetry collector used to
 collect metrics, logs and traces from a Consul cluster and collect metrics from envoy
-service proxies and export them to HCP or another OTLP compliant endpoint. The metric sink
- is encrypted and authorized by the Consul service mesh.
-
-.
+service proxies and export them to HCP or another OTLP compliant endpoint. 
+The metric sink is encrypted and authorized by the Consul service mesh.
 
 Configuration will be loaded in the following order of precedence:
 
@@ -18,8 +16,7 @@ Configuration will be loaded in the following order of precedence:
 
 # Installation
 
-
-To install and use the consul-telemetry-collector you will need a Consul version of 1.15.3 or greater and to authorize communication with the collector on the Service Mesh.
+To install and use the Consul Telemetry Collector you will need a Consul version of 1.15.3 or greater and to authorize communication with the collector on the Service Mesh.
 
 ## Kubernetes with consul-k8s or Helm
 
@@ -27,13 +24,13 @@ To install and use the consul-telemetry-collector you will need a Consul version
 * [Minimal Installation](#minimal-installation)
 * [Forward metrics to HCP](#forwarding-metrics-to-hcp)
 
-This requires consul-k8s version of 1.1.2 or greater
+This requires consul-k8s version of 1.1.2 or greater.
 
-We currently recommend using the consul-k8s CLI to install the consul-telemetry-collector. If you aren't already using it or the Consul Helm chart you can find instructions and documentation for using it [in the Consul Documentation](https://developer.hashicorp.com/consul/docs/k8s/installation/install). A few small changes to the helm chart enable the telemetry-collector to forward metrics to HCP.
+We currently recommend using the consul-k8s CLI to install the Consul Telemetry Collector. If you are not already using the consul-k8s CLI, nor the Consul Helm chart, you can find instructions and documentation [in the Consul Documentation](https://developer.hashicorp.com/consul/docs/k8s/installation/install). A few small changes to the helm chart enable the Consul Telemetry Collector to forward metrics to HCP.
 
 ### Minimal Installation
 
-Retrieve the current Helm values from Kubernetes using the `consul-k8s status` command or `helm get values consul` and write them to a file.
+Retrieve the current Helm values from Kubernetes using the `consul-k8s status` command or `helm get values consul` and write them to a file, for example `values.yaml`.
 ```bash
   connectInject:
     enabled: true
@@ -52,7 +49,7 @@ Retrieve the current Helm values from Kubernetes using the `consul-k8s status` c
     replicas: 3
 ```
 
-Now add the changes to the helm `values.yaml` file to enable the telemetry-collector deployment.
+Add the changes to the helm `values.yaml` file to enable the Consul Telemetry Collector deployment.
 ```yaml
   connectInject:
     enabled: true
@@ -75,15 +72,16 @@ Now add the changes to the helm `values.yaml` file to enable the telemetry-colle
 +    enabled: true
 ```
 
-Now apply your new configuration using the upgrade command
+Now, apply your new configuration using the upgrade command:
+
 ```bash
 consul-k8s upgrade -f values.yaml
 ```
 
 #### Service Intentions
-Next ensure that we authorize communication with the consul-telemetry-collector so that we start receiving envoy metrics.
+Lastly, ensure that we authorize communication with the Consul Telemetry Collector to start receiving envoy metrics.
 
-You'll need to create a `ServiceIntention` to allow that communication.
+You need to create a `ServiceIntention` to allow that communication:
 ```bash
 cat <<EOF | kubectl apply --filename -
 apiVersion: consul.hashicorp.com/v1alpha1
@@ -99,9 +97,9 @@ spec:
 EOF
 ```
 
-Now all pods that have been deployed since the Consul upgrade will get an updated envoy configuration and start attempting to forward their metrics to the consul-telemetry-collector.
+Now, all pods that have been deployed since the Consul upgrade will get an updated envoy configuration and attempt to forward their metrics to the Consul Telemetry Collector.
 
-#### Forward to another otel-collector
+#### Forward to another OTEL collector
 
 To consume these metrics in an APM, forward them to another OTLP metrics HTTP endpoint.
 
@@ -115,13 +113,13 @@ telemetryCollector:
 
 ### Forwarding Metrics to HCP
 
-These metrics can also be sent to HCP's Consul management plane to receive Consul Server and envoy proxy metrics. This assumes that this cluster is already [linked with HCP's Consul management plane](https://developer.hashicorp.com/hcp/docs/consul/usage/management-plane). You'll need the Service Principal and HCP Resource ID for the cluster to authenticate to HCP.
+These metrics can also be sent to HCP's Consul management plane to receive Consul Server and Envoy proxy metrics. This assumes that this cluster is already [linked with HCP's Consul management plane](https://developer.hashicorp.com/hcp/docs/consul/usage/management-plane). You will need the Service Principal and HCP Resource ID for the cluster to authenticate with HCP.
 
-If you've previously used the `cloud` preset to deploy Consul, download the latest version of consul-k8s (>= `1.1.2`) and run `consul-k8s -preset cloud upgrade` to update to the latest version of Consul and enable the telemetry-collector automatically! Skip to [Service Intentions](#service-intentions-1)
+If you have previously used the `cloud` preset to deploy Consul, download the latest version of consul-k8s (>= `1.1.2`) and run `consul-k8s -preset cloud upgrade` to update to the latest version of Consul and enable the Consul Telemetry Collector automatically! Skip to [Service Intentions](#service-intentions-1)
 
 If not, follow these instructions to add the new configuration to your values file.
 
-Retrieve the current values.yaml file from Kubernetes using the `consul-k8s status` command or `helm get values consul`
+Retrieve the current values.yaml file from Kubernetes using the `consul-k8s status` command or `helm get values consul` and write them to a file, for example `values.yaml`.
 ```bash
   connectInject:
     enabled: true
@@ -162,7 +160,7 @@ Retrieve the current values.yaml file from Kubernetes using the `consul-k8s stat
       secretName: consul-server-cert
 ```
 
-Now add the following two snippets to the helm `values.yaml` file to enable the telemetry-collector deployment and upgrade the helm chart.
+Now add the following two snippets to the helm `values.yaml` file to enable the Consul Telemetry Collector deployment.
 ```yaml
 global:
   metrics:
