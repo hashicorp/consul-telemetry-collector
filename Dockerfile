@@ -94,7 +94,8 @@ RUN groupadd --gid 1000 $PRODUCT_NAME && \
     usermod -a -G root $PRODUCT_NAME
 
 COPY dist/$TARGETOS/$TARGETARCH/$BIN_NAME /bin/
-#COPY LICENSE /licenses/copyright.txt
+# copy license for redhat certification
+COPY LICENSE /licenses/copyright.txt
 
 USER 101
 CMD /bin/$BIN_NAME
