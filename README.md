@@ -87,6 +87,8 @@ spec:
     name: '*'
 ```
 
+Now all pods that have been deployed since the Consul upgrade will will get an updated envoy configuration and start attempting to forward their metrics to the consul-telemetry-collector.
+
 #### Forwarding Metrics to HCP
 
 These metrics can also be sent to HCP's Consul management plane to receiver Consul Server and service mesh metrics. This assumes that this cluster is already [linked with HCP's Consul management plane](https://developer.hashicorp.com/hcp/docs/consul/usage/management-plane). You'll need the Service Principal and HCP Resource ID for the cluster to authenticate to HCP.
