@@ -87,7 +87,7 @@ cat <<EOF | kubectl apply --filename -
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
-  name: global
+  name: consul-telemetry-collector
 spec:
   destination:
     name: consul-telemetry-collector
@@ -261,7 +261,7 @@ cat <<EOF | kubectl apply --filename -
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
-  name: global
+  name: consul-telemetry-collector
 spec:
   destination:
     name: consul-telemetry-collector
