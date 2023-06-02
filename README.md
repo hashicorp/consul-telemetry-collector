@@ -64,17 +64,7 @@ Now add the changes to the helm `values.yaml` file to enable the telemetry-colle
 ```
 
 ```bash
-# consul-k8s upgrade -f values.yaml
-```
-
-Use the custom config to forward metrics to another open-telemetry-collector's OTEL HTTP endpoint.
-
-```yaml
-...
-+ telemetryCollector:
-+   enabled: true
-+   customExporterConfig: |
-+     {"http_collector_endpoint": "otel-collector:4187"}
+consul-k8s upgrade -f values.yaml
 ```
 
 #### Forwarding Metrics to HCP
@@ -177,7 +167,7 @@ Now add the changes to the helm `values.yaml` file to enable the telemetry-colle
 ```
 
 ```bash
-# consul-k8s upgrade -f values.yaml
+consul-k8s upgrade -f values.yaml
 ```
 
 Use the custom config to forward metrics to another open-telemetry-collector's OTEL HTTP endpoint.
@@ -192,8 +182,8 @@ Use the custom config to forward metrics to another open-telemetry-collector's O
 +     clientSecret:
 +       secretKey: client-secret
 +       secretName: consul-hcp-client-secret
-+     enabled: true
-+     customExporterConfig: |
++   enabled: true
++   customExporterConfig: |
 +       {"http_collector_endpoint": "otel-collector:4187"}
 ```
 
