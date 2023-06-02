@@ -45,6 +45,9 @@ func Test_New(t *testing.T) {
 			if r != "" {
 				client = &hcp.MockClient{
 					MockMetricsEndpoint: "https://metrics.test.endpoint",
+					MockMetricAttributes: map[string]string{
+						"cluster": "name",
+					},
 				}
 			}
 

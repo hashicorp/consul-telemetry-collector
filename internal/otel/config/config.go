@@ -121,7 +121,7 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 	case processors.FilterProcessorID:
 		return processors.FilterProcessorCfg(p.Client), nil
 	case processors.ResourceProcessorID:
-		return processors.ResourcesProcessorCfg(p.ResourceID), nil
+		return processors.ResourcesProcessorCfg(p.Client), nil
 	// exporters
 	case exporters.LoggingExporterID:
 		return exporters.LogExporterCfg(), nil
@@ -133,7 +133,7 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		}
 		metricsEndpoint, err := p.Client.MetricsEndpoint()
 		if err != nil {
-			return nil, err
+			return nil, fmt.Errorf("failed to get metrics endpoint: %w", err)
 		}
 
 		return exporters.OtlpExporterHCPCfg(metricsEndpoint, p.ResourceID, extensions.OauthClientID), nil

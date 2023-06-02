@@ -58,6 +58,9 @@ func Test_newConfigProvider(t *testing.T) {
 				mockClient = &hcp.MockClient{
 					MockMetricsEndpoint: "https://hcp-metrics-endpoint",
 					MockMetricFilters:   []string{"^a", "b$"},
+					MockMetricAttributes: map[string]string{
+						"cluster": "name",
+					},
 				}
 			}
 			c := CollectorCfg{
