@@ -173,7 +173,7 @@ Now add the changes to the helm `values.yaml` file to enable the telemetry-colle
 +    clientSecret:
 +      secretKey: client-secret
 +      secretName: consul-hcp-client-secret
-+    enabled: true
++  enabled: true
 ```
 
 ```bash
@@ -185,15 +185,16 @@ Use the custom config to forward metrics to another open-telemetry-collector's O
 ```yaml
 ...
 + telemetryCollector:
-+   clientId:
-+     secretKey: client-id
-+     secretName: consul-hcp-client-id
-+   clientSecret:
-+     secretKey: client-secret
-+     secretName: consul-hcp-client-secret
-+   enabled: true
-+   customExporterConfig: |
-+     {"http_collector_endpoint": "otel-collector:4187"}
++   cloud:
++     clientId:
++       secretKey: client-id
++       secretName: consul-hcp-client-id
++     clientSecret:
++       secretKey: client-secret
++       secretName: consul-hcp-client-secret
++     enabled: true
++     customExporterConfig: |
++       {"http_collector_endpoint": "otel-collector:4187"}
 ```
 
 
