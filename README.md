@@ -71,6 +71,7 @@ Now add the changes to the helm `values.yaml` file to enable the telemetry-colle
 consul-k8s upgrade -f values.yaml
 ```
 
+#### Service Intentions
 Next ensure that we authorize communication with the consul-telemetry-collector so that we start receiving envoy metrics.
 
 You'll need to create a ServiceIntention to allow that communication.
@@ -93,7 +94,9 @@ Now all pods that have been deployed since the Consul upgrade will will get an u
 
 These metrics can also be sent to HCP's Consul management plane to receiver Consul Server and service mesh metrics. This assumes that this cluster is already [linked with HCP's Consul management plane](https://developer.hashicorp.com/hcp/docs/consul/usage/management-plane). You'll need the Service Principal and HCP Resource ID for the cluster to authenticate to HCP.
 
-If you've previously used the `cloud` preset to deploy Consul, download the latest version of consul-k8s and run `consul-k8s -preset cloud upgrade` to update to the latest version of Consul and enable the telemetry-collector automatically! If not, follow these instructions to add the new configuration to your values file.
+If you've previously used the `cloud` preset to deploy Consul, download the latest version of consul-k8s (>= `1.1.3`) and run `consul-k8s -preset cloud upgrade` to update to the latest version of Consul and enable the telemetry-collector automatically! Skip to [Service Intentions](#service-intentions-1)
+
+If not, follow these instructions to add the new configuration to your values file.
 
 Retrieve the current values.yaml file from Kubernetes using the `consul-k8s status` command or `helm get values consul`
 ```bash
@@ -208,6 +211,26 @@ consul-k8s upgrade -f values.yaml
 +      secretName: consul-hcp-client-secret
 +  enabled: true
 ```
+
+#### Service Intentions
+
+Next ensure that we authorize communication with the consul-telemetry-collector so that we start receiving envoy metrics.
+
+You'll need to create a ServiceIntention to allow that communication.
+```yaml
+apiVersion: consul.hashicorp.com/v1alpha1
+kind: ServiceIntentions
+metadata:
+  name: global
+spec:
+  destination:
+    name: consul-telemetry-collector
+  sources:
+  - action: allow
+    name: '*'
+```
+
+#### Forward to another otel-collector
 
 Use the custom config to forward metrics to another open-telemetry-collector's OTEL HTTP endpoint.
 
