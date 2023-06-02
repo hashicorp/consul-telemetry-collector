@@ -10,13 +10,7 @@ import (
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers/hcp"
 )
 
-// revive:disable:unexported-return
-
-//revive:enable:unexported-return
-
-func newProvider(
-	cfg CollectorCfg,
-) (otelcol.ConfigProvider, error) {
+func newProvider(cfg CollectorCfg) (otelcol.ConfigProvider, error) {
 	uris := []string{"external:"}
 	if cfg.ResourceID != "" {
 		uris = append(uris, fmt.Sprintf("hcp:%s", cfg.ResourceID))

@@ -155,3 +155,13 @@ func (c *Client) MetricFilters() ([]string, error) {
 	}
 	return c.metricCfg.includeList, nil
 }
+
+// MetricAttributes returns the labels we were told to include from the TelemetryConfig.
+func (c *Client) MetricAttributes() (map[string]string, error) {
+	if c.metricCfg == nil {
+		if err := c.ReloadConfig(); err != nil {
+			return nil, err
+		}
+	}
+	return c.metricCfg.labels, nil
+}

@@ -11,6 +11,7 @@ import (
 type TelemetryClient interface {
 	MetricsEndpoint() (string, error)
 	MetricFilters() ([]string, error)
+	MetricAttributes() (map[string]string, error)
 }
 
 // ClientService is a paired down interface for the global-network-manager-service that retrieves the
