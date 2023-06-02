@@ -61,8 +61,8 @@ func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsSe
 			identifier = metricsMessage.GetIdentifier()
 
 			labels = map[string]string{
-				"envoy_cluster": identifier.GetNode().GetCluster(), // envoy.cluster is the service name in Consul
-				"node_id":       identifier.GetNode().GetId(),      // node.id delineate proxies
+				"envoy.cluster": identifier.GetNode().GetCluster(), // envoy.cluster is the service name in Consul
+				"node.id":       identifier.GetNode().GetId(),      // node.id delineate proxies
 			}
 
 			fields := identifier.GetNode().GetMetadata().AsMap()
