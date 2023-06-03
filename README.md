@@ -18,7 +18,7 @@ Envoy service proxies and export them to HCP or another [OTLP compliant endpoint
 
 ### Step 0: Existing Consul Datacenter
 
-If you have previously used the `cloud` preset of `consul-k8s` to deploy Consul:
+If you used the `-preset cloud` of `consul-k8s` to deploy Consul:
 1. [download](https://developer.hashicorp.com/consul/docs/k8s/installation/install-cli#install-the-cli) `consul-k8s` version `>= 1.15.3`
 1. run `consul-k8s -preset cloud upgrade` to update to the latest version of Consul and enable the Consul Telemetry Collector
 1. skip to [Step 2: Configure Service Intentions](#step-2-configure-service-intentions)
@@ -33,6 +33,14 @@ connectInject:
 controller:
   enabled: true
 global:
+  cloud:
+    enabled: true
+    clientId:
+      secretKey: client-id
+      secretName: consul-hcp-client-id
+    clientSecret:
+      secretKey: client-secret
+      secretName: consul-hcp-client-secret
   acls:
     manageSystemACLs: true
   datacenter: mesh-metrics
