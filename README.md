@@ -4,7 +4,7 @@
 </h1>
 
 Consul Telemetry Collector is a lightweight OpenTelemetry collector that collects metrics from
-Envoy service proxies and export them to HCP or another [OTLP compliant endpoint](https://opentelemetry.io/docs/concepts/sdk-configuration/otlp-exporter-configuration/#otel_exporter_otlp_metrics_endpoint). Metric exporting to the Consul Telemetry Collector from Envoy proxies is encrypted and authorized by the Consul service mesh.
+Envoy service proxies and exports them to [HCP Consul's management plane](https://developer.hashicorp.com/hcp/docs/consul/usage/management-plane) or other [OTLP endpoints](https://opentelemetry.io/docs/concepts/sdk-configuration/otlp-exporter-configuration/#otel_exporter_otlp_metrics_endpoint).
 
 # Installation
 
@@ -19,7 +19,7 @@ Envoy service proxies and export them to HCP or another [OTLP compliant endpoint
 ### Step 0: Existing Consul Datacenter
 
 If you used the `-preset cloud` of `consul-k8s` to deploy Consul:
-1. [download](https://developer.hashicorp.com/consul/docs/k8s/installation/install-cli#install-the-cli) `consul-k8s` version `>= 1.15.3`
+1. [download](https://developer.hashicorp.com/consul/docs/k8s/installation/install-cli#install-the-cli) `consul-k8s` version `>= 1.1.2`
 1. run `consul-k8s -preset cloud upgrade` to update to the latest version of Consul and enable the Consul Telemetry Collector
 1. skip to [Step 2: Configure Service Intentions](#step-2-configure-service-intentions)
 
@@ -53,7 +53,7 @@ server:
   replicas: 3
 ```
 
-Add the changes to the helm `values.yaml` file to enable the Consul Telemetry Collector deployment:
+Add the following settings to the helm `values.yaml` file to enable the Consul Telemetry Collector deployment:
 
 ```diff
   connectInject:
@@ -85,7 +85,7 @@ Add the changes to the helm `values.yaml` file to enable the Consul Telemetry Co
 +    enabled: true
 ```
 
-Now, apply your new configuration using the upgrade command:
+Apply the new configuration using the upgrade command:
 
 ```bash
 consul-k8s upgrade -f values.yaml
@@ -93,7 +93,7 @@ consul-k8s upgrade -f values.yaml
 
 ### Step 2: Configure Service Intentions
 
-To authorize communication with the Consul Telemetry Collector to from Envoy proxies, you need to create a [`ServiceIntention`](https://developer.hashicorp.com/consul/docs/connect/config-entries/service-intentions):
+You will need to authorize communication to the Consul Telemetry Collector from Envoy proxies with a [`ServiceIntention`](https://developer.hashicorp.com/consul/docs/connect/config-entries/service-intentions):
 
 ```bash
 cat <<EOF | kubectl apply --filename -
@@ -120,50 +120,4 @@ telemetryCollector:
   enabled: true
   customExporterConfig: |
       {"http_collector_endpoint": "otel-collector:4187"}
-```
-
-## Development
-
-To get started run `consul-telemetry-collector agent -dev`. The collector
-will run in dev mode and write all collected metrics to the console.
-
-The collector can also:
-
-1. Forward to HCP
-2. Forward to another collector
-
-### Forward to HCP
-
-Use the CLIENT_ID, CLIENT_SECRET, and RESOURCE_ID created for observability
-from HCP Consul. The collector will use them to send metrics to HCP.
-
-```bash
-HCP_CLIENT_ID=<client_id> \
-HCP_CLIENT_SECRET=<client_secret> \
-HCP_RESOURCE_ID=<resource_id> \
-consul-telemetry-collector agent
-```
-
-# Development
-
-## Build
-
-### Binary
-
-```bash
-make dev
-```
-
-### Docker Image
-
-```bash
-make docker
-```
-
-## Testing
-
-### Unit Tests
-
-```bash
-make unit-tests
 ```
