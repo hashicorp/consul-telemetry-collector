@@ -84,7 +84,7 @@ Apply the new configuration:
 consul-k8s upgrade -f values.yaml
 
 # if using helm
-helm install consul hashicorp/consul --create-namespace --namespace consul --values values.yaml
+helm upgrade consul hashicorp/consul --namespace consul --values values.yaml
 ```
 
 ## Step 2: Configure Service Intentions
