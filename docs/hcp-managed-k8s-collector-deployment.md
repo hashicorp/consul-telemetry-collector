@@ -1,12 +1,12 @@
 # Collect Envoy Metrics in an HCP Managed Consul Kubernetes Cluster
 
-Follow these instructions to add Envoy metric collection to an existing Consul service mesh. This document assumes that Kubernetes where the Consul cluster is [managed by HCP](https://developer.hashicorp.com/hcp/docs/consul/usage/management-plane).
+Follow these instructions to add Envoy metric collection to an existing Consul service mesh.
 
 ## Requirements
 
-- Consul version `>= 1.15.3`
+- Consul version `>= 1.15.3` running in a Kubernetes cluster
+- Consul linked to [HCP's Consul Management Plane](https://developer.hashicorp.com/hcp/docs/consul/usage/management-plane)
 - [consul-k8s](https://developer.hashicorp.com/consul/docs/k8s/installation/install-cli#install-the-cli) version `>= 1.1.2` OR the [Consul Helm chart](https://developer.hashicorp.com/consul/docs/k8s/installation/install#install-consul-on-kubernetes-with-helm)
-- Consul cluster linked to [HCP's Consul Management Plane](https://developer.hashicorp.com/hcp/docs/consul/usage/management-plane)
 
 ## Step 0: Upgrading a `consul-k8s` Deployed Datacenter
 

@@ -22,7 +22,7 @@ To install and use the Consul Telemetry Collector you will need a Consul version
 
 ### Kubernetes
 
-* [HCP Managed Cluster](./docs/hcp-managed-collector-deployment.md)
+* [HCP Managed Cluster](./docs/hcp-managed-k8s-collector-deployment.md)
 * [consul-k8s/helm](./docs/consul-k8s-helm.md)
 
 ## Development
