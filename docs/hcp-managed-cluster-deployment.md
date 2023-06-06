@@ -77,7 +77,7 @@ Add the following settings to the helm `values.yaml` file to enable the Consul T
 +    enabled: true
 ```
 
-Apply the new configuration using the upgrade command:
+Apply the new configuration:
 
 ```bash
 # if using consul-k8s
