@@ -1,6 +1,6 @@
-# Collecting Consul Service Mesh Metrics for HCP Managed Consul Cluster
+# Collect Envoy Metrics in an HCP Managed Consul Kubernetes Cluster
 
-These instructions describe how to add Envoy metric collection to an existing Consul service mesh in Kubernetes where the Consul cluster is [managed by HCP](https://developer.hashicorp.com/hcp/docs/consul/usage/management-plane).
+Follow these instructions to add Envoy metric collection to an existing Consul service mesh. This document assumes that Kubernetes where the Consul cluster is [managed by HCP](https://developer.hashicorp.com/hcp/docs/consul/usage/management-plane).
 
 ## Requirements
 
