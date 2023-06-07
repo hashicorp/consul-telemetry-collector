@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 // Package flags is a helper module that can be used to provide common functionality for
 // flag sets
 package flags

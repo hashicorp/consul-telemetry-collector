@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 // Package config manages helpers to generate opentelemetry-collector configuration.
 //
 // Currently the Config struct is the overarching configuration that is generated and marshaled to a confmap

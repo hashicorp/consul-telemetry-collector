@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 // Package version handles the human read-able version for the consul-telemetry-collector itself and important
 // components
 package version
