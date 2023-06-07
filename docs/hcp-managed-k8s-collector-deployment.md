@@ -12,7 +12,8 @@ Follow these instructions to add Envoy metric collection to an existing Consul s
 
 If you used the `-preset cloud` of `consul-k8s` to deploy Consul:
 1. [download](https://developer.hashicorp.com/consul/docs/k8s/installation/install-cli#install-the-cli) `consul-k8s` version `>= 1.1.2`
-1. run `consul-k8s -preset cloud upgrade` to update to the latest version of Consul and enable the Consul Telemetry Collector
+1. Export your clusters `HCP_CLIENT_ID`, `HCP_CLIENT_SECRET`, and `HCP_RESOURCE_ID`
+1. run `consul-k8s upgrade -preset cloud` to update to the latest version of Consul and enable the Consul Telemetry Collector
 1. skip to [Step 2: Configure Service Intentions](#step-2-configure-service-intentions)
 
 ## Step 1: Deploy Consul Telemetry Collector
