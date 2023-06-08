@@ -92,7 +92,7 @@ helm upgrade consul hashicorp/consul --namespace consul --values values.yaml
 You will need to authorize communication to the Consul Telemetry Collector from Envoy proxies with a [`ServiceIntention`](https://developer.hashicorp.com/consul/docs/connect/config-entries/service-intentions):
 
 ```bash
-cat <<EOF | kubectl apply --filename -
+cat <<EOF | kubectl apply --namespace consul --filename -
 apiVersion: consul.hashicorp.com/v1alpha1
 kind: ServiceIntentions
 metadata:
