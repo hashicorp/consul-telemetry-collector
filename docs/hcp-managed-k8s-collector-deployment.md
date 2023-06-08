@@ -1,4 +1,4 @@
-# Collect Envoy Metrics in an HCP Managed Consul Kubernetes Cluster
+# Collect Envoy Metrics in an HCP Managed or Linked Consul Kubernetes Cluster
 
 Follow these instructions to add Envoy metric collection to an existing Consul service mesh.
 
@@ -16,6 +16,22 @@ If you used the `-preset cloud` of `consul-k8s` to deploy Consul:
 1. skip to [Step 2: Configure Service Intentions](#step-2-configure-service-intentions)
 
 ## Step 1: Deploy Consul Telemetry Collector
+
+If your cluster is HashiCorp-managed, first export your client ID, client secret, and HCP resource ID, and then create secrets to authenticate with HCP:
+
+```bash
+export HCP_CLIENT_ID=""
+export HCP_CLIENT_SECRET=""
+export HCP_RESOURCE_ID=""
+```
+
+```bash
+kubectl create secret generic consul-hcp-client-id --from-literal=client-id=$HCP_CLIENT_ID --namespace consul
+
+kubectl create secret generic consul-hcp-client-secret --from-literal=client-secret=$HCP_CLIENT_SECRET --namespace consul
+
+kubectl create secret generic consul-hcp-resource-id --from-literal=resource-id=$HCP_RESOURCE_ID --namespace consul
+```
 
 Retrieve the current Helm values from Kubernetes using the `consul-k8s status` command or `helm get values consul` and write them to a file, for example `values.yaml`. The configuration file below is an example and yours may have additional settings:
 
