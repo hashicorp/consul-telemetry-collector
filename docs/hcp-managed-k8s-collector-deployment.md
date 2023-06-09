@@ -122,6 +122,8 @@ spec:
 EOF
 ```
 
+You can modify the `--namespace` flag with the [`namespace`](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/) your Consul datacenter is in, if it differs.
+
 ## Step 3: (Optional) Forward to Another OTEL Collector
 
 To consume these metrics in [another OTLP-compatible collector or back end](https://opentelemetry.io/docs/concepts/sdk-configuration/otlp-exporter-configuration/#otel_exporter_otlp_metrics_endpoint), configure the Consul Telemetry Collector with the `telemetryCollector.customExportConfig` setting:
