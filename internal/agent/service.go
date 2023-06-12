@@ -1,3 +1,6 @@
+// Copyright (c) HashiCorp, Inc.
+// SPDX-License-Identifier: MPL-2.0
+
 // Package agent manages the consul-telemetry-collector process, loads the configuration,
 // and sets up and manages the lifecycle of the opentelemetry-otel.
 package agent
