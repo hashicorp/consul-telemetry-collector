@@ -23,8 +23,8 @@ jobs:
     - uses: benc-uk/workflow-dispatch@798e70c97009500150087d30d9f11c5444830385 # v1.2.2
       name: kubernetes
       with:
-        workflow: cloud.yml
+        workflow: collector.yml
         repo: hashicorp/consul-k8s-workflows
-        ref: main
+        ref: k8s-collector-workflow
         token: ${{ secrets.ELEVATED_GITHUB_TOKEN }}
-        inputs: '{ "context":"${{ env.CONTEXT }}", "repository":"hashicorp/consul-k8s", "branch":"${{ env.BRANCH }}", "sha":"release/1.2.x", "token":"${{ secrets.ELEVATED_GITHUB_TOKEN }}" }'
+        inputs: '{ "context":"${{ env.CONTEXT }}", "repository":"hashicorp/consul-telemetry-collector", "branch":"${{ env.BRANCH }}", "sha":"release/1.2.x", "token":"${{ secrets.ELEVATED_GITHUB_TOKEN }}, "collector-image": "0.0.1" }'
