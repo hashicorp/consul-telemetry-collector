@@ -92,12 +92,13 @@ jobs:
           instructions: |
             make build
 
-  build-docker-default:
+  build-docker:
     # Do not run on forks
     if: github.repository_owner == 'hashicorp' && contains(github.event.pull_request.labels.*.name, 'e2e')
     name: Docker ${{ matrix.arch }} dev build
     needs:
       - set-product-version
+      - build-linux
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -126,6 +127,9 @@ jobs:
           version: ${{ env.version }}
           target: release-default
           arch: ${{ matrix.arch }}
+          # theoretically these tags shouldn't get used? We'd want the ones from mainline
+          tags: |
+            docker.io/hashicorp/${{ env.repo }}:${{ env.version }}
           # dev_tags are tags that get automatically pushed whenever successful
           # builds make it to the stable channel. The intention is for these tags
           # to be used for early testing of new code prior to official releases
@@ -148,9 +152,10 @@ jobs:
           dev_tags: |
             docker.io/hashicorppreview/${{ env.repo }}:${{ env.version }}-${{ github.sha }}
   kubernetes:
-    #if: github.event.label.name == 'e2e'
     name: kubernetes
     runs-on: ubuntu-latest
+    needs:
+      - build-docker
     steps:
     - uses: benc-uk/workflow-dispatch@798e70c97009500150087d30d9f11c5444830385 # v1.2.2
       name: kubernetes
