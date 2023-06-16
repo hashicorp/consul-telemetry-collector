@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches: [e2e]
-  #  pull_request:
+  pull_request:
   #  types:
   #    - labeled
 
@@ -13,10 +13,142 @@ on:
 env:
   CONTEXT: "ctx"
   BRANCH: "release/1.2.x"
+  PKG_NAME: "consul-telemetry-collector"
 
 jobs:
+  get-go-version:
+    name: "Determine Go toolchain version"
+    runs-on: ubuntu-latest
+    outputs:
+      go-version: ${{ steps.get-go-version.outputs.go-version }}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Determine Go version
+        id: get-go-version
+        # We use .go-version as our source of truth for current Go
+        # version, because "goenv" can react to it automatically.
+        run: |
+          echo "Building with Go $(cat .go-version)"
+          echo "go-version=$(cat .go-version)" >> $GITHUB_OUTPUT
+
+  set-product-version:
+    runs-on: ubuntu-latest
+    outputs:
+      product-version: ${{ steps.set-product-version.outputs.product-version }}
+      base-product-version: ${{ steps.set-product-version.outputs.base-product-version }}
+      prerelease-product-version: ${{ steps.set-product-version.outputs.prerelease-product-version }}
+    steps:
+      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b #https://github.com/actions/checkout/releases/tag/v3.2.0
+      - name: Set Product version
+        id: set-product-version
+        uses: hashicorp/actions-set-product-version@v1
+
+  test:
+    runs-on: ubuntu-latest
+    needs:
+      - get-go-version
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: ${{ needs.get-go-version.outputs.go-version }}
+      - name: Deps
+        run: |
+          make deps
+      - name: Test
+        run: |
+          make go/test
+      - name: Lint
+        run: |
+          export PATH=$(go env GOPATH)/bin:$PATH
+          make go/lint
+
+  build-linux:
+    needs:
+      - get-go-version
+      - set-product-version
+      - test
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        goos: [linux]
+        goarch: ["arm", "arm64", "amd64"]
+
+      fail-fast: true
+
+    name: Go ${{ needs.get-go-version.outputs.go-version }} ${{ matrix.goos }} ${{ matrix.goarch }} build
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - uses: hashicorp/actions-go-build@v0.1.3
+        with:
+          product_name: ${{ env.PKG_NAME }}
+          product_version: ${{ needs.set-product-version.outputs.product-version }}
+          go_version: ${{ needs.get-go-version.outputs.go-version }}
+          os: ${{ matrix.goos }}
+          arch: ${{ matrix.goarch }}
+          reproducible: assert
+          instructions: |
+            make build
+
+  build-docker-default:
+    # Do not run on forks
+    if: github.repository_owner == 'hashicorp' && contains(github.event.pull_request.labels.*.name, 'e2e')
+    name: Docker ${{ matrix.arch }} dev build
+    needs:
+      - set-product-version
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        arch: ["arm", "arm64", "amd64"]
+    env:
+      repo: ${{ github.event.repository.name }}
+      version: ${{ needs.set-product-version.outputs.product-version }}
+      base-version: ${{ needs.set-product-version.outputs.base-product-version }}
+
+    steps:
+      - uses: actions/checkout@755da8c3cf115ac066823e79a1e1788f8940201b #https://github.com/actions/checkout/releases/tag/v3.2.0
+      - name: Docker Build (Action)
+        uses: hashicorp/actions-docker-build@v1
+        with:
+          # Add smoke test here. Below is a sample smoke test that runs the built image
+          # and validates the version.
+          smoke_test: |
+            TEST_VERSION="$(docker run "${IMAGE_NAME}" --version)"
+            if [ "${TEST_VERSION}" != "${version}" ]; then
+              echo "Test FAILED"
+              echo "Test Version: ${TEST_VERSION}"
+              echo "Version: ${version}"
+              exit 1
+            fi
+            echo "Test PASSED"
+          version: ${{ env.version }}
+          target: release-default
+          arch: ${{ matrix.arch }}
+          # dev_tags are tags that get automatically pushed whenever successful
+          # builds make it to the stable channel. The intention is for these tags
+          # to be used for early testing of new code prior to official releases
+          # going out. The stable channel implies that all tests and scans have
+          # completed successfully, so these images should be _stable_ but are not
+          # intended for production use.
+          #
+          # Here we have two example dev tags. The first (ending -dev) is a tag
+          # that will be updated over-and-over as new builds arrive in stable.
+          #
+          # The second (using the git SHA) will produce a new separate tag for
+          # each commit that is built. (These can still be overridden if the same
+          # commit is built successfully a second time, but that is a less likely
+          # scenario.) These kinds of dev tags are useful if you want to be able
+          # to use Docker images built from those specific commits.
+          #
+          # NOTE: dev_tags MUST publish to the 'hashicorppreview' DockerHub org, it
+          # will fail to any other DockerHub org or registry. You can optionally
+          # prepend docker.io
+          dev_tags: |
+            docker.io/hashicorppreview/${{ env.repo }}:${{ env.version }}-${{ github.sha }}
   kubernetes:
-    #if: github.event.label.name == 'e2e' || github.event.label.name == 'e2e/kubernetes'
+    #if: github.event.label.name == 'e2e'
     name: kubernetes
     runs-on: ubuntu-latest
     steps:
