@@ -14,7 +14,7 @@ ifeq ($(ARCH),aarch64)
 endif
 OS       = $(shell uname | tr [[:upper:]] [[:lower:]])
 PLATFORM = $(OS)/$(ARCH)
-BIN_PATH ?= dist/$(PLATFORM)
+BIN_PATH ?= dist/$(PLATFORM)/$(BIN_NAME)
 
 GO_MODULE_DIRS ?= $(shell go list -m -f "{{ .Dir }}" | grep -v mod-vendor)
 
