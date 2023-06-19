@@ -124,7 +124,11 @@ EOF
 
 You can modify the `--namespace` flag with the [`namespace`](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/) your Consul datacenter is in, if it differs.
 
-## Step 3: (Optional) Forward to Another OTEL Collector
+## Step 3: Restart Pods After Consul Version Upgrade
+
+If you have upgraded your cluster's Consul version from a version less than 1.15.3 to a version at or greater than 1.15.3, you must restart your service(s) pods to allow Envoy to start sending metrics for those services to the telemetry collector.
+
+## Step 4: (Optional) Forward to Another OTEL Collector
 
 To consume these metrics in [another OTLP-compatible collector or back end](https://opentelemetry.io/docs/concepts/sdk-configuration/otlp-exporter-configuration/#otel_exporter_otlp_metrics_endpoint), configure the Consul Telemetry Collector with the `telemetryCollector.customExportConfig` setting:
 
