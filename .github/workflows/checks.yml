@@ -61,4 +61,14 @@ jobs:
     if: github.repository_owner == 'hashicorp' && contains(github.event.pull_request.labels.*.name, 'e2e')
     needs:
       [test, golangci]
-    uses: ./.github/workflows/e2e.yml
+      #uses: ./.github/workflows/e2e.yml
+    runs-on: ubuntu-latest
+    steps:
+    - uses: benc-uk/workflow-dispatch@798e70c97009500150087d30d9f11c5444830385 # v1.2.2
+      name: kubernetes
+      with:
+        workflow: collector.yml
+        repo: hashicorp/consul-k8s-workflows
+        ref: k8s-collector-workflow
+        token: ${{ secrets.ELEVATED_GITHUB_TOKEN }}
+        inputs: '{ "context":"${{ env.CONTEXT }}", "repository":"hashicorp/consul-telemetry-collector", "branch":"${{ env.BRANCH }}", "sha":"release/1.2.x", "token":"${{ secrets.ELEVATED_GITHUB_TOKEN }}" }'
