@@ -23,4 +23,4 @@ jobs:
         repo: hashicorp/consul-k8s-workflows
         ref: k8s-collector-workflow
         token: ${{ secrets.ELEVATED_GITHUB_TOKEN }}
-        inputs: '{ "context":"${{ env.CONTEXT }}", "repository":"hashicorp/consul-telemetry-collector", "branch":"${{ env.BRANCH }}", "sha":"release/1.2.x", "token":"${{ secrets.ELEVATED_GITHUB_TOKEN }}, "collector-image": "0.0.1" }'
+        inputs: '{ "context":"${{ env.CONTEXT }}", "repository":"hashicorp/consul-telemetry-collector", "branch":"${{ env.BRANCH }}", "sha":"release/1.2.x", "token":"${{ secrets.ELEVATED_GITHUB_TOKEN }}" }'
