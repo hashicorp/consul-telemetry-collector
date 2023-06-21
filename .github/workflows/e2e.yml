@@ -7,8 +7,9 @@ on:
 
 env:
   CONTEXT: "ctx"
-  BRANCH: "release/1.2.x"
+  BRANCH: ${{ github.head_ref || github.ref_name }}
   PKG_NAME: "consul-telemetry-collector"
+  SHA: ${{ github.event.pull_request.head.sha || github.sha }}
 
 jobs:
   kubernetes:
@@ -23,4 +24,4 @@ jobs:
         repo: hashicorp/consul-k8s-workflows
         ref: k8s-collector-workflow
         token: ${{ secrets.ELEVATED_GITHUB_TOKEN }}
-        inputs: '{ "context":"${{ env.CONTEXT }}", "repository":"hashicorp/consul-telemetry-collector", "branch":"${{ env.BRANCH }}", "sha":"release/1.2.x", "token":"${{ secrets.ELEVATED_GITHUB_TOKEN }}" }'
+        inputs: '{ "context":"${{ env.CONTEXT }}", "repository":"${{ github.repository }}", "branch":"${{ env.BRANCH }}", "sha":"${{ env.SHA }}", "token":"${{ secrets.ELEVATED_GITHUB_TOKEN }}" }'
