@@ -126,7 +126,7 @@ You can modify the `--namespace` flag with the [`namespace`](https://kubernetes.
 
 ## Step 3: Restart Pods After Consul Version Upgrade
 
-If you have upgraded your cluster's Consul version from a version less than 1.15.3 to a version at or greater than 1.15.3, you must restart your service(s) pods to allow Envoy to start sending metrics for those services to the telemetry collector.
+If you have upgraded your cluster's Consul version from less than 1.15.3 to 1.15.3 or greater, you must [restart your services' pods](https://kubernetes.io/docs/reference/generated/kubectl/kubectl-commands#-em-restart-em-). This is so Envoy is configured to send metrics for those services to the Consul Telemetry Collector.
 
 ## Step 4: (Optional) Forward to Another OTEL Collector
 
