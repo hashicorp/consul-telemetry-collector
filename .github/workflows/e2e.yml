@@ -6,7 +6,7 @@ on:
 
 
 env:
-  CONTEXT: "ctx"
+  CONTEXT: "consul-telemetry-collector-pr"
   BRANCH: ${{ github.head_ref || github.ref_name }}
   PKG_NAME: "consul-telemetry-collector"
   SHA: ${{ github.event.pull_request.head.sha || github.sha }}
