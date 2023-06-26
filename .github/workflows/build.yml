@@ -9,6 +9,7 @@ on:
 
 env:
   PKG_NAME: "consul-telemetry-collector"
+  BIN_NAME: "consul-telemetry-collector"
 
 jobs:
   get-go-version:

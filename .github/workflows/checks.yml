@@ -56,3 +56,10 @@ jobs:
         run: |
           export PATH=$(go env GOPATH)/bin:$PATH
           make go/lint
+
+  e2e:
+    if: github.repository_owner == 'hashicorp' && contains(github.event.pull_request.labels.*.name, 'e2e')
+    needs:
+      [test, golangci]
+    uses: ./.github/workflows/e2e.yml
+    secrets: inherit

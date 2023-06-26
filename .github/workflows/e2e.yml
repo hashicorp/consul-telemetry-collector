@@ -1,0 +1,26 @@
+name: "E2E tests"
+
+on:
+  workflow_call:
+
+
+
+env:
+  CONTEXT: "consul-telemetry-collector-pr"
+  BRANCH: ${{ github.head_ref || github.ref_name }}
+  PKG_NAME: "consul-telemetry-collector"
+  SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+
+jobs:
+  kubernetes:
+    name: kubernetes
+    runs-on: ubuntu-latest
+    if: github.repository_owner == 'hashicorp'
+    steps:
+    - uses: benc-uk/workflow-dispatch@798e70c97009500150087d30d9f11c5444830385 # v1.2.2
+      name: kubernetes
+      with:
+        workflow: collector.yml
+        repo: hashicorp/consul-k8s-workflows
+        token: ${{ secrets.ELEVATED_GITHUB_TOKEN }}
+        inputs: '{ "context":"${{ env.CONTEXT }}", "repository":"${{ github.repository }}", "branch":"${{ env.BRANCH }}", "sha":"${{ env.SHA }}", "token":"${{ secrets.ELEVATED_GITHUB_TOKEN }}" }'
