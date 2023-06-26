@@ -106,14 +106,36 @@
         "timestamp_ms": 1682099630190
       }
     ]
-   },
-   {
+  },
+  {
     "name": "server_stats_recent_lookups",
     "type": 1,
     "metric": [
       {
         "gauge": {
           "value": 2541
+        },
+        "timestamp_ms": 1682099630190
+      }
+    ]
+  },
+  {
+    "name": "cluster_ef15b5b5_consul_telemetry_collector_default_otlp_single_node_cluster_internal_d1779413_9e75_e538_94cc_8a6b0e6a5175_consul_upstream_cx_total",
+    "type": 1,
+    "metric": [
+      {
+        "label": [
+          {
+            "name": "envoy_cluster_name",
+            "value": "metrics_cluster"
+          },
+          {
+            "name": "consul.destination.partition",
+            "value": "default"
+          }
+        ],
+        "gauge": {
+          "value": 1
         },
         "timestamp_ms": 1682099630190
       }

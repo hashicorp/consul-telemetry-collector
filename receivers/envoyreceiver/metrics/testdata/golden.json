@@ -143,6 +143,31 @@
                   }
                 ]
               }
+            },
+            {
+              "name": "cluster_ef15b5b5_consul_telemetry_collector_default_otlp_single_node_cluster_internal_d1779413_9e75_e538_94cc_8a6b0e6a5175_consul_upstream_cx_total",
+              "gauge": {
+                "dataPoints": [
+                  {
+                    "attributes": [
+                      {
+                        "key": "envoy_cluster_name",
+                        "value": {
+                          "stringValue": "metrics_cluster"
+                        }
+                      },
+                      {
+                        "key": "consul.destination.partition",
+                        "value": {
+                          "stringValue": "default"
+                        }
+                      }
+                    ],
+                    "timeUnixNano": "1682099630856000000",
+                    "asDouble": 1
+                  }
+                ]
+              }
             }
           ]
         }
