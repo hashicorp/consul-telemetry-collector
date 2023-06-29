@@ -11,6 +11,7 @@ Follow these instructions to add Envoy metric collection to an existing Consul s
 ## Step 0: Upgrading a `consul-k8s` Deployed Datacenter
 
 If you used the `-preset cloud` of `consul-k8s` to deploy Consul:
+
 1. [download](https://developer.hashicorp.com/consul/docs/k8s/installation/install-cli#install-the-cli) `consul-k8s` version `>= 1.1.2`
 1. run `consul-k8s -preset cloud upgrade` to update to the latest version of Consul and enable the Consul Telemetry Collector
 1. skip to [Step 2: Configure Service Intentions](#step-2-configure-service-intentions)
@@ -31,7 +32,13 @@ kubectl create secret generic consul-hcp-client-secret --from-literal=client-sec
 kubectl create secret generic consul-hcp-resource-id --from-literal=resource-id=$HCP_RESOURCE_ID --namespace consul
 ```
 
-Retrieve the current Helm values from Kubernetes using the `consul-k8s status` command or `helm get values consul` and write them to a file, for example `values.yaml`. The configuration file below is an example and yours may have additional settings:
+Retrieve the current Helm values from Kubernetes using the `consul-k8s status` command or `helm get values consul` and write them to a file, for example `values.yaml`:
+
+```bash
+helm get values consul --namespace consul --output yaml > values.yaml
+```
+
+The configuration file below is an example and yours may have additional settings:
 
 ```bash
 connectInject:
@@ -131,9 +138,10 @@ If you have upgraded your cluster's Consul version from less than 1.15.3 to 1.15
 To consume these metrics in [another OTLP-compatible collector or back end](https://opentelemetry.io/docs/concepts/sdk-configuration/otlp-exporter-configuration/#otel_exporter_otlp_metrics_endpoint), configure the Consul Telemetry Collector with the `telemetryCollector.customExportConfig` setting:
 
 ```yaml
-...
+
+---
 telemetryCollector:
   enabled: true
   customExporterConfig: |
-      {"http_collector_endpoint": "otel-collector:4187"}
+    {"http_collector_endpoint": "otel-collector:4187"}
 ```
