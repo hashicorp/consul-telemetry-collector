@@ -138,8 +138,6 @@ If you have upgraded your cluster's Consul version from less than 1.15.3 to 1.15
 To consume these metrics in [another OTLP-compatible collector or back end](https://opentelemetry.io/docs/concepts/sdk-configuration/otlp-exporter-configuration/#otel_exporter_otlp_metrics_endpoint), configure the Consul Telemetry Collector with the `telemetryCollector.customExportConfig` setting:
 
 ```yaml
-
----
 telemetryCollector:
   enabled: true
   customExporterConfig: |
