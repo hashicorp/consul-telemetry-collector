@@ -27,9 +27,7 @@ export HCP_RESOURCE_ID=""
 
 ```bash
 kubectl create secret generic consul-hcp-client-id --from-literal=client-id=$HCP_CLIENT_ID --namespace consul
-
 kubectl create secret generic consul-hcp-client-secret --from-literal=client-secret=$HCP_CLIENT_SECRET --namespace consul
-
 kubectl create secret generic consul-hcp-resource-id --from-literal=resource-id=$HCP_RESOURCE_ID --namespace consul
 ```
 
@@ -64,33 +62,33 @@ server:
 Add the following settings to the helm `values.yaml` file to enable the Consul Telemetry Collector deployment:
 
 ```diff
-  connectInject:
+connectInject:
+  enabled: true
+controller:
+  enabled: true
+global:
++ metrics:
++   enableTelemetryCollector: true
+  cloud:
     enabled: true
-  controller:
+    clientId:
+      secretKey: client-id
+      secretName: consul-hcp-client-id
+    clientSecret:
+      secretKey: client-secret
+      secretName: consul-hcp-client-secret
+  acls:
+    manageSystemACLs: true
+  datacenter: mesh-metrics
+  name: consul
+  tls:
+    enableAutoEncrypt: true
     enabled: true
-  global:
-+   metrics:
-+     enableTelemetryCollector: true
-    cloud:
-      enabled: true
-      clientId:
-        secretKey: client-id
-        secretName: consul-hcp-client-id
-      clientSecret:
-        secretKey: client-secret
-        secretName: consul-hcp-client-secret
-    acls:
-      manageSystemACLs: true
-    datacenter: mesh-metrics
-    name: consul
-    tls:
-      enableAutoEncrypt: true
-      enabled: true
-  server:
-    affinity: null
-    replicas: 3
-+ telemetryCollector:
-+    enabled: true
+server:
+  affinity: null
+  replicas: 3
++telemetryCollector:
++  enabled: true
 ```
 
 Apply the new configuration:
