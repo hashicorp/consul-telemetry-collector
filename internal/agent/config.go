@@ -8,6 +8,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
 	"go.uber.org/multierr"
 
@@ -16,7 +17,7 @@ import (
 
 var (
 	errNoConfigurationProvided = errors.New("no configuration provided: see usage")
-	errCloudConfigInvalid      = fmt.Errorf("cloud configuration is not valid")
+	errCloudConfigInvalid      = errors.New("cloud configuration is not valid")
 )
 
 func configFromEnvVars() *Config {
@@ -88,19 +89,39 @@ func (c *Cloud) IsEnabled() bool {
 	if c == nil {
 		return false
 	}
+
 	if c.ClientSecret != "" || c.ClientID != "" || c.ResourceID != "" {
 		return true
 	}
+
 	return false
 }
 
+// validate that, if the Cloud config is enabled, all required fields are set.
+// Return an error describing missing fields.
 func (c *Cloud) validate() error {
 	if c == nil {
 		return nil
 	}
-	if c.IsEnabled() && (c.ClientID == "" || c.ClientSecret == "" || c.ResourceID == "") {
-		return errCloudConfigInvalid
+
+	if !c.IsEnabled() {
+		return nil
 	}
+
+	msg := []string{}
+	if c.ClientID == "" {
+		msg = append(msg, "client_id")
+	}
+	if c.ClientSecret == "" {
+		msg = append(msg, "client_secret")
+	}
+	if c.ResourceID == "" {
+		msg = append(msg, "resource_id")
+	}
+	if len(msg) > 0 {
+		return fmt.Errorf("%w: missing %s", errCloudConfigInvalid, strings.Join(msg, ", "))
+	}
+
 	return nil
 }
 
