@@ -108,18 +108,18 @@ func (c *Cloud) validate() error {
 		return nil
 	}
 
-	msg := []string{}
+	missing := []string{}
 	if c.ClientID == "" {
-		msg = append(msg, "client_id")
+		missing = append(missing, "client_id")
 	}
 	if c.ClientSecret == "" {
-		msg = append(msg, "client_secret")
+		missing = append(missing, "client_secret")
 	}
 	if c.ResourceID == "" {
-		msg = append(msg, "resource_id")
+		missing = append(missing, "resource_id")
 	}
-	if len(msg) > 0 {
-		return fmt.Errorf("%w: missing %s", errCloudConfigInvalid, strings.Join(msg, ", "))
+	if len(missing) > 0 {
+		return fmt.Errorf("%w: missing %s", errCloudConfigInvalid, strings.Join(missing, ", "))
 	}
 
 	return nil
