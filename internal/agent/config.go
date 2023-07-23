@@ -20,6 +20,31 @@ var (
 	errCloudConfigInvalid      = errors.New("cloud configuration is not valid")
 )
 
+type errCloudConfigInvalidField struct {
+	cloudCfg Cloud
+}
+
+// Error returns a string describing the invalid fields in the Cloud config. Each invalid field is separated by a comma
+func (e *errCloudConfigInvalidField) Error() string {
+	sb := strings.Builder{}
+	if e.cloudCfg.ClientID == "" {
+		sb.WriteString("client_id")
+	}
+	if e.cloudCfg.ClientSecret == "" {
+		if sb.Len() > 0 {
+			sb.WriteString(",")
+		}
+		sb.WriteString("client_secret,")
+	}
+	if e.cloudCfg.ResourceID == "" {
+		if sb.Len() > 0 {
+			sb.WriteString(",")
+		}
+		sb.WriteString("resource_id")
+	}
+	return fmt.Sprintf("%w: missing %s", errCloudConfigInvalid, sb.String())
+}
+
 func configFromEnvVars() *Config {
 	return &Config{
 		Cloud: &Cloud{
@@ -108,18 +133,8 @@ func (c *Cloud) validate() error {
 		return nil
 	}
 
-	missing := []string{}
-	if c.ClientID == "" {
-		missing = append(missing, "client_id")
-	}
-	if c.ClientSecret == "" {
-		missing = append(missing, "client_secret")
-	}
-	if c.ResourceID == "" {
-		missing = append(missing, "resource_id")
-	}
-	if len(missing) > 0 {
-		return fmt.Errorf("%w: missing %s", errCloudConfigInvalid, strings.Join(missing, ", "))
+	if c.IsEnabled() && (c.ClientID == "" || c.ClientSecret == "" || c.ResourceID == "") {
+		return &errCloudConfigInvalidField{cloudCfg: *c}
 	}
 
 	return nil
