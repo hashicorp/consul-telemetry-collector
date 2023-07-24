@@ -14,9 +14,11 @@ import (
 
 func Test_Validation(t *testing.T) {
 	endpoint, cid, csec, crid := "endpoint", "cid", "csec", "crid"
+
 	for name, tc := range map[string]struct {
-		input *Config
-		err   error
+		input       *Config
+		err         error
+		errContains string
 	}{
 		"FailNoConfig": {
 			err: errNoConfigurationProvided,
@@ -43,7 +45,8 @@ func Test_Validation(t *testing.T) {
 					ResourceID: crid,
 				},
 			},
-			err: errCloudConfigInvalid,
+			err:         errCloudConfigInvalid,
+			errContains: "missing client_id, client_secret",
 		},
 		"FailCloudResourceMissingClientID": {
 			input: &Config{
@@ -52,7 +55,8 @@ func Test_Validation(t *testing.T) {
 					ResourceID:   crid,
 				},
 			},
-			err: errCloudConfigInvalid,
+			err:         errCloudConfigInvalid,
+			errContains: "missing client_id",
 		},
 		"FailCloudResourceMissingResourceID": {
 			input: &Config{
@@ -61,7 +65,8 @@ func Test_Validation(t *testing.T) {
 					ClientID:     cid,
 				},
 			},
-			err: errCloudConfigInvalid,
+			err:         errCloudConfigInvalid,
+			errContains: "missing resource_id",
 		},
 		"FailCloudResourceMissingClientSecret": {
 			input: &Config{
@@ -89,6 +94,7 @@ func Test_Validation(t *testing.T) {
 			if tc.err != nil {
 				test.Error(t, err)
 				test.ErrorIs(t, err, tc.err)
+				test.ErrorContains(t, err, tc.errContains)
 				return
 			}
 			test.NoError(t, err)
