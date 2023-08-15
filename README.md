@@ -5,7 +5,7 @@
 
 Consul Telemetry Collector is a lightweight OpenTelemetry collector used to
 collect metrics, logs and traces from a Consul cluster and collect metrics from envoy
-service proxies and export them to HCP or another OTLP compliant endpoint. 
+service proxies and export them to HCP or another OTLP compliant endpoint.
 The metric sink is encrypted and authorized by the Consul service mesh.
 
 Configuration will be loaded in the following order of precedence:
@@ -20,10 +20,9 @@ To install and use the Consul Telemetry Collector you will need a Consul version
 
 ## Deployment instructions
 
-### Kubernetes
+### Docs
 
-* [HCP Managed Cluster](./docs/hcp-managed-k8s-collector-deployment.md)
-* [consul-k8s/helm](./docs/consul-k8s-helm.md)
+- [Deploy the Consul telemetry collector](https://developer.hashicorp.com/hcp/docs/consul/monitor/management-plane/observability/telemetry-collector)
 
 ## Development
 
