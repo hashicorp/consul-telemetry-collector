@@ -16,8 +16,8 @@ receivers:
 processors:
   memory_limiter:
     check_interval: 1s
-    limit_percentage: 50
-    spike_limit_percentage: 30
+    limit_percentage: 80
+    spike_limit_percentage: 75
   batch:
   filter:
     metrics:
@@ -40,7 +40,7 @@ extensions:
       audience: https://api.hashicorp.cloud
     token_url: https://auth.idp.hashicorp.com/oauth2/token
   memory_ballast:
-    size_in_percentage: 10
+    size_in_percentage: 50
 
 connectors: {}
 
