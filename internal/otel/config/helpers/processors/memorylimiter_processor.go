@@ -20,6 +20,6 @@ func MemoryLimiterCfg() *memorylimiterprocessor.Config {
 	return &memorylimiterprocessor.Config{
 		CheckInterval:         time.Second,
 		MemoryLimitPercentage: 80,
-		MemorySpikePercentage: 75,
+		MemorySpikePercentage: 20,
 	}
 }
