@@ -19,6 +19,7 @@ processors:
     limit_percentage: 80
     spike_limit_percentage: 20
   batch:
+    timeout: 1m
 
 extensions:
   memory_ballast:

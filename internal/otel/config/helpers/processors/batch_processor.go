@@ -4,6 +4,8 @@
 package processors
 
 import (
+	"time"
+
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/processor/batchprocessor"
 )
@@ -17,6 +19,8 @@ var BatchProcessorID component.ID = component.NewID(batchProcessorName)
 func BatchProcessorCfg() *batchprocessor.Config {
 	factory := batchprocessor.NewFactory()
 	cfg := factory.CreateDefaultConfig().(*batchprocessor.Config)
+	cfg.SendBatchSize = 8192
+	cfg.Timeout = time.Minute * 1
 
 	return cfg
 }
