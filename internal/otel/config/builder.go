@@ -70,7 +70,7 @@ func WithResourceProcessor(prcs []component.ID) []component.ID {
 // ExtensionBuilder builds a list of extension IDs. Optionally we can include more ids with variadic opts.
 func ExtensionBuilder(opts ...Opts) []component.ID {
 	base := []component.ID{
-		extensions.BallastID,
+		// extensions.BallastID,
 	}
 	for _, opt := range opts {
 		base = opt(base)

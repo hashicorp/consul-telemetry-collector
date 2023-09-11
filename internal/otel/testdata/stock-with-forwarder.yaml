@@ -16,14 +16,12 @@ receivers:
 processors:
   memory_limiter:
     check_interval: 1s
-    limit_percentage: 80
-    spike_limit_percentage: 20
+    limit_percentage: 70
+    spike_limit_percentage: 40
   batch:
     timeout: 1m
 
-extensions:
-  memory_ballast:
-    size_in_percentage: 50
+extensions: {}
 
 exporters:
   logging:
@@ -36,7 +34,7 @@ exporters:
 connectors: {}
 
 service:
-  extensions: [memory_ballast]
+  extensions: []
   telemetry:
     resource: {}
     logs:
