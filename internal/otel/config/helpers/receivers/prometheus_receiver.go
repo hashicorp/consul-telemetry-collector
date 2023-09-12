@@ -40,7 +40,7 @@ func PrometheusReceiverCfg() *PrometheusConfig {
 		  config:
 			scrape_configs:
 			- job_name: consul-telemetry-collector
-			  scrape_interval: 10s
+			  scrape_interval: 1m
 			  static_configs:
 			  - targets:
 				- localhost:9090
@@ -48,10 +48,10 @@ func PrometheusReceiverCfg() *PrometheusConfig {
 
 	return &PrometheusConfig{
 		Config: map[string][]ScrapeConfig{
-			scrapeConfigKey: []ScrapeConfig{
+			scrapeConfigKey: {
 				{
 					JobName:        "consul-telemetry-collector",
-					ScrapeInterval: "10s",
+					ScrapeInterval: "1m",
 					StaticConfigs: []StaticConfig{
 						{
 							Targets: []string{"localhost:9090"},

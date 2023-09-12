@@ -5,7 +5,7 @@ package config
 
 import (
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/service"
+	"go.opentelemetry.io/collector/service/pipelines"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
@@ -25,8 +25,8 @@ type Params struct {
 }
 
 // PipelineConfigBuilder defines a basic list of pipeline component IDs for a service.PipelineConfig.
-func PipelineConfigBuilder(p *Params) service.PipelineConfig {
-	baseCfg := service.PipelineConfig{
+func PipelineConfigBuilder(p *Params) pipelines.PipelineConfig {
+	baseCfg := pipelines.PipelineConfig{
 		Processors: []component.ID{
 			processors.MemoryLimiterID,
 			// add your processors here

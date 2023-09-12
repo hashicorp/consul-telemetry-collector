@@ -54,6 +54,7 @@ func newEnvoyReceiver(
 func (r *envoyReceiver) Start(_ context.Context, host component.Host) error {
 	grpcServer, err := r.cfg.GRPC.ToServer(host, r.settings.TelemetrySettings)
 	if err != nil {
+		r.logger.Error("error creating new server")
 		return err
 	}
 
@@ -85,8 +86,14 @@ func (r *envoyReceiver) Start(_ context.Context, host component.Host) error {
 }
 
 func (r *envoyReceiver) Shutdown(_ context.Context) error {
-	r.grpcServer.GracefulStop()
-	<-r.shutdownCh
+	if r.grpcServer != nil {
+		r.logger.Info("Shutting down envoy receiver")
+		r.grpcServer.GracefulStop()
+		<-r.shutdownCh
+	} else {
+		r.logger.Warn("Shutting down envoy receiver that did not start successfully")
+	}
+
 	return nil
 }
 

@@ -9,8 +9,8 @@ import (
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/configauth"
-	"go.opentelemetry.io/collector/config/configtls"
 
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/types"
 	"github.com/hashicorp/consul-telemetry-collector/internal/version"
 )
 
@@ -48,7 +48,7 @@ type ExporterConfig struct {
 	Headers map[string]string `mapstructure:"headers,omitempty"`
 
 	// TLSSetting struct exposes TLS client configuration.
-	TLSSetting configtls.TLSClientSetting `mapstructure:"tls"`
+	TLSSetting types.TLSClientSetting `mapstructure:"tls"`
 
 	// The compression key for supported compression types within collector.
 	Compression string `mapstructure:"compression"`
@@ -91,14 +91,14 @@ func OtlpExporterHCPCfg(endpoint, resourceID string, authID component.ID) *Expor
 	return &cfg
 }
 
-func tlsConfigForSetting() configtls.TLSClientSetting {
+func tlsConfigForSetting() types.TLSClientSetting {
 	setting := os.Getenv(envVarOtlpExporterTLS)
 	switch setting {
 	// case tlsSettingDisabled:
-	// 	return configtls.TLSClientSetting{Insecure: true}
+	// 	return configtls.types.TLSClientSetting{Insecure: true}
 	case tlsSettingInsecure:
-		return configtls.TLSClientSetting{InsecureSkipVerify: true}
+		return types.TLSClientSetting{InsecureSkipVerify: true}
 	default:
-		return configtls.TLSClientSetting{}
+		return types.TLSClientSetting{}
 	}
 }
