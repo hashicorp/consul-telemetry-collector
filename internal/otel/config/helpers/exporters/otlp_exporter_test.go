@@ -43,5 +43,6 @@ func Test_OtlpExporterHCP(t *testing.T) {
 	}
 	err = conf.Unmarshal(unmarshalledCfg)
 	require.NoError(t, err)
+
 	require.Equal(t, cfg, unmarshalledCfg)
 }

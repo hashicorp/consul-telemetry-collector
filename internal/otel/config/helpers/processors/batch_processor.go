@@ -21,6 +21,7 @@ func BatchProcessorCfg() *batchprocessor.Config {
 	cfg := factory.CreateDefaultConfig().(*batchprocessor.Config)
 	cfg.SendBatchSize = 8192
 	cfg.Timeout = time.Minute * 1
+	cfg.MetadataKeys = make([]string, 0)
 
 	return cfg
 }

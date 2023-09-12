@@ -18,16 +18,19 @@ const ( // supported trace propagators
 func Telemetry() telemetry.Config {
 	return telemetry.Config{
 		Logs: telemetry.LogsConfig{
-			Level:       zapcore.InfoLevel,
-			Encoding:    "console",
-			OutputPaths: []string{"stderr"},
+			Level:            zapcore.InfoLevel,
+			Encoding:         "console",
+			OutputPaths:      []string{"stderr"},
+			ErrorOutputPaths: []string{"stderr"},
 		},
 		Metrics: telemetry.MetricsConfig{
 			Address: "localhost:9090",
 			Level:   configtelemetry.LevelDetailed,
+			Readers: []telemetry.MetricReader{},
 		},
 		Traces: telemetry.TracesConfig{
 			Propagators: []string{traceContextPropagator, b3Propagator},
+			Processors:  []telemetry.SpanProcessor{},
 		},
 	}
 }

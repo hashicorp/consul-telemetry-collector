@@ -9,7 +9,8 @@ import (
 	"os"
 
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/config/configtls"
+
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/types"
 )
 
 const (
@@ -49,7 +50,7 @@ type OauthClientConfig struct {
 	TokenURL string `mapstructure:"token_url"`
 
 	// TLSSetting struct exposes TLS client configuration for the underneath client to authorization server.
-	TLSSetting configtls.TLSClientSetting `mapstructure:"tls,omitempty"`
+	TLSSetting types.TLSClientSetting `mapstructure:"tls,omitempty"`
 }
 
 // OauthClientCfg returns a component ID and oauth config.
@@ -70,14 +71,14 @@ func OauthClientCfg(clientID, clientSecret string) *OauthClientConfig {
 	}
 }
 
-func tlsConfigForSetting() configtls.TLSClientSetting {
+func tlsConfigForSetting() types.TLSClientSetting {
 	setting := os.Getenv(envVarAuthTLS)
 	switch setting {
 	case tlsSettingDisabled:
-		return configtls.TLSClientSetting{Insecure: true}
+		return types.TLSClientSetting{Insecure: true}
 	case tlsSettingInsecure:
-		return configtls.TLSClientSetting{InsecureSkipVerify: true}
+		return types.TLSClientSetting{InsecureSkipVerify: true}
 	default:
-		return configtls.TLSClientSetting{}
+		return types.TLSClientSetting{}
 	}
 }

@@ -9,6 +9,7 @@ import (
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/service"
+	"go.opentelemetry.io/collector/service/pipelines"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/extensions"
@@ -35,7 +36,7 @@ type Config struct {
 // NewConfig creates a new config object with all types initialized.
 func NewConfig() *Config {
 	svcConfig := service.Config{}
-	svcConfig.Pipelines = make(map[component.ID]*service.PipelineConfig)
+	svcConfig.Pipelines = make(map[component.ID]*pipelines.PipelineConfig)
 	return &Config{
 		Receivers:  make(componentMap),
 		Exporters:  make(componentMap),
@@ -50,7 +51,7 @@ func NewConfig() *Config {
 // and builds the corresponding configuration for each component ID. Some of these components
 // require a set of params.
 func (c *Config) EnrichWithPipelineCfg(
-	pCfg service.PipelineConfig,
+	pCfg pipelines.PipelineConfig,
 	p *Params,
 	pipelineID component.ID,
 ) error {

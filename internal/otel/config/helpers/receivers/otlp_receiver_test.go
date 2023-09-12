@@ -22,5 +22,5 @@ func Test_OtlpReceiver(t *testing.T) {
 	err = conf.Unmarshal(unmarshalledCfg)
 	require.NoError(t, err)
 
-	require.Equal(t, cfg, unmarshalledCfg)
+	require.EqualValues(t, cfg, unmarshalledCfg)
 }
