@@ -19,7 +19,7 @@ var MemoryLimiterID component.ID = component.NewID(memoryLimiterName)
 func MemoryLimiterCfg() *memorylimiterprocessor.Config {
 	return &memorylimiterprocessor.Config{
 		CheckInterval:         time.Second,
-		MemoryLimitPercentage: 80,
-		MemorySpikePercentage: 20,
+		MemoryLimitPercentage: 70,
+		MemorySpikePercentage: 30,
 	}
 }

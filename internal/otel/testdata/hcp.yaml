@@ -16,8 +16,8 @@ receivers:
 processors:
   memory_limiter:
     check_interval: 1s
-    limit_percentage: 80
-    spike_limit_percentage: 20
+    limit_percentage: 70
+    spike_limit_percentage: 30
   batch:
     timeout: 1m
   filter:
@@ -40,8 +40,6 @@ extensions:
     endpoint_params:
       audience: https://api.hashicorp.cloud
     token_url: https://auth.idp.hashicorp.com/oauth2/token
-  memory_ballast:
-    size_in_percentage: 50
 
 connectors: {}
 
@@ -59,7 +57,7 @@ exporters:
 
 
 service:
-  extensions: [memory_ballast,oauth2client/hcp]
+  extensions: [oauth2client/hcp]
   telemetry:
     resource: {}
     logs:
