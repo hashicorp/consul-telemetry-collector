@@ -23,7 +23,10 @@ type Service struct {
 // NewService returns a new Service based off the past in configuration.
 func NewService(cfg *Config) (*Service, error) {
 	s := &Service{}
-	s.cfg = otel.CollectorCfg{ForwarderEndpoint: cfg.HTTPCollectorEndpoint}
+	s.cfg = otel.CollectorCfg{
+		ForwarderEndpoint: cfg.HTTPCollectorEndpoint,
+		OverridesPath:     cfg.CollectorOverridesFP,
+	}
 
 	if cfg.Cloud != nil && cfg.Cloud.IsEnabled() {
 		hcpClient, err := hcp.New(&hcp.Params{

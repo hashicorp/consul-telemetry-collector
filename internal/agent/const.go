@@ -32,4 +32,10 @@ const (
 
 	// COOConfigPathOpt is the cli opt for path to the config.
 	COOConfigPathOpt = "config-file-path"
+
+	// CollectorOverridesConfigPath is the environment variable for path to the config.
+	CollectorOverridesConfigPath = "COLLECTOR_OVERRIDES_PATH"
+
+	// CollectorOverridesConfigPathOpt is the cli opt for path to the config.
+	CollectorOverridesConfigPathOpt = "collector-overrides-path"
 )

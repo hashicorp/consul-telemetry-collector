@@ -73,6 +73,7 @@ func readConfiguration(reader io.Reader, filename string) (*Config, error) {
 type Config struct {
 	Cloud                 *Cloud `hcl:"cloud,block"`
 	HTTPCollectorEndpoint string `hcl:"http_collector_endpoint,optional"`
+	CollectorOverridesFP  string `hcl:"collector_overrides_path,optional"`
 	ConfigFile            string
 }
 

@@ -6,23 +6,27 @@ package external
 import (
 	"context"
 	"fmt"
+	"os"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/confmap"
+	"gopkg.in/yaml.v2"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
 )
 
 type externalProvider struct {
 	otlpHTTPEndpoint string
+	overridesPath    string
 }
 
 var _ confmap.Provider = (*externalProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider.
-func NewProvider(forwarderEndpoint string) confmap.Provider {
+func NewProvider(forwarderEndpoint, overridesFP string) confmap.Provider {
 	return &externalProvider{
 		otlpHTTPEndpoint: forwarderEndpoint,
+		overridesPath:    overridesFP,
 	}
 }
 
@@ -58,7 +62,37 @@ func (m *externalProvider) Retrieve(_ context.Context, _ string, _ confmap.Watch
 	if err != nil {
 		return nil, err
 	}
+
+	if m.overridesPath != "" {
+		overrideCfg, err := loadOveride(m.overridesPath)
+		if err != nil {
+			return nil, fmt.Errorf("failure to parse overrides")
+		}
+
+		if err := conf.Merge(overrideCfg); err != nil {
+			return nil, err
+		}
+	}
+
 	return confmap.NewRetrieved(conf.ToStringMap())
+}
+
+func loadOveride(filePath string) (*confmap.Conf, error) {
+	yamlFile, err := os.ReadFile(filePath)
+	if err != nil {
+		return nil, fmt.Errorf("failed to parse external config: %w", err)
+	}
+	raw := map[string]interface{}{}
+	err = yaml.Unmarshal(yamlFile, raw)
+	if err != nil {
+		return nil, fmt.Errorf("failed to unmarshal external config: %w", err)
+	}
+	overrideCfg := confmap.New()
+	err = overrideCfg.Marshal(raw)
+	if err != nil {
+		return nil, err
+	}
+	return overrideCfg, nil
 }
 
 func (m *externalProvider) Scheme() string {

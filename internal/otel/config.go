@@ -21,7 +21,7 @@ func newProvider(cfg CollectorCfg) (otelcol.ConfigProvider, error) {
 	resolver := confmap.ResolverSettings{
 		URIs: uris,
 		Providers: makeMapProvidersMap(
-			external.NewProvider(cfg.ForwarderEndpoint),
+			external.NewProvider(cfg.ForwarderEndpoint, cfg.OverridesPath),
 			hcp.NewProvider(cfg.ForwarderEndpoint, cfg.Client, cfg.ClientID, cfg.ClientSecret),
 		),
 

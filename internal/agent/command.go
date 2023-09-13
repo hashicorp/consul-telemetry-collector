@@ -54,10 +54,15 @@ func NewAgentCmd(ui cli.Ui) (*Command, error) {
 	// Setup Flags
 	c.flags = flag.NewFlagSet("", flag.ContinueOnError)
 	c.flags.StringVar(&c.flagConfig.ConfigFile, COOConfigPathOpt, "", "Load configuration from a config file.")
-	c.flags.StringVar(&c.flagConfig.Cloud.ClientID, HCPClientIDOpt, "", fmt.Sprintf("HCP Service Principal Client ID Environment variable %s", "HCP_CLIENT_ID"))
-	c.flags.StringVar(&c.flagConfig.Cloud.ClientSecret, HCPClientSecretOpt, "", fmt.Sprintf("HCP Service Principal Client Secret Environment variable %s", "HCP_CLIENT_SECRET"))
-	c.flags.StringVar(&c.flagConfig.Cloud.ResourceID, HCPResourceIDOpt, "", fmt.Sprintf("HCP Resource ID Environment variable %s", "HCP_RESOURCE_ID"))
-	c.flags.StringVar(&c.flagConfig.HTTPCollectorEndpoint, COOtelHTTPEndpointOpt, "", fmt.Sprintf("OTLP HTTP endpoint to forward telemetry to Environment variable %s", "CO_OTEL_HTTP_ENDPOINT"))
+	c.flags.StringVar(&c.flagConfig.Cloud.ClientID, HCPClientIDOpt, "", fmt.Sprintf("HCP Service Principal Client ID Environment variable %s", HCPClientID))
+	c.flags.StringVar(&c.flagConfig.Cloud.ClientSecret, HCPClientSecretOpt, "", fmt.Sprintf("HCP Service Principal Client Secret Environment variable %s", HCPClientSecret))
+	c.flags.StringVar(&c.flagConfig.Cloud.ResourceID, HCPResourceIDOpt, "", fmt.Sprintf("HCP Resource ID Environment variable %s", HCPResourceID))
+	c.flags.StringVar(
+		&c.flagConfig.CollectorOverridesFP,
+		CollectorOverridesConfigPathOpt,
+		"",
+		fmt.Sprintf("Collector overrides path variable: %s: NOTE: there is no guarantee that overrides to collector defaults will work", CollectorOverridesConfigPath))
+	c.flags.StringVar(&c.flagConfig.HTTPCollectorEndpoint, COOtelHTTPEndpointOpt, "", fmt.Sprintf("OTLP HTTP endpoint to forward telemetry to Environment variable %s", COOtelHTTPEndpoint))
 	c.help = flags.Usage(help, c.flags)
 
 	return c, nil

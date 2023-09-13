@@ -29,6 +29,7 @@ type CollectorCfg struct {
 	ResourceID        string
 	Client            hcp.TelemetryClient
 	ForwarderEndpoint string
+	OverridesPath     string
 }
 
 const otelFeatureGate = "telemetry.useOtelForInternalMetrics"
