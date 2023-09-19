@@ -22,4 +22,4 @@ jobs:
         workflow: collector.yml
         repo: hashicorp/consul-k8s-workflows
         token: ${{ secrets.ELEVATED_GITHUB_TOKEN }}
-          inputs: '{ "context":"${{ env.CONTEXT }}", "repository":"${{ github.repository }}", "branch":"${{ env.BRANCH }}", "sha":"${{ env.SHA }}", "token":"${{ secrets.ELEVATED_GITHUB_TOKEN }}", "helm_sha":"${{ env.HELM_BRANCH }}" }'
+        inputs: '{ "context":"${{ env.CONTEXT }}", "repository":"${{ github.repository }}", "branch":"${{ env.BRANCH }}", "sha":"${{ env.SHA }}", "token":"${{ secrets.ELEVATED_GITHUB_TOKEN }}", "helm_sha":"${{ env.HELM_BRANCH }}" }'
