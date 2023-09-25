@@ -65,7 +65,6 @@ func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsSe
 
 			labels = map[string]string{
 				"envoy.cluster": identifier.GetNode().GetCluster(), // envoy.cluster is the service name in Consul
-				"node.id":       identifier.GetNode().GetId(),      // node.id delineate proxies
 			}
 
 			fields := identifier.GetNode().GetMetadata().AsMap()
@@ -78,6 +77,7 @@ func (r *Receiver) StreamMetrics(stream metricsv3.MetricsService_StreamMetricsSe
 		otlpMetrics := translateMetrics(labels, metrics)
 		err = r.nextConsumer.ConsumeMetrics(stream.Context(), otlpMetrics)
 		if err != nil {
+			r.logger.Error("failed to push metrics", zap.String("error", err.Error()))
 			return err
 		}
 	}
