@@ -3,10 +3,7 @@
   <span>Consul Telemetry Collector</span>
 </h1>
 
-Consul Telemetry Collector is a lightweight OpenTelemetry collector used to
-collect metrics, logs and traces from a Consul cluster and collect metrics from envoy
-service proxies and export them to HCP or another OTLP compliant endpoint.
-The metric sink is encrypted and authorized by the Consul service mesh.
+Consul Telemetry Collector is a lightweight OpenTelemetry collector used to collect metrics from Envoy proxies and export them to HCP and/or another OTLP compliant metrics endpoint. The [Envoy stats sink](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/metrics/v3/metrics_service.proto#extension-envoy-stat-sinks-metrics-service) is encrypted and authorized by the Consul service mesh.
 
 Configuration will be loaded in the following order of precedence:
 
@@ -16,52 +13,60 @@ Configuration will be loaded in the following order of precedence:
 
 # Installation
 
-To install and use the Consul Telemetry Collector you will need a Consul version of 1.15.3 or greater and to authorize communication with the collector on the Service Mesh.
-
-## Deployment instructions
-
-### Docs
+Documentation on deploying the Consul Telemetry Collector to a Kubernetes runtime are provided in the HCP documentation:
 
 - [Deploy the Consul telemetry collector](https://developer.hashicorp.com/hcp/docs/consul/monitor/management-plane/observability/telemetry-collector)
 
-## Development
+## Configuration
 
-To get started run `consul-telemetry-collector agent -dev`. The collector
-will run in dev mode and write all collected metrics to the console.
+In a Kubernetes runtime, when using `consul-k8s` with the `-cloud` preset, these [values are pre-configured](https://developer.hashicorp.com/hcp/docs/consul/monitor/management-plane/observability/telemetry-collector) for you.
 
-The collector can also:
-
-1. Forward to HCP
-2. Forward to another collector
-
-### Forward to HCP
-
-Use the CLIENT_ID, CLIENT_SECRET, and RESOURCE_ID created for observability
-from HCP Consul. The collector will use them to send metrics to HCP.
+All configuration options available are listed below. Use the CLIENT_ID, CLIENT_SECRET, and RESOURCE_ID created for observability from HCP Consul Central to send metrics to HCP.
 
 ```bash
-HCP_CLIENT_ID=<client_id> HCP_CLIENT_SECRET=<client_secret> HCP_RESOURCE_ID=<resource_id> consul-telemetry-collector agent
+Usage: consul-telemetry-collector agent [options]
+
+        Starts the telemetry-collector and runs until an interrupt is received. The
+        collector can forward all metrics to an otlphttp endpoint or to the Hashicorp
+        cloud platform.
+
+  -config-file-path=<string>
+     Load configuration from a config file.
+
+  -hcp-client-id=<string>
+     HCP Service Principal Client ID Environment variable HCP_CLIENT_ID
+
+  -hcp-client-secret=<string>
+     HCP Service Principal Client Secret Environment variable
+     HCP_CLIENT_SECRET
+
+  -hcp-resource-id=<string>
+     HCP Resource ID Environment variable HCP_RESOURCE_ID
+
+  -http-collector-endpoint=<string>
+     OTLP HTTP endpoint to forward telemetry to Environment variable
+     CO_OTEL_HTTP_ENDPOINT
 ```
 
-## Development
+# Development
 
-### Build
+## Build
 
-#### Binary
+### Binary
 
 ```bash
 make dev
 ```
 
-#### Docker Image
+### Docker Image
 
 ```bash
 make docker
 ```
 
-### Testing
+## Test
 
-#### Unit Tests
+### Unit Tests
 
 ```bash
 make unit-tests
