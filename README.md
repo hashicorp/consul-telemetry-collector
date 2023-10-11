@@ -3,7 +3,7 @@
   <span>Consul Telemetry Collector</span>
 </h1>
 
-Consul Telemetry Collector is a lightweight OpenTelemetry collector used to collect metrics from Envoy proxies and export them to HCP and/or another OTLP compliant metrics endpoint. The [Envoy stats sink](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/metrics/v3/metrics_service.proto#extension-envoy-stat-sinks-metrics-service) is encrypted and authorized by the Consul service mesh.
+Consul Telemetry Collector is a lightweight [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/) used to collect metrics from Envoy proxies and export them to HCP and/or another OTLP compliant metrics endpoint. The [Envoy stats sink](https://www.envoyproxy.io/docs/envoy/latest/api-v3/config/metrics/v3/metrics_service.proto#extension-envoy-stat-sinks-metrics-service) is encrypted and authorized by the Consul service mesh.
 
 Configuration will be loaded in the following order of precedence:
 
