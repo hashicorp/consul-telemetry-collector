@@ -27,9 +27,9 @@ require (
 	go.opentelemetry.io/collector/component v0.85.0
 	go.opentelemetry.io/collector/config/configauth v0.84.0
 	go.opentelemetry.io/collector/config/configgrpc v0.84.0
+	go.opentelemetry.io/collector/config/confighttp v0.84.0
 	go.opentelemetry.io/collector/config/configopaque v0.84.0
 	go.opentelemetry.io/collector/config/configtelemetry v0.85.0
-	go.opentelemetry.io/collector/config/configtls v0.84.0
 	go.opentelemetry.io/collector/confmap v0.85.0
 	go.opentelemetry.io/collector/exporter v0.85.0
 	go.opentelemetry.io/collector/exporter/loggingexporter v0.72.0
@@ -207,8 +207,8 @@ require (
 	go.mongodb.org/mongo-driver v1.11.2 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/collector/config/configcompression v0.84.0 // indirect
-	go.opentelemetry.io/collector/config/confighttp v0.84.0 // indirect
 	go.opentelemetry.io/collector/config/confignet v0.85.0 // indirect
+	go.opentelemetry.io/collector/config/configtls v0.84.0 // indirect
 	go.opentelemetry.io/collector/config/internal v0.84.0 // indirect
 	go.opentelemetry.io/collector/connector v0.85.0 // indirect
 	go.opentelemetry.io/collector/consumer v0.85.0 // indirect
@@ -235,13 +235,13 @@ require (
 	go.opentelemetry.io/proto/otlp v1.0.0 // indirect
 	go.uber.org/atomic v1.10.0 // indirect
 	go.uber.org/goleak v1.2.1 // indirect
-	golang.org/x/crypto v0.13.0 // indirect
+	golang.org/x/crypto v0.14.0 // indirect
 	golang.org/x/exp v0.0.0-20230711023510-fffb14384f22 // indirect
 	golang.org/x/mod v0.12.0 // indirect
-	golang.org/x/net v0.15.0 // indirect
+	golang.org/x/net v0.17.0 // indirect
 	golang.org/x/oauth2 v0.12.0 // indirect
-	golang.org/x/sys v0.12.0 // indirect
-	golang.org/x/term v0.12.0 // indirect
+	golang.org/x/sys v0.13.0 // indirect
+	golang.org/x/term v0.13.0 // indirect
 	golang.org/x/text v0.13.0 // indirect
 	golang.org/x/time v0.3.0 // indirect
 	golang.org/x/tools v0.12.0 // indirect
