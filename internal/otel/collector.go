@@ -5,6 +5,7 @@ package otel
 
 import (
 	"context"
+	"time"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/featuregate"
@@ -29,6 +30,15 @@ type CollectorCfg struct {
 	ResourceID        string
 	Client            hcp.TelemetryClient
 	ForwarderEndpoint string
+	ExporterConfig    *ExporterConfig
+}
+
+// ExporterConfig holds
+type ExporterConfig struct {
+	Type     string
+	Headers  map[string]string
+	Endpoint string
+	Timeout  time.Duration
 }
 
 const otelFeatureGate = "telemetry.useOtelForInternalMetrics"
