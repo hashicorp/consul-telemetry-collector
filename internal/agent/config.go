@@ -167,7 +167,12 @@ func (c *Config) validate() error {
 
 func (c *Config) logDeprecations(logger hclog.Logger) {
 	const deprecatedWarning = "'%s' is deprecated and will be removed in a future release. Use '%s' instead."
+	const conflictingConfig = "deprecated field '%s' and supported config '%s' are both configured. Using '%s'"
 	if c.HTTPCollectorEndpoint != "" {
 		logger.Warn(deprecatedWarning, "http_collector_endpoint", "exporter_config")
+	}
+
+	if c.ExporterConfig != nil && c.HTTPCollectorEndpoint != "" {
+		logger.Warn(conflictingConfig, "http_collector_endpoint", "exporter_config", "exporter_config")
 	}
 }
