@@ -8,7 +8,9 @@ import (
 	"fmt"
 	"strings"
 	"testing"
+	"time"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/shoenig/test"
 )
 
@@ -149,7 +151,7 @@ func Test_ReadFile(t *testing.T) {
 		"ClientIDSecretJson": {
 			json: true,
 			config: fmt.Sprintf(`{
-				"cloud": { 
+				"cloud": {
 					"client_id": "%s",
 					"client_secret": "%s"
 				}
@@ -173,10 +175,45 @@ func Test_ReadFile(t *testing.T) {
 				},
 			},
 		},
+		"MinimalExporterConfig": {
+			config: `
+				exporter_config "otelgrpc" {
+					endpoint = "http://otel:3749"
+				}
+			`,
+			expect: &Config{
+				ExporterConfig: &ExporterConfig{
+					Type:     "otelgrpc",
+					Endpoint: "http://otel:3749",
+				},
+			},
+		},
+		"FullExporterConfig": {
+			config: `
+				exporter_config "otelgrpc" {
+					endpoint = "http://otel:3749"
+					timeout = "10s"
+					headers = {
+						a = "b"
+					}
+				}
+			`,
+			expect: &Config{
+				ExporterConfig: &ExporterConfig{
+					Type:            "otelgrpc",
+					Endpoint:        "http://otel:3749",
+					timeoutDuration: time.Second * 10,
+					Timeout:         "10s",
+					Headers: map[string]string{
+						"a": "b",
+					},
+				},
+			},
+		},
 		"AllFieldsJson": {
 			json: true,
 			config: fmt.Sprintf(`{
-			"cloud": { 
+			"cloud": {
 				"client_id": "%s",
 				"client_secret": "%s"
 			},
@@ -243,8 +280,11 @@ func Test_ReadFile(t *testing.T) {
 				test.ErrorContains(t, err, tc.err.Error())
 				return
 			}
+
+			diff := cmp.Diff(outputConfig, tc.expect, cmp.AllowUnexported(ExporterConfig{}))
 			test.NoError(t, err)
-			test.Eq(t, outputConfig, tc.expect)
+			test.Eq(t, outputConfig, tc.expect, test.Sprint(diff))
+
 		})
 	}
 }

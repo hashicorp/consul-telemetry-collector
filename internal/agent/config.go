@@ -9,9 +9,11 @@ import (
 	"io"
 	"os"
 	"strings"
+	"time"
 
 	"go.uber.org/multierr"
 
+	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/hcl/v2/hclsimple"
 )
 
@@ -61,12 +63,28 @@ func readConfiguration(reader io.Reader, filename string) (*Config, error) {
 	}
 	// decode needs filename for parsing and bytes passed to it.
 	err = hclsimple.Decode(filename, buffer, nil, cfg)
-
 	if err != nil {
 		return nil, fmt.Errorf("failed parsing config file: %w", err)
 	}
 
+	if err = parseExportConfig(cfg); err != nil {
+		return nil, fmt.Errorf("failed parsing config file: %w", err)
+	}
+
 	return cfg, nil
+}
+
+func parseExportConfig(c *Config) error {
+	if c.ExporterConfig != nil {
+		if c.ExporterConfig.Timeout != "" {
+			d, err := time.ParseDuration(c.ExporterConfig.Timeout)
+			if err != nil {
+				return fmt.Errorf("failed to parse export config. unable to parse timeout %s %w", c.ExporterConfig.Timeout, err)
+			}
+			c.ExporterConfig.timeoutDuration = d
+		}
+	}
+	return nil
 }
 
 // Config is the global collector configuration.
@@ -74,6 +92,7 @@ type Config struct {
 	Cloud                 *Cloud `hcl:"cloud,block"`
 	HTTPCollectorEndpoint string `hcl:"http_collector_endpoint,optional"`
 	ConfigFile            string
+	ExporterConfig        *ExporterConfig `hcl:"exporter_config,block"`
 }
 
 // Cloud is the HCP Cloud configuration.
@@ -81,6 +100,15 @@ type Cloud struct {
 	ClientID     string `hcl:"client_id,optional"`
 	ClientSecret string `hcl:"client_secret,optional"`
 	ResourceID   string `hcl:"resource_id,optional"`
+}
+
+// ExporterConfig holds
+type ExporterConfig struct {
+	Type            string            `hcl:"type,label"`
+	Headers         map[string]string `hcl:"headers,optional"`
+	Endpoint        string            `hcl:"endpoint"`
+	Timeout         string            `hcl:"timeout,optional"`
+	timeoutDuration time.Duration
 }
 
 // IsEnabled checks if the Cloud config is enabled. It returns false if the ClientID,
@@ -135,4 +163,11 @@ func (c *Config) validate() error {
 	}
 
 	return c.Cloud.validate()
+}
+
+func (c *Config) logDeprecations(logger hclog.Logger) {
+	const deprecatedWarning = "'%s' is deprecated and will be removed in a future release. Use '%s' instead."
+	if c.HTTPCollectorEndpoint != "" {
+		logger.Warn(deprecatedWarning, "http_collector_endpoint", "exporter_config")
+	}
 }

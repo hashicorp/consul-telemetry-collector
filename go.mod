@@ -5,6 +5,7 @@ go 1.19
 require (
 	github.com/go-openapi/errors v0.20.3
 	github.com/go-openapi/runtime v0.25.0
+	github.com/google/go-cmp v0.5.9
 	github.com/google/uuid v1.3.1
 	github.com/hashicorp/consul-telemetry-collector/receivers/envoyreceiver v0.0.0-20230907200253-024ee4b37903
 	github.com/hashicorp/go-hclog v1.5.0
@@ -27,9 +28,9 @@ require (
 	go.opentelemetry.io/collector/component v0.85.0
 	go.opentelemetry.io/collector/config/configauth v0.84.0
 	go.opentelemetry.io/collector/config/configgrpc v0.84.0
+	go.opentelemetry.io/collector/config/confighttp v0.84.0
 	go.opentelemetry.io/collector/config/configopaque v0.84.0
 	go.opentelemetry.io/collector/config/configtelemetry v0.85.0
-	go.opentelemetry.io/collector/config/configtls v0.84.0
 	go.opentelemetry.io/collector/confmap v0.85.0
 	go.opentelemetry.io/collector/exporter v0.85.0
 	go.opentelemetry.io/collector/exporter/loggingexporter v0.72.0
@@ -114,7 +115,6 @@ require (
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/gnostic-models v0.6.8 // indirect
-	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/go-querystring v1.1.0 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
 	github.com/google/s2a-go v0.1.4 // indirect
@@ -207,8 +207,8 @@ require (
 	go.mongodb.org/mongo-driver v1.11.2 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.opentelemetry.io/collector/config/configcompression v0.84.0 // indirect
-	go.opentelemetry.io/collector/config/confighttp v0.84.0 // indirect
 	go.opentelemetry.io/collector/config/confignet v0.85.0 // indirect
+	go.opentelemetry.io/collector/config/configtls v0.84.0 // indirect
 	go.opentelemetry.io/collector/config/internal v0.84.0 // indirect
 	go.opentelemetry.io/collector/connector v0.85.0 // indirect
 	go.opentelemetry.io/collector/consumer v0.85.0 // indirect

@@ -139,6 +139,8 @@ func (c *Command) Run(args []string) int {
 		return -1
 	}
 
+	cfg.logDeprecations(logger)
+
 	service, err := NewService(cfg)
 	if err != nil {
 		logger.Error("error creating service", "error", err)
