@@ -13,7 +13,9 @@ import (
 )
 
 func Test_InMem(t *testing.T) {
-	provider := NewProvider(exporters.BaseOtlpExporterID, nil)
+	provider := NewProvider(exporters.BaseOtlpExporterID, &exporters.ExporterConfig{
+		Endpoint: "https://localhost:6060",
+	})
 	retrieved, err := provider.Retrieve(context.Background(), "", nil)
 	test.NoError(t, err)
 

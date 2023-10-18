@@ -18,11 +18,11 @@ import (
 )
 
 type hcpProvider struct {
-	otlpHTTPEndpoint string
-	client           hcp.TelemetryClient
-	clientID         string
-	clientSecret     string
-	shutdownCh       chan struct{}
+	exporterConfig *config.ExportConfig
+	client         hcp.TelemetryClient
+	clientID       string
+	clientSecret   string
+	shutdownCh     chan struct{}
 }
 
 const scheme = "hcp"
@@ -32,17 +32,17 @@ var _ confmap.Provider = (*hcpProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider.
 func NewProvider(
-	forwarderEndpoint string,
+	exporterConfig *config.ExportConfig,
 	client hcp.TelemetryClient,
 	clientID,
 	clientSecret string,
 ) confmap.Provider {
 	return &hcpProvider{
-		otlpHTTPEndpoint: forwarderEndpoint,
-		client:           client,
-		clientID:         clientID,
-		clientSecret:     clientSecret,
-		shutdownCh:       make(chan struct{}),
+		exporterConfig: exporterConfig,
+		client:         client,
+		clientID:       clientID,
+		clientSecret:   clientSecret,
+		shutdownCh:     make(chan struct{}),
 	}
 }
 
@@ -71,11 +71,11 @@ func (m *hcpProvider) Retrieve(
 	// in this set of extension IDs we want the WithExtOauthClientID which requires the params to build
 	// the actual extension.
 	hcpParams := &config.Params{
-		OtlpHTTPEndpoint: m.otlpHTTPEndpoint,
-		Client:           m.client,
-		ClientID:         m.clientID,
-		ClientSecret:     m.clientSecret,
-		ResourceID:       r.String(),
+		ExporterConfig: m.exporterConfig,
+		Client:         m.client,
+		ClientID:       m.clientID,
+		ClientSecret:   m.clientSecret,
+		ResourceID:     r.String(),
 	}
 	err = c.EnrichWithExtensions(extensions, hcpParams)
 	if err != nil {
@@ -97,7 +97,7 @@ func (m *hcpProvider) Retrieve(
 
 	// 3. B: Build external pipeline
 	externalParams := &config.Params{
-		OtlpHTTPEndpoint: m.otlpHTTPEndpoint,
+		ExporterConfig: m.exporterConfig,
 	}
 	externalCfg := config.PipelineConfigBuilder(externalParams)
 	externalID := component.NewID(component.DataTypeMetrics)
