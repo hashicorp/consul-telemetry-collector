@@ -9,6 +9,7 @@ import (
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/configauth"
+	"go.opentelemetry.io/collector/confmap"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/types"
 	"github.com/hashicorp/consul-telemetry-collector/internal/version"
@@ -52,6 +53,14 @@ type ExporterConfig struct {
 
 	// The compression key for supported compression types within collector.
 	Compression string `mapstructure:"compression"`
+}
+
+func (e *ExporterConfig) Config() (*confmap.Conf, error) {
+	c := confmap.New()
+	if err := c.Marshal(&e); err != nil {
+		return nil, err
+	}
+	return c, nil
 }
 
 // OtlpExporterCfg generates the configuration for a otlp exporter.

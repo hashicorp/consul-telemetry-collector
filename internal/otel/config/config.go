@@ -6,6 +6,7 @@ package config
 import (
 	"errors"
 	"fmt"
+	"time"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/service"
@@ -31,6 +32,14 @@ type Config struct {
 	Connectors componentMap   `mapstructure:"connectors"`
 	Extensions componentMap   `mapstructure:"extensions"`
 	Service    service.Config `mapstructure:"service"`
+}
+
+// ExporterConfig holds
+type ExporterConfig struct {
+	Type     string
+	Headers  map[string]string
+	Endpoint string
+	Timeout  time.Duration
 }
 
 // NewConfig creates a new config object with all types initialized.

@@ -5,13 +5,13 @@ package otel
 
 import (
 	"context"
-	"time"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/featuregate"
 	"go.opentelemetry.io/collector/otelcol"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/hashicorp/consul-telemetry-collector/internal/version"
 )
 
@@ -30,15 +30,13 @@ type CollectorCfg struct {
 	ResourceID        string
 	Client            hcp.TelemetryClient
 	ForwarderEndpoint string
-	ExporterConfig    *ExporterConfig
+	ExporterConfig    *OTLPExporterConfig
 }
 
-// ExporterConfig holds
-type ExporterConfig struct {
-	Type     string
-	Headers  map[string]string
-	Endpoint string
-	Timeout  time.Duration
+// OTLPExporterConfig holds the type and
+type OTLPExporterConfig struct {
+	ExporterConfig exporters.ExporterConfig
+	Type           string
 }
 
 const otelFeatureGate = "telemetry.useOtelForInternalMetrics"

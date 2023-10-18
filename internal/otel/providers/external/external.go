@@ -14,15 +14,17 @@ import (
 )
 
 type externalProvider struct {
-	otlpHTTPEndpoint string
+	exporterID component.ID
+	exporter   config.Exporter
 }
 
 var _ confmap.Provider = (*externalProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider.
-func NewProvider(forwarderEndpoint string) confmap.Provider {
+func NewProvider(exporterID component.ID, exporter config.Exporter) confmap.Provider {
 	return &externalProvider{
-		otlpHTTPEndpoint: forwarderEndpoint,
+		exporterID: exporterID,
+		exporter:   exporter,
 	}
 }
 

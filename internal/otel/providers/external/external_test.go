@@ -7,12 +7,13 @@ import (
 	"context"
 	"testing"
 
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/shoenig/test"
 	"github.com/shoenig/test/must"
 )
 
 func Test_InMem(t *testing.T) {
-	provider := NewProvider("https://localhost:6060")
+	provider := NewProvider(exporters.BaseOtlpExporterID, nil)
 	retrieved, err := provider.Retrieve(context.Background(), "", nil)
 	test.NoError(t, err)
 
