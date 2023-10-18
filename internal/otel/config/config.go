@@ -6,7 +6,6 @@ package config
 import (
 	"errors"
 	"fmt"
-	"time"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/service"
@@ -32,14 +31,6 @@ type Config struct {
 	Connectors componentMap   `mapstructure:"connectors"`
 	Extensions componentMap   `mapstructure:"extensions"`
 	Service    service.Config `mapstructure:"service"`
-}
-
-// ExporterConfig holds
-type ExporterConfig struct {
-	Type     string
-	Headers  map[string]string
-	Endpoint string
-	Timeout  time.Duration
 }
 
 // NewConfig creates a new config object with all types initialized.
@@ -113,6 +104,7 @@ func buildComponents(
 			componentMap[id] = component
 		}
 	}
+
 	return nil
 }
 
@@ -138,8 +130,6 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 	// exporters
 	case exporters.LoggingExporterID:
 		return exporters.LogExporterCfg(), nil
-	case exporters.BaseOtlpExporterID:
-		return exporters.OtlpExporterCfg(p.OtlpHTTPEndpoint), nil
 	case exporters.HCPExporterID:
 		if p.Client == nil {
 			return nil, errors.New("parameters must specify a client to build HPC exporter config")
@@ -159,6 +149,13 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		}
 		return extensions.OauthClientCfg(p.ClientID, p.ClientSecret), nil
 	default:
+		if id == p.ExporterConfig.ID {
+			cfg, err := p.ExporterConfig.Exporter.Config()
+			if err != nil {
+				return nil, err
+			}
+			return cfg.ToStringMap(), nil
+		}
 		return nil, fmt.Errorf("unsupported component id: %s", id)
 	}
 }

@@ -19,7 +19,7 @@ import (
 // these inputs.
 type Params struct {
 	OtlpHTTPEndpoint string
-	ExporterConfig   *ExporterConfig
+	ExporterConfig   *ExportConfig
 	Client           hcp.TelemetryClient
 	ClientID         string
 	ClientSecret     string
@@ -27,8 +27,8 @@ type Params struct {
 }
 
 type ExportConfig struct {
-	id       component.ID
-	exporter Exporter
+	ID       component.ID
+	Exporter Exporter
 }
 type Exporter interface {
 	Config() (*confmap.Conf, error)
@@ -53,6 +53,8 @@ func PipelineConfigBuilder(p *Params) pipelines.PipelineConfig {
 		baseCfg.Exporters = append(baseCfg.Exporters, exporters.HCPExporterID)
 	} else if p.OtlpHTTPEndpoint != "" {
 		baseCfg.Exporters = append(baseCfg.Exporters, exporters.BaseOtlpExporterID)
+	} else if p.ExporterConfig != nil {
+		baseCfg.Exporters = append(baseCfg.Exporters, p.ExporterConfig.ID)
 	}
 
 	return baseCfg

@@ -13,6 +13,7 @@ import (
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/types"
 	"github.com/hashicorp/consul-telemetry-collector/internal/version"
+	"github.com/imdario/mergo"
 )
 
 const (
@@ -56,6 +57,10 @@ type ExporterConfig struct {
 }
 
 func (e *ExporterConfig) Config() (*confmap.Conf, error) {
+	defaultConfig := OtlpExporterCfg(e.Endpoint)
+	if err := mergo.Merge(e, defaultConfig); err != nil {
+		return nil, err
+	}
 	c := confmap.New()
 	if err := c.Marshal(&e); err != nil {
 		return nil, err

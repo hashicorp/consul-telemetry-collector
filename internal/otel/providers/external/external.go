@@ -45,8 +45,14 @@ func (m *externalProvider) Retrieve(_ context.Context, _ string, _ confmap.Watch
 	}
 
 	// 3. Build external pipeline
-	externalParams := &config.Params{
-		OtlpHTTPEndpoint: m.otlpHTTPEndpoint,
+	externalParams := &config.Params{}
+
+	// see if this is an empty component.ID
+	if m.exporterID.String() != "" {
+		externalParams.ExporterConfig = &config.ExportConfig{
+			ID:       m.exporterID,
+			Exporter: m.exporter,
+		}
 	}
 	externalCfg := config.PipelineConfigBuilder(externalParams)
 	externalID := component.NewID(component.DataTypeMetrics)
