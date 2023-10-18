@@ -11,6 +11,7 @@ import (
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/hashicorp/go-hclog"
 )
 
@@ -25,9 +26,11 @@ func NewService(cfg *Config) (*Service, error) {
 	s := &Service{}
 
 	if cfg.HTTPCollectorEndpoint != "" {
-		s.cfg.ExporterConfig = &otel.ExporterConfig{
-			Type:     "otlphttp",
-			Endpoint: cfg.HTTPCollectorEndpoint,
+		s.cfg.ExporterConfig = &otel.OTLPExporterConfig{
+			Type: exporters.BaseOtlpExporterID.Name(),
+			ExporterConfig: exporters.ExporterConfig{
+				Endpoint: cfg.HTTPCollectorEndpoint,
+			},
 		}
 	}
 
@@ -47,11 +50,13 @@ func NewService(cfg *Config) (*Service, error) {
 	}
 
 	if cfg.ExporterConfig != nil {
-		s.cfg.ExporterConfig = &otel.ExporterConfig{
-			Type:     cfg.ExporterConfig.Type,
-			Headers:  cfg.ExporterConfig.Headers,
-			Endpoint: cfg.ExporterConfig.Endpoint,
-			Timeout:  cfg.ExporterConfig.timeoutDuration,
+		s.cfg.ExporterConfig = &otel.OTLPExporterConfig{
+			Type: cfg.ExporterConfig.Type,
+			ExporterConfig: exporters.ExporterConfig{
+				Headers:  cfg.ExporterConfig.Headers,
+				Endpoint: cfg.ExporterConfig.Endpoint,
+				// Timeout:  cfg.ExporterConfig.timeoutDuration,
+			},
 		}
 	}
 
