@@ -16,6 +16,7 @@ import (
 	"go.opentelemetry.io/collector/otelcol"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/hashicorp/hcp-sdk-go/resource"
 )
@@ -23,7 +24,7 @@ import (
 func Test_newConfigProvider(t *testing.T) {
 	testcases := map[string]struct {
 		testfile    string
-		exporter    *OTLPExporterConfig
+		exporter    *config.ExportConfig
 		hcpResource *resource.Resource
 	}{
 		"stock": {
@@ -31,9 +32,9 @@ func Test_newConfigProvider(t *testing.T) {
 		},
 		"stock-with-forwarder": {
 			testfile: "stock-with-forwarder.yaml",
-			exporter: &OTLPExporterConfig{
-				Type: exporters.BaseOtlpExporterID.String(),
-				ExporterConfig: exporters.ExporterConfig{
+			exporter: &config.ExportConfig{
+				ID: exporters.BaseOtlpExporterID,
+				Exporter: &exporters.ExporterConfig{
 					Endpoint: "https://test-forwarder-endpoint:4138",
 				},
 			},
@@ -55,9 +56,9 @@ func Test_newConfigProvider(t *testing.T) {
 				Organization: "00000000-0000-0000-0000-000000000003",
 				Project:      "00000000-0000-0000-0000-000000000004",
 			},
-			exporter: &OTLPExporterConfig{
-				Type: exporters.BaseOtlpExporterID.String(),
-				ExporterConfig: exporters.ExporterConfig{
+			exporter: &config.ExportConfig{
+				ID: exporters.BaseOtlpExporterID,
+				Exporter: &exporters.ExporterConfig{
 					Endpoint: "https://test-forwarder-endpoint:4138",
 				},
 			},

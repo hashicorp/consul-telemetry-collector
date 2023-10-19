@@ -11,7 +11,6 @@ import (
 	"go.opentelemetry.io/collector/otelcol"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
-	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers/external"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers/hcp"
 )
@@ -23,22 +22,18 @@ func newProvider(cfg CollectorCfg) (otelcol.ConfigProvider, error) {
 	}
 
 	var exportID component.ID
-	var exportConfig *exporters.ExporterConfig
-	var exportCfg *config.ExportConfig
+	var exportConfig config.Exporter
+	// TODO: Make sure a nil ExporterConfig is tested
 	if cfg.ExporterConfig != nil {
-		exportID = component.NewID(component.Type(cfg.ExporterConfig.Type))
-		exportConfig = &cfg.ExporterConfig.ExporterConfig
-		exportCfg = &config.ExportConfig{
-			ID:       exportID,
-			Exporter: exportConfig,
-		}
+		exportID = cfg.ExporterConfig.ID
+		exportConfig = cfg.ExporterConfig.Exporter
 	}
 
 	resolver := confmap.ResolverSettings{
 		URIs: uris,
 		Providers: makeMapProvidersMap(
 			external.NewProvider(exportID, exportConfig),
-			hcp.NewProvider(exportCfg, cfg.Client, cfg.ClientID, cfg.ClientSecret),
+			hcp.NewProvider(cfg.ExporterConfig, cfg.Client, cfg.ClientID, cfg.ClientSecret),
 		),
 		Converters: []confmap.Converter{},
 	}

@@ -11,6 +11,7 @@ import (
 	"go.opentelemetry.io/collector/otelcol"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/hashicorp/consul-telemetry-collector/internal/version"
 )
@@ -30,7 +31,7 @@ type CollectorCfg struct {
 	ResourceID        string
 	Client            hcp.TelemetryClient
 	ForwarderEndpoint string
-	ExporterConfig    *OTLPExporterConfig
+	ExporterConfig    *config.ExportConfig
 }
 
 // OTLPExporterConfig holds the type and
