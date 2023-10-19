@@ -95,7 +95,14 @@ func (m *hcpProvider) Retrieve(
 		return nil, err
 	}
 
-	// 3. B: Build external pipeline
+	// 3. B: Build external pipeline We need to build this external pipeline because of how otel merges configuration.
+	// It does _not_ perform a deep merge and instead performs an overriding merge at the highest matching level. This
+	// behavior means that the service object will never match between the HCP provider and the External provider
+	// without ensuring that the external generator _also_ executes for HCP. The external generator will ensure that the
+	// forward component.ID and other components are included in the service stanza and are activated by the collector.
+	// An improvement here would be to separate the service stanza creation from the HCP or External generators. This
+	// would allow component configuration to happen separately from the service stanza and removing repeated work.
+
 	externalParams := &config.Params{
 		ExporterConfig: m.exporterConfig,
 	}
