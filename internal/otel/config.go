@@ -6,11 +6,9 @@ package otel
 import (
 	"fmt"
 
-	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/otelcol"
 
-	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers/external"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers/hcp"
 )
@@ -21,18 +19,10 @@ func newProvider(cfg CollectorCfg) (otelcol.ConfigProvider, error) {
 		uris = append(uris, fmt.Sprintf("hcp:%s", cfg.ResourceID))
 	}
 
-	var exportID component.ID
-	var exportConfig config.Exporter
-	// TODO: Make sure a nil ExporterConfig is tested
-	if cfg.ExporterConfig != nil {
-		exportID = cfg.ExporterConfig.ID
-		exportConfig = cfg.ExporterConfig.Exporter
-	}
-
 	resolver := confmap.ResolverSettings{
 		URIs: uris,
 		Providers: makeMapProvidersMap(
-			external.NewProvider(exportID, exportConfig),
+			external.NewProvider(cfg.ExporterConfig),
 			hcp.NewProvider(cfg.ExporterConfig, cfg.Client, cfg.ClientID, cfg.ClientSecret),
 		),
 		Converters: []confmap.Converter{},

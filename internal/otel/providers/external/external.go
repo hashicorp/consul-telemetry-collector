@@ -14,17 +14,15 @@ import (
 )
 
 type externalProvider struct {
-	exporterID component.ID
-	exporter   config.Exporter
+	exporterConfig *config.ExportConfig
 }
 
 var _ confmap.Provider = (*externalProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider.
-func NewProvider(exporterID component.ID, exporter config.Exporter) confmap.Provider {
+func NewProvider(exporterConfig *config.ExportConfig) confmap.Provider {
 	return &externalProvider{
-		exporterID: exporterID,
-		exporter:   exporter,
+		exporterConfig: exporterConfig,
 	}
 }
 
@@ -48,12 +46,10 @@ func (m *externalProvider) Retrieve(_ context.Context, _ string, _ confmap.Watch
 	externalParams := &config.Params{}
 
 	// see if this is an empty component.ID
-	if m.exporterID.String() != "" {
-		externalParams.ExporterConfig = &config.ExportConfig{
-			ID:       m.exporterID,
-			Exporter: m.exporter,
-		}
+	if m.exporterConfig != nil {
+		externalParams.ExporterConfig = m.exporterConfig
 	}
+
 	externalCfg := config.PipelineConfigBuilder(externalParams)
 	externalID := component.NewID(component.DataTypeMetrics)
 	err = c.EnrichWithPipelineCfg(externalCfg, externalParams, externalID)

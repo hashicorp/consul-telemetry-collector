@@ -102,7 +102,6 @@ func (m *hcpProvider) Retrieve(
 	// forward component.ID and other components are included in the service stanza and are activated by the collector.
 	// An improvement here would be to separate the service stanza creation from the HCP or External generators. This
 	// would allow component configuration to happen separately from the service stanza and removing repeated work.
-
 	externalParams := &config.Params{
 		ExporterConfig: m.exporterConfig,
 	}
