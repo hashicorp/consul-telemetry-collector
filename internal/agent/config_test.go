@@ -215,15 +215,29 @@ func Test_ReadFile(t *testing.T) {
 				"client_id": "%s",
 				"client_secret": "%s"
 			},
-			"http_collector_endpoint": "%s"
+			"http_collector_endpoint": "%s",
+			"exporter_config": {
+				"otelhttp": {
+					"endpoint": "%s",
+					"headers": {
+						"a": "b"
+					},
+					"timeout": "10s"
+				}
 			}
-			`, clientid, clientsecret, endpoint),
+			}`, clientid, clientsecret, endpoint, endpoint),
 			expect: &Config{
 				Cloud: &Cloud{
 					ClientID:     clientid,
 					ClientSecret: clientsecret,
 				},
 				HTTPCollectorEndpoint: endpoint,
+				ExporterConfig: &ExporterConfig{
+					Type:     "otelhttp",
+					Endpoint: endpoint,
+					Headers:  map[string]string{"a": "b"},
+					Timeout:  "10s",
+				},
 			},
 		},
 		"AllFields": {

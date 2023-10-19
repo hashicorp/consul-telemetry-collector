@@ -36,6 +36,9 @@ func Test_newConfigProvider(t *testing.T) {
 				ID: exporters.BaseOtlpExporterID,
 				Exporter: &exporters.ExporterConfig{
 					Endpoint: "https://test-forwarder-endpoint:4138",
+					Headers: map[string]string{
+						"authorization": "abc123",
+					},
 				},
 			},
 		},
