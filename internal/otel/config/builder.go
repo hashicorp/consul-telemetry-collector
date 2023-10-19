@@ -25,10 +25,13 @@ type Params struct {
 	ResourceID     string
 }
 
+// ExportConfig holds a dynamic exporter configuration and corresponding component.ID
 type ExportConfig struct {
 	ID       component.ID
 	Exporter Exporter
 }
+
+// Exporter returns the confmap.Conf representation of an open-telemetry-collector exporter
 type Exporter interface {
 	Config() (*confmap.Conf, error)
 }

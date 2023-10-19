@@ -59,6 +59,7 @@ type ExporterConfig struct {
 	Timeout string `mapstructure:"timeout"`
 }
 
+// Config implemented the config.Exporter interface to return the current configuration as a confmap.Conf allowing external configuration of this exporter
 func (e *ExporterConfig) Config() (*confmap.Conf, error) {
 	defaultConfig := OtlpExporterCfg(e.Endpoint)
 	if err := mergo.Merge(e, defaultConfig); err != nil {
