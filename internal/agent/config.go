@@ -9,7 +9,6 @@ import (
 	"io"
 	"os"
 	"strings"
-	"time"
 
 	"go.uber.org/multierr"
 
@@ -67,24 +66,7 @@ func readConfiguration(reader io.Reader, filename string) (*Config, error) {
 		return nil, fmt.Errorf("failed parsing config file: %w", err)
 	}
 
-	if err = parseExportConfig(cfg); err != nil {
-		return nil, fmt.Errorf("failed parsing config file: %w", err)
-	}
-
 	return cfg, nil
-}
-
-func parseExportConfig(c *Config) error {
-	if c.ExporterConfig != nil {
-		if c.ExporterConfig.Timeout != "" {
-			d, err := time.ParseDuration(c.ExporterConfig.Timeout)
-			if err != nil {
-				return fmt.Errorf("failed to parse export config. unable to parse timeout %s %w", c.ExporterConfig.Timeout, err)
-			}
-			c.ExporterConfig.timeoutDuration = d
-		}
-	}
-	return nil
 }
 
 // Config is the global collector configuration.
@@ -104,11 +86,10 @@ type Cloud struct {
 
 // ExporterConfig holds
 type ExporterConfig struct {
-	Type            string            `hcl:"type,label"`
-	Headers         map[string]string `hcl:"headers,optional"`
-	Endpoint        string            `hcl:"endpoint"`
-	Timeout         string            `hcl:"timeout,optional"`
-	timeoutDuration time.Duration
+	Type     string            `hcl:"type,label"`
+	Headers  map[string]string `hcl:"headers,optional"`
+	Endpoint string            `hcl:"endpoint"`
+	Timeout  string            `hcl:"timeout,optional"`
 }
 
 // IsEnabled checks if the Cloud config is enabled. It returns false if the ClientID,

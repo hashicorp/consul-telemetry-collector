@@ -7,13 +7,13 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/imdario/mergo"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/configauth"
 	"go.opentelemetry.io/collector/confmap"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/types"
 	"github.com/hashicorp/consul-telemetry-collector/internal/version"
-	"github.com/imdario/mergo"
 )
 
 const (
@@ -54,6 +54,9 @@ type ExporterConfig struct {
 
 	// The compression key for supported compression types within collector.
 	Compression string `mapstructure:"compression"`
+
+	// Timeout is the http request time limit
+	Timeout string `mapstructure:"timeout"`
 }
 
 func (e *ExporterConfig) Config() (*confmap.Conf, error) {

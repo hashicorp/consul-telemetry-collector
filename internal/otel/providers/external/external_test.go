@@ -7,9 +7,10 @@ import (
 	"context"
 	"testing"
 
-	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/shoenig/test"
 	"github.com/shoenig/test/must"
+
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 )
 
 func Test_InMem(t *testing.T) {

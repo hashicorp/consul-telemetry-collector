@@ -9,13 +9,13 @@ import (
 	"context"
 	"fmt"
 
+	"go.opentelemetry.io/collector/component"
+
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/hashicorp/go-hclog"
-
-	"go.opentelemetry.io/collector/component"
 )
 
 // Service runs a otel.Collector with a configured otel pipeline.
@@ -58,7 +58,7 @@ func NewService(cfg *Config) (*Service, error) {
 			Exporter: &exporters.ExporterConfig{
 				Headers:  cfg.ExporterConfig.Headers,
 				Endpoint: cfg.ExporterConfig.Endpoint,
-				// Timeout:  cfg.ExporterConfig.timeoutDuration,
+				Timeout:  cfg.ExporterConfig.Timeout,
 			},
 		}
 	}

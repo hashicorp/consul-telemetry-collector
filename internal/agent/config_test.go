@@ -8,7 +8,6 @@ import (
 	"fmt"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/google/go-cmp/cmp"
 	"github.com/shoenig/test"
@@ -200,10 +199,9 @@ func Test_ReadFile(t *testing.T) {
 			`,
 			expect: &Config{
 				ExporterConfig: &ExporterConfig{
-					Type:            "otelgrpc",
-					Endpoint:        "http://otel:3749",
-					timeoutDuration: time.Second * 10,
-					Timeout:         "10s",
+					Type:     "otelgrpc",
+					Endpoint: "http://otel:3749",
+					Timeout:  "10s",
 					Headers: map[string]string{
 						"a": "b",
 					},
@@ -284,7 +282,6 @@ func Test_ReadFile(t *testing.T) {
 			diff := cmp.Diff(outputConfig, tc.expect, cmp.AllowUnexported(ExporterConfig{}))
 			test.NoError(t, err)
 			test.Eq(t, outputConfig, tc.expect, test.Sprint(diff))
-
 		})
 	}
 }
