@@ -56,7 +56,7 @@ type ExporterConfig struct {
 	Compression string `mapstructure:"compression"`
 
 	// Timeout is the http request time limit
-	Timeout string `mapstructure:"timeout"`
+	Timeout string `mapstructure:"timeout,omitempty"`
 }
 
 // Config implemented the config.Exporter interface to return the current configuration as a confmap.Conf allowing external configuration of this exporter
