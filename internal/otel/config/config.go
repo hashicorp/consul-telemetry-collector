@@ -150,7 +150,7 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		return extensions.OauthClientCfg(p.ClientID, p.ClientSecret), nil
 	default:
 		if id == p.ExporterConfig.ID {
-			cfg, err := p.ExporterConfig.Exporter.Config()
+			cfg, err := exporters.OtlpExporterCfg(p.ExporterConfig.Exporter)
 			if err != nil {
 				return nil, err
 			}

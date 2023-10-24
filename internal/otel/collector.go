@@ -12,7 +12,6 @@ import (
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
-	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/hashicorp/consul-telemetry-collector/internal/version"
 )
 
@@ -32,12 +31,6 @@ type CollectorCfg struct {
 	Client            hcp.TelemetryClient
 	ForwarderEndpoint string
 	ExporterConfig    *config.ExportConfig
-}
-
-// OTLPExporterConfig holds the type and
-type OTLPExporterConfig struct {
-	ExporterConfig exporters.ExporterConfig
-	Type           string
 }
 
 const otelFeatureGate = "telemetry.useOtelForInternalMetrics"

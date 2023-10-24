@@ -5,7 +5,6 @@ package config
 
 import (
 	"go.opentelemetry.io/collector/component"
-	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/service/pipelines"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
@@ -28,12 +27,7 @@ type Params struct {
 // ExportConfig holds a dynamic exporter configuration and corresponding component.ID
 type ExportConfig struct {
 	ID       component.ID
-	Exporter Exporter
-}
-
-// Exporter returns the confmap.Conf representation of an open-telemetry-collector exporter
-type Exporter interface {
-	Config() (*confmap.Conf, error)
+	Exporter *exporters.ExporterConfig
 }
 
 // PipelineConfigBuilder defines a basic list of pipeline component IDs for a service.PipelineConfig.
