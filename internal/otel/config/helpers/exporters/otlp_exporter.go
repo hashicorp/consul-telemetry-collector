@@ -23,8 +23,9 @@ const (
 	channelValue         = "consul-telemetry-collector"
 	resourceIDHeader     = "x-hcp-resource-id"
 
-	userAgentHeader  = "user-agent"
-	defaultUserAgent = "Go-http-client/1.1"
+	userAgentHeader    = "user-agent"
+	defaultUserAgent   = "Go-http-client/1.1"
+	defaultCompression = "none"
 
 	envVarOtlpExporterTLS = "OTLP_EXPORTER_TLS"
 	tlsSettingInsecure    = "insecure"
@@ -59,9 +60,16 @@ type ExporterConfig struct {
 	Timeout string `mapstructure:"timeout,omitempty"`
 }
 
-// Config implemented the config.Exporter interface to return the current configuration as a confmap.Conf allowing external configuration of this exporter
-func (e *ExporterConfig) Config() (*confmap.Conf, error) {
-	defaultConfig := OtlpExporterCfg(e.Endpoint)
+// OtlpExporterCfg generates the configuration for a otlp exporter.
+func OtlpExporterCfg(e *ExporterConfig) (*confmap.Conf, error) {
+	defaultConfig := ExporterConfig{
+		Compression: defaultCompression,
+		Headers: map[string]string{
+			userAgentHeader: defaultUserAgent,
+		},
+	}
+	defaultConfig.Endpoint = e.Endpoint
+
 	if err := mergo.Merge(e, defaultConfig); err != nil {
 		return nil, err
 	}
@@ -70,18 +78,6 @@ func (e *ExporterConfig) Config() (*confmap.Conf, error) {
 		return nil, err
 	}
 	return c, nil
-}
-
-// OtlpExporterCfg generates the configuration for a otlp exporter.
-func OtlpExporterCfg(endpoint string) *ExporterConfig {
-	cfg := ExporterConfig{
-		Compression: "none",
-		Headers: map[string]string{
-			userAgentHeader: defaultUserAgent,
-		},
-	}
-	cfg.Endpoint = endpoint
-	return &cfg
 }
 
 // OtlpExporterHCPCfg generates the config for an otlp exporter to HCP.

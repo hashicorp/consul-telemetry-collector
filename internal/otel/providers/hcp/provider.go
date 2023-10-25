@@ -18,7 +18,7 @@ import (
 )
 
 type hcpProvider struct {
-	exporterConfig *config.ExportConfig
+	exporterConfig *config.ExporterConfig
 	client         hcp.TelemetryClient
 	clientID       string
 	clientSecret   string
@@ -32,7 +32,7 @@ var _ confmap.Provider = (*hcpProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider.
 func NewProvider(
-	exporterConfig *config.ExportConfig,
+	exporterConfig *config.ExporterConfig,
 	client hcp.TelemetryClient,
 	clientID,
 	clientSecret string,

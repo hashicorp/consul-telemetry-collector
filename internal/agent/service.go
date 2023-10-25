@@ -29,7 +29,7 @@ func NewService(cfg *Config) (*Service, error) {
 	s := &Service{}
 
 	if cfg.HTTPCollectorEndpoint != "" {
-		s.cfg.ExporterConfig = &config.ExportConfig{
+		s.cfg.ExporterConfig = &config.ExporterConfig{
 			ID: exporters.BaseOtlpExporterID,
 			Exporter: &exporters.ExporterConfig{
 				Endpoint: cfg.HTTPCollectorEndpoint,
@@ -53,7 +53,7 @@ func NewService(cfg *Config) (*Service, error) {
 	}
 
 	if cfg.ExporterConfig != nil {
-		s.cfg.ExporterConfig = &config.ExportConfig{
+		s.cfg.ExporterConfig = &config.ExporterConfig{
 			ID: component.NewID(component.Type(cfg.ExporterConfig.Type)),
 			Exporter: &exporters.ExporterConfig{
 				Headers:  cfg.ExporterConfig.Headers,

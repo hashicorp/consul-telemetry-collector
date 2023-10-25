@@ -14,13 +14,13 @@ import (
 )
 
 type externalProvider struct {
-	exporterConfig *config.ExportConfig
+	exporterConfig *config.ExporterConfig
 }
 
 var _ confmap.Provider = (*externalProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider.
-func NewProvider(exporterConfig *config.ExportConfig) confmap.Provider {
+func NewProvider(exporterConfig *config.ExporterConfig) confmap.Provider {
 	return &externalProvider{
 		exporterConfig: exporterConfig,
 	}

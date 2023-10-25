@@ -30,7 +30,7 @@ func Test_InMem(t *testing.T) {
 	})
 
 	t.Run("with forwarder", func(t *testing.T) {
-		provider := NewProvider(&config.ExportConfig{
+		provider := NewProvider(&config.ExporterConfig{
 			ID: exporters.BaseOtlpExporterID,
 			Exporter: &exporters.ExporterConfig{
 				Endpoint: "https://localhost:6060",

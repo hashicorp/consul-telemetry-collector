@@ -24,7 +24,7 @@ import (
 func Test_newConfigProvider(t *testing.T) {
 	testcases := map[string]struct {
 		testfile    string
-		exporter    *config.ExportConfig
+		exporter    *config.ExporterConfig
 		hcpResource *resource.Resource
 	}{
 		"stock": {
@@ -32,7 +32,7 @@ func Test_newConfigProvider(t *testing.T) {
 		},
 		"stock-with-forwarder": {
 			testfile: "stock-with-forwarder.yaml",
-			exporter: &config.ExportConfig{
+			exporter: &config.ExporterConfig{
 				ID: exporters.BaseOtlpExporterID,
 				Exporter: &exporters.ExporterConfig{
 					Endpoint: "https://test-forwarder-endpoint:4138",
@@ -59,7 +59,7 @@ func Test_newConfigProvider(t *testing.T) {
 				Organization: "00000000-0000-0000-0000-000000000003",
 				Project:      "00000000-0000-0000-0000-000000000004",
 			},
-			exporter: &config.ExportConfig{
+			exporter: &config.ExporterConfig{
 				ID: exporters.BaseOtlpExporterID,
 				Exporter: &exporters.ExporterConfig{
 					Endpoint: "https://test-forwarder-endpoint:4138",
