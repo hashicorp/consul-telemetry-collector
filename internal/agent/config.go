@@ -84,7 +84,7 @@ type Cloud struct {
 	ResourceID   string `hcl:"resource_id,optional"`
 }
 
-// ExporterConfig holds
+// ExporterConfig holds configuration options to export metrics to a desired custom endpoint.
 type ExporterConfig struct {
 	Type     string            `hcl:"type,label"`
 	Headers  map[string]string `hcl:"headers,optional"`
