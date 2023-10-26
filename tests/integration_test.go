@@ -159,6 +159,52 @@ func Test_OTLPHTTP(t *testing.T) {
 	hclog.Default().Info("Shutting down")
 }
 
+func Test_OTLPGRPC(t *testing.T) {
+	totalMetric := atomic.Int64{}
+	addrs := NewTestServer(t, func(req *otlpcolmetrics.ExportMetricsServiceRequest) {
+		for _, resourceMetric := range req.GetResourceMetrics() {
+			for _, scopeMetric := range resourceMetric.GetScopeMetrics() {
+				count := int64(len(scopeMetric.GetMetrics()))
+				totalMetric.Add(count)
+			}
+		}
+	})
+
+	hclog.Default().Info("Running test server", "addr", addrs)
+	collector, err := otel.NewCollector(otel.CollectorCfg{
+		ExporterConfig: &config.ExporterConfig{
+			ID: exporters.GRPCOtlpExporterID,
+			Exporter: &exporters.ExporterConfig{
+				Endpoint: fmt.Sprintf("http://%s", addrs.GRPCEndpoint),
+				Headers: map[string]string{
+					"authorization": "abc123",
+				},
+			},
+		},
+	})
+	must.NoError(t, err)
+	ctx := context.Background()
+	go func() { must.NoError(t, collector.Run(ctx)) }()
+
+	total := generateMetrics(t, 30, 30)
+	ch := time.After(30 * time.Second)
+	for {
+		select {
+		case <-ch:
+			t.Logf("Failed to get %d metrics in 30 seconds", total)
+			t.Fail()
+		default:
+			time.Sleep(500 * time.Millisecond)
+		}
+		if totalMetric.Load() == int64(total) {
+			break
+		}
+	}
+
+	collector.Shutdown()
+	hclog.Default().Info("Shutting down")
+}
+
 func ptr[T any](s T) *T {
 	return &s
 }
