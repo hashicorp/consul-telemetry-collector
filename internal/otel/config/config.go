@@ -60,7 +60,7 @@ func (c *Config) EnrichWithPipelineCfg(
 	err := buildComponents(c.Receivers, pCfg.Receivers, p)
 	merr = multierror.Append(merr, err)
 	// Exporters
-	err = buildComponents(c.Exporters, pCfg.Exporters, p)
+	err = buildExporterComponents(c.Exporters, pCfg.Exporters, p)
 	merr = multierror.Append(merr, err)
 	// Processors
 	err = buildComponents(c.Processors, pCfg.Processors, p)
@@ -108,6 +108,56 @@ func buildComponents(
 	return nil
 }
 
+func buildExporterComponents(
+	componentMap componentMap,
+	componentIDs []component.ID,
+	p *Params,
+) error {
+	for _, id := range componentIDs {
+		if _, ok := componentMap[id]; !ok {
+			component, err := buildExporters(id, p)
+			if err != nil {
+				return err
+			}
+			componentMap[id] = component
+		}
+	}
+
+	return nil
+}
+
+func buildExporters(id component.ID, p *Params) (any, error) {
+	switch id {
+	// exporters
+	case exporters.LoggingExporterID:
+		return exporters.LogExporterCfg(), nil
+	case exporters.HCPExporterID:
+		if p.Client == nil {
+			return nil, errors.New("parameters must specify a client to build HPC exporter config")
+		}
+		metricsEndpoint, err := p.Client.MetricsEndpoint()
+		if err != nil {
+			return nil, fmt.Errorf("failed to get metrics endpoint: %w", err)
+		}
+
+		return exporters.OtlpExporterHCPCfg(metricsEndpoint, p.ResourceID, extensions.OauthClientID), nil
+	case exporters.BaseOtlpExporterID:
+		cfg, err := exporters.OtlpExporterCfg(p.ExporterConfig.Exporter)
+		if err != nil {
+			return nil, err
+		}
+		return cfg.ToStringMap(), nil
+	case exporters.GRPCOtlpExporterID:
+		cfg, err := exporters.OtlpExporterCfg(p.ExporterConfig.Exporter)
+		if err != nil {
+			return nil, err
+		}
+		return cfg.ToStringMap(), nil
+	default:
+		return nil, fmt.Errorf("unsupported component id: %s", id)
+	}
+}
+
 // buildComponent returns a configuration type for a specific ID.
 func buildComponent(id component.ID, p *Params) (any, error) {
 	switch id {
@@ -127,19 +177,6 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		return processors.FilterProcessorCfg(p.Client), nil
 	case processors.ResourceProcessorID:
 		return processors.ResourcesProcessorCfg(p.Client), nil
-	// exporters
-	case exporters.LoggingExporterID:
-		return exporters.LogExporterCfg(), nil
-	case exporters.HCPExporterID:
-		if p.Client == nil {
-			return nil, errors.New("parameters must specify a client to build HPC exporter config")
-		}
-		metricsEndpoint, err := p.Client.MetricsEndpoint()
-		if err != nil {
-			return nil, fmt.Errorf("failed to get metrics endpoint: %w", err)
-		}
-
-		return exporters.OtlpExporterHCPCfg(metricsEndpoint, p.ResourceID, extensions.OauthClientID), nil
 	// extensions
 	case extensions.BallastID:
 		return extensions.BallastCfg(), nil
@@ -149,13 +186,6 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		}
 		return extensions.OauthClientCfg(p.ClientID, p.ClientSecret), nil
 	default:
-		if id == p.ExporterConfig.ID {
-			cfg, err := exporters.OtlpExporterCfg(p.ExporterConfig.Exporter)
-			if err != nil {
-				return nil, err
-			}
-			return cfg.ToStringMap(), nil
-		}
 		return nil, fmt.Errorf("unsupported component id: %s", id)
 	}
 }

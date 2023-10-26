@@ -19,6 +19,7 @@ import (
 const (
 	// otlpHTTPExporterName is the component.ID value used by the otlphttp exporter.
 	otlpHTTPExporterName = "otlphttp"
+	otlpGRPCExporterName = "otlp"
 	channelName          = "x-channel"
 	channelValue         = "consul-telemetry-collector"
 	resourceIDHeader     = "x-hcp-resource-id"
@@ -37,6 +38,7 @@ var (
 	HCPExporterID = component.NewIDWithName(otlpHTTPExporterName, "hcp")
 	// BaseOtlpExporterID is the id of a base otel exporter.
 	BaseOtlpExporterID = component.NewID(otlpHTTPExporterName)
+	GRPCOtlpExporterID = component.NewID(otlpGRPCExporterName)
 )
 
 // ExporterConfig is a base wrapper around the otlphttpexorter which
