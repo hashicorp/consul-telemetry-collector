@@ -1,0 +1,58 @@
+# Copyright (c) HashiCorp, Inc.
+# SPDX-License-Identifier: MPL-2.0
+
+receivers:
+  envoy:
+    grpc:
+  prometheus:
+    config:
+      scrape_configs:
+      - job_name: consul-telemetry-collector
+        scrape_interval: 1m
+        static_configs:
+        - targets:
+          - localhost:9090
+
+processors:
+  memory_limiter:
+    check_interval: 1s
+    limit_percentage: 70
+    spike_limit_percentage: 30
+  batch:
+    timeout: 1m
+    metadata_keys: {}
+
+extensions: {}
+
+exporters:
+  logging:
+  otlp:
+    endpoint: https://test-forwarder-endpoint:4138
+    compression: "none"
+    headers:
+      user-agent: "Go-http-client/1.1"
+      authorization: "abc123"
+
+connectors: {}
+
+service:
+  extensions: []
+  telemetry:
+    resource: {}
+    logs:
+      encoding: console
+      output_paths: stderr
+      error_output_paths: [stderr]
+      initial_fields: {}
+    metrics:
+      address: localhost:9090
+      level: "detailed"
+      readers: []
+    traces:
+      propagators: tracecontext,b3
+      processors: []
+  pipelines:
+    metrics:
+      receivers: [envoy,prometheus]
+      processors: [memory_limiter,batch]
+      exporters: [logging,otlp]
