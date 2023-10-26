@@ -12,12 +12,10 @@ import (
 )
 
 func Test_OtlpExporter(t *testing.T) {
-	cfg := OtlpExporterCfg("foobar")
-	require.NotNil(t, cfg)
-
-	// Marshall the configuration
-	conf := confmap.New()
-	err := conf.Marshal(cfg)
+	e := &ExporterConfig{
+		Endpoint: "foobar",
+	}
+	conf, err := OtlpExporterCfg(e)
 	require.NoError(t, err)
 
 	// Unmarshall and verify
@@ -25,7 +23,9 @@ func Test_OtlpExporter(t *testing.T) {
 	err = conf.Unmarshal(unmarshalledCfg)
 	require.NoError(t, err)
 
-	require.Equal(t, cfg, unmarshalledCfg)
+	require.Equal(t, e.Endpoint, unmarshalledCfg.Endpoint)
+	require.Equal(t, e.Compression, defaultCompression)
+	require.Equal(t, unmarshalledCfg.Headers["user-agent"], defaultUserAgent)
 }
 
 func Test_OtlpExporterHCP(t *testing.T) {

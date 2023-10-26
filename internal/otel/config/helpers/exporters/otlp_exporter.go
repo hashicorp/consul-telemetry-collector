@@ -7,8 +7,10 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/imdario/mergo"
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/configauth"
+	"go.opentelemetry.io/collector/confmap"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/types"
 	"github.com/hashicorp/consul-telemetry-collector/internal/version"
@@ -21,8 +23,9 @@ const (
 	channelValue         = "consul-telemetry-collector"
 	resourceIDHeader     = "x-hcp-resource-id"
 
-	userAgentHeader  = "user-agent"
-	defaultUserAgent = "Go-http-client/1.1"
+	userAgentHeader    = "user-agent"
+	defaultUserAgent   = "Go-http-client/1.1"
+	defaultCompression = "none"
 
 	envVarOtlpExporterTLS = "OTLP_EXPORTER_TLS"
 	tlsSettingInsecure    = "insecure"
@@ -52,18 +55,29 @@ type ExporterConfig struct {
 
 	// The compression key for supported compression types within collector.
 	Compression string `mapstructure:"compression"`
+
+	// Timeout is the http request time limit
+	Timeout string `mapstructure:"timeout,omitempty"`
 }
 
 // OtlpExporterCfg generates the configuration for a otlp exporter.
-func OtlpExporterCfg(endpoint string) *ExporterConfig {
-	cfg := ExporterConfig{
-		Compression: "none",
+func OtlpExporterCfg(e *ExporterConfig) (*confmap.Conf, error) {
+	defaultConfig := ExporterConfig{
+		Compression: defaultCompression,
 		Headers: map[string]string{
 			userAgentHeader: defaultUserAgent,
 		},
 	}
-	cfg.Endpoint = endpoint
-	return &cfg
+	defaultConfig.Endpoint = e.Endpoint
+
+	if err := mergo.Merge(e, defaultConfig); err != nil {
+		return nil, err
+	}
+	c := confmap.New()
+	if err := c.Marshal(&e); err != nil {
+		return nil, err
+	}
+	return c, nil
 }
 
 // OtlpExporterHCPCfg generates the config for an otlp exporter to HCP.

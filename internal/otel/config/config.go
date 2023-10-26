@@ -104,6 +104,7 @@ func buildComponents(
 			componentMap[id] = component
 		}
 	}
+
 	return nil
 }
 
@@ -129,8 +130,6 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 	// exporters
 	case exporters.LoggingExporterID:
 		return exporters.LogExporterCfg(), nil
-	case exporters.BaseOtlpExporterID:
-		return exporters.OtlpExporterCfg(p.OtlpHTTPEndpoint), nil
 	case exporters.HCPExporterID:
 		if p.Client == nil {
 			return nil, errors.New("parameters must specify a client to build HPC exporter config")
@@ -150,6 +149,13 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		}
 		return extensions.OauthClientCfg(p.ClientID, p.ClientSecret), nil
 	default:
+		if id == p.ExporterConfig.ID {
+			cfg, err := exporters.OtlpExporterCfg(p.ExporterConfig.Exporter)
+			if err != nil {
+				return nil, err
+			}
+			return cfg.ToStringMap(), nil
+		}
 		return nil, fmt.Errorf("unsupported component id: %s", id)
 	}
 }

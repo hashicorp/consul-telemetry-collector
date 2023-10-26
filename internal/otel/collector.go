@@ -11,6 +11,7 @@ import (
 	"go.opentelemetry.io/collector/otelcol"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
 	"github.com/hashicorp/consul-telemetry-collector/internal/version"
 )
 
@@ -29,6 +30,7 @@ type CollectorCfg struct {
 	ResourceID        string
 	Client            hcp.TelemetryClient
 	ForwarderEndpoint string
+	ExporterConfig    *config.ExporterConfig
 }
 
 const otelFeatureGate = "telemetry.useOtelForInternalMetrics"

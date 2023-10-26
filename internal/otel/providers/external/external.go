@@ -14,15 +14,15 @@ import (
 )
 
 type externalProvider struct {
-	otlpHTTPEndpoint string
+	exporterConfig *config.ExporterConfig
 }
 
 var _ confmap.Provider = (*externalProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider.
-func NewProvider(forwarderEndpoint string) confmap.Provider {
+func NewProvider(exporterConfig *config.ExporterConfig) confmap.Provider {
 	return &externalProvider{
-		otlpHTTPEndpoint: forwarderEndpoint,
+		exporterConfig: exporterConfig,
 	}
 }
 
@@ -43,9 +43,13 @@ func (m *externalProvider) Retrieve(_ context.Context, _ string, _ confmap.Watch
 	}
 
 	// 3. Build external pipeline
-	externalParams := &config.Params{
-		OtlpHTTPEndpoint: m.otlpHTTPEndpoint,
+	externalParams := &config.Params{}
+
+	// see if this is an empty component.ID
+	if m.exporterConfig != nil {
+		externalParams.ExporterConfig = m.exporterConfig
 	}
+
 	externalCfg := config.PipelineConfigBuilder(externalParams)
 	externalID := component.NewID(component.DataTypeMetrics)
 	err = c.EnrichWithPipelineCfg(externalCfg, externalParams, externalID)

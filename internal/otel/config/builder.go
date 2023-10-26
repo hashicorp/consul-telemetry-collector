@@ -17,11 +17,17 @@ import (
 // Params are the inputs to the configuration building process. Only some config requires
 // these inputs.
 type Params struct {
-	OtlpHTTPEndpoint string
-	Client           hcp.TelemetryClient
-	ClientID         string
-	ClientSecret     string
-	ResourceID       string
+	ExporterConfig *ExporterConfig
+	Client         hcp.TelemetryClient
+	ClientID       string
+	ClientSecret   string
+	ResourceID     string
+}
+
+// ExporterConfig holds a dynamic exporter configuration and corresponding component.ID
+type ExporterConfig struct {
+	ID       component.ID
+	Exporter *exporters.ExporterConfig
 }
 
 // PipelineConfigBuilder defines a basic list of pipeline component IDs for a service.PipelineConfig.
@@ -41,8 +47,8 @@ func PipelineConfigBuilder(p *Params) pipelines.PipelineConfig {
 	includeHCPPipeline := p.ClientID != "" && p.ClientSecret != "" && p.Client != nil
 	if includeHCPPipeline {
 		baseCfg.Exporters = append(baseCfg.Exporters, exporters.HCPExporterID)
-	} else if p.OtlpHTTPEndpoint != "" {
-		baseCfg.Exporters = append(baseCfg.Exporters, exporters.BaseOtlpExporterID)
+	} else if p.ExporterConfig != nil {
+		baseCfg.Exporters = append(baseCfg.Exporters, p.ExporterConfig.ID)
 	}
 
 	return baseCfg

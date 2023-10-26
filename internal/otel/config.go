@@ -18,13 +18,13 @@ func newProvider(cfg CollectorCfg) (otelcol.ConfigProvider, error) {
 	if cfg.ResourceID != "" {
 		uris = append(uris, fmt.Sprintf("hcp:%s", cfg.ResourceID))
 	}
+
 	resolver := confmap.ResolverSettings{
 		URIs: uris,
 		Providers: makeMapProvidersMap(
-			external.NewProvider(cfg.ForwarderEndpoint),
-			hcp.NewProvider(cfg.ForwarderEndpoint, cfg.Client, cfg.ClientID, cfg.ClientSecret),
+			external.NewProvider(cfg.ExporterConfig),
+			hcp.NewProvider(cfg.ExporterConfig, cfg.Client, cfg.ClientID, cfg.ClientSecret),
 		),
-
 		Converters: []confmap.Converter{},
 	}
 

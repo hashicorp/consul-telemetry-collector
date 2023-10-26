@@ -9,8 +9,12 @@ import (
 	"context"
 	"fmt"
 
+	"go.opentelemetry.io/collector/component"
+
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/hashicorp/go-hclog"
 )
 
@@ -23,7 +27,15 @@ type Service struct {
 // NewService returns a new Service based off the past in configuration.
 func NewService(cfg *Config) (*Service, error) {
 	s := &Service{}
-	s.cfg = otel.CollectorCfg{ForwarderEndpoint: cfg.HTTPCollectorEndpoint}
+
+	if cfg.HTTPCollectorEndpoint != "" {
+		s.cfg.ExporterConfig = &config.ExporterConfig{
+			ID: exporters.BaseOtlpExporterID,
+			Exporter: &exporters.ExporterConfig{
+				Endpoint: cfg.HTTPCollectorEndpoint,
+			},
+		}
+	}
 
 	if cfg.Cloud != nil && cfg.Cloud.IsEnabled() {
 		hcpClient, err := hcp.New(&hcp.Params{
@@ -39,6 +51,18 @@ func NewService(cfg *Config) (*Service, error) {
 		s.cfg.Client = hcpClient
 		s.cfg.ResourceID = cfg.Cloud.ResourceID
 	}
+
+	if cfg.ExporterConfig != nil {
+		s.cfg.ExporterConfig = &config.ExporterConfig{
+			ID: component.NewID(component.Type(cfg.ExporterConfig.Type)),
+			Exporter: &exporters.ExporterConfig{
+				Headers:  cfg.ExporterConfig.Headers,
+				Endpoint: cfg.ExporterConfig.Endpoint,
+				Timeout:  cfg.ExporterConfig.Timeout,
+			},
+		}
+	}
+
 	var err error
 	s.collector, err = otel.NewCollector(s.cfg)
 	if err != nil {

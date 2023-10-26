@@ -16,21 +16,31 @@ import (
 	"go.opentelemetry.io/collector/otelcol"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
 	"github.com/hashicorp/hcp-sdk-go/resource"
 )
 
 func Test_newConfigProvider(t *testing.T) {
 	testcases := map[string]struct {
 		testfile    string
-		forwarder   string
+		exporter    *config.ExporterConfig
 		hcpResource *resource.Resource
 	}{
 		"stock": {
 			testfile: "stock.yaml",
 		},
 		"stock-with-forwarder": {
-			testfile:  "stock-with-forwarder.yaml",
-			forwarder: "https://test-forwarder-endpoint:4138",
+			testfile: "stock-with-forwarder.yaml",
+			exporter: &config.ExporterConfig{
+				ID: exporters.BaseOtlpExporterID,
+				Exporter: &exporters.ExporterConfig{
+					Endpoint: "https://test-forwarder-endpoint:4138",
+					Headers: map[string]string{
+						"authorization": "abc123",
+					},
+				},
+			},
 		},
 		"hcp": {
 			testfile: "hcp.yaml",
@@ -42,13 +52,18 @@ func Test_newConfigProvider(t *testing.T) {
 			},
 		},
 		"hcp-with-forwarder": {
-			testfile:  "hcp-with-forwarder.yaml",
-			forwarder: "https://test-forwarder-endpoint:4138",
+			testfile: "hcp-with-forwarder.yaml",
 			hcpResource: &resource.Resource{
 				ID:           "otel-with-cluster",
 				Type:         "hashicorp.consul.cluster",
 				Organization: "00000000-0000-0000-0000-000000000003",
 				Project:      "00000000-0000-0000-0000-000000000004",
+			},
+			exporter: &config.ExporterConfig{
+				ID: exporters.BaseOtlpExporterID,
+				Exporter: &exporters.ExporterConfig{
+					Endpoint: "https://test-forwarder-endpoint:4138",
+				},
 			},
 		},
 	}
@@ -67,11 +82,11 @@ func Test_newConfigProvider(t *testing.T) {
 				}
 			}
 			c := CollectorCfg{
-				ClientID:          "cid",
-				ClientSecret:      "csec",
-				Client:            mockClient,
-				ResourceID:        resourceURL,
-				ForwarderEndpoint: tc.forwarder,
+				ClientID:       "cid",
+				ClientSecret:   "csec",
+				Client:         mockClient,
+				ResourceID:     resourceURL,
+				ExporterConfig: tc.exporter,
 			}
 			provider, err := newProvider(c)
 			test.NoError(t, err)

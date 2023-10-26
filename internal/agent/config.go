@@ -12,6 +12,7 @@ import (
 
 	"go.uber.org/multierr"
 
+	"github.com/hashicorp/go-hclog"
 	"github.com/hashicorp/hcl/v2/hclsimple"
 )
 
@@ -61,7 +62,6 @@ func readConfiguration(reader io.Reader, filename string) (*Config, error) {
 	}
 	// decode needs filename for parsing and bytes passed to it.
 	err = hclsimple.Decode(filename, buffer, nil, cfg)
-
 	if err != nil {
 		return nil, fmt.Errorf("failed parsing config file: %w", err)
 	}
@@ -74,6 +74,7 @@ type Config struct {
 	Cloud                 *Cloud `hcl:"cloud,block"`
 	HTTPCollectorEndpoint string `hcl:"http_collector_endpoint,optional"`
 	ConfigFile            string
+	ExporterConfig        *ExporterConfig `hcl:"exporter_config,block"`
 }
 
 // Cloud is the HCP Cloud configuration.
@@ -81,6 +82,14 @@ type Cloud struct {
 	ClientID     string `hcl:"client_id,optional"`
 	ClientSecret string `hcl:"client_secret,optional"`
 	ResourceID   string `hcl:"resource_id,optional"`
+}
+
+// ExporterConfig holds configuration options to export metrics to a desired custom endpoint.
+type ExporterConfig struct {
+	Type     string            `hcl:"type,label"`
+	Headers  map[string]string `hcl:"headers,optional"`
+	Endpoint string            `hcl:"endpoint"`
+	Timeout  string            `hcl:"timeout,optional"`
 }
 
 // IsEnabled checks if the Cloud config is enabled. It returns false if the ClientID,
@@ -135,4 +144,16 @@ func (c *Config) validate() error {
 	}
 
 	return c.Cloud.validate()
+}
+
+func (c *Config) logDeprecations(logger hclog.Logger) {
+	const deprecatedWarning = "'%s' is deprecated and will be removed in a future release. Use '%s' instead."
+	const conflictingConfig = "deprecated field '%s' and supported config '%s' are both configured. Using '%s'"
+	if c.HTTPCollectorEndpoint != "" {
+		logger.Warn(deprecatedWarning, "http_collector_endpoint", "exporter_config")
+	}
+
+	if c.ExporterConfig != nil && c.HTTPCollectorEndpoint != "" {
+		logger.Warn(conflictingConfig, "http_collector_endpoint", "exporter_config", "exporter_config")
+	}
 }

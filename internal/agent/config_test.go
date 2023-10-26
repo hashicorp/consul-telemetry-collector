@@ -9,6 +9,7 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/google/go-cmp/cmp"
 	"github.com/shoenig/test"
 )
 
@@ -149,7 +150,7 @@ func Test_ReadFile(t *testing.T) {
 		"ClientIDSecretJson": {
 			json: true,
 			config: fmt.Sprintf(`{
-				"cloud": { 
+				"cloud": {
 					"client_id": "%s",
 					"client_secret": "%s"
 				}
@@ -173,22 +174,70 @@ func Test_ReadFile(t *testing.T) {
 				},
 			},
 		},
+		"MinimalExporterConfig": {
+			config: `
+				exporter_config "otelgrpc" {
+					endpoint = "http://otel:3749"
+				}
+			`,
+			expect: &Config{
+				ExporterConfig: &ExporterConfig{
+					Type:     "otelgrpc",
+					Endpoint: "http://otel:3749",
+				},
+			},
+		},
+		"FullExporterConfig": {
+			config: `
+				exporter_config "otelgrpc" {
+					endpoint = "http://otel:3749"
+					timeout = "10s"
+					headers = {
+						a = "b"
+					}
+				}
+			`,
+			expect: &Config{
+				ExporterConfig: &ExporterConfig{
+					Type:     "otelgrpc",
+					Endpoint: "http://otel:3749",
+					Timeout:  "10s",
+					Headers: map[string]string{
+						"a": "b",
+					},
+				},
+			},
+		},
 		"AllFieldsJson": {
 			json: true,
 			config: fmt.Sprintf(`{
-			"cloud": { 
+			"cloud": {
 				"client_id": "%s",
 				"client_secret": "%s"
 			},
-			"http_collector_endpoint": "%s"
+			"http_collector_endpoint": "%s",
+			"exporter_config": {
+				"otelhttp": {
+					"endpoint": "%s",
+					"headers": {
+						"a": "b"
+					},
+					"timeout": "10s"
+				}
 			}
-			`, clientid, clientsecret, endpoint),
+			}`, clientid, clientsecret, endpoint, endpoint),
 			expect: &Config{
 				Cloud: &Cloud{
 					ClientID:     clientid,
 					ClientSecret: clientsecret,
 				},
 				HTTPCollectorEndpoint: endpoint,
+				ExporterConfig: &ExporterConfig{
+					Type:     "otelhttp",
+					Endpoint: endpoint,
+					Headers:  map[string]string{"a": "b"},
+					Timeout:  "10s",
+				},
 			},
 		},
 		"AllFields": {
@@ -243,8 +292,10 @@ func Test_ReadFile(t *testing.T) {
 				test.ErrorContains(t, err, tc.err.Error())
 				return
 			}
+
+			diff := cmp.Diff(outputConfig, tc.expect, cmp.AllowUnexported(ExporterConfig{}))
 			test.NoError(t, err)
-			test.Eq(t, outputConfig, tc.expect)
+			test.Eq(t, outputConfig, tc.expect, test.Sprint(diff))
 		})
 	}
 }

@@ -18,11 +18,11 @@ import (
 )
 
 type hcpProvider struct {
-	otlpHTTPEndpoint string
-	client           hcp.TelemetryClient
-	clientID         string
-	clientSecret     string
-	shutdownCh       chan struct{}
+	exporterConfig *config.ExporterConfig
+	client         hcp.TelemetryClient
+	clientID       string
+	clientSecret   string
+	shutdownCh     chan struct{}
 }
 
 const scheme = "hcp"
@@ -32,17 +32,17 @@ var _ confmap.Provider = (*hcpProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider.
 func NewProvider(
-	forwarderEndpoint string,
+	exporterConfig *config.ExporterConfig,
 	client hcp.TelemetryClient,
 	clientID,
 	clientSecret string,
 ) confmap.Provider {
 	return &hcpProvider{
-		otlpHTTPEndpoint: forwarderEndpoint,
-		client:           client,
-		clientID:         clientID,
-		clientSecret:     clientSecret,
-		shutdownCh:       make(chan struct{}),
+		exporterConfig: exporterConfig,
+		client:         client,
+		clientID:       clientID,
+		clientSecret:   clientSecret,
+		shutdownCh:     make(chan struct{}),
 	}
 }
 
@@ -71,11 +71,11 @@ func (m *hcpProvider) Retrieve(
 	// in this set of extension IDs we want the WithExtOauthClientID which requires the params to build
 	// the actual extension.
 	hcpParams := &config.Params{
-		OtlpHTTPEndpoint: m.otlpHTTPEndpoint,
-		Client:           m.client,
-		ClientID:         m.clientID,
-		ClientSecret:     m.clientSecret,
-		ResourceID:       r.String(),
+		ExporterConfig: m.exporterConfig,
+		Client:         m.client,
+		ClientID:       m.clientID,
+		ClientSecret:   m.clientSecret,
+		ResourceID:     r.String(),
 	}
 	err = c.EnrichWithExtensions(extensions, hcpParams)
 	if err != nil {
@@ -95,9 +95,15 @@ func (m *hcpProvider) Retrieve(
 		return nil, err
 	}
 
-	// 3. B: Build external pipeline
+	// 3. B: Build external pipeline We need to build this external pipeline because of how otel merges configuration.
+	// It does _not_ perform a deep merge and instead performs an overriding merge at the highest matching level. This
+	// behavior means that the service object will never match between the HCP provider and the External provider
+	// without ensuring that the external generator _also_ executes for HCP. The external generator will ensure that the
+	// forward component.ID and other components are included in the service stanza and are activated by the collector.
+	// An improvement here would be to separate the service stanza creation from the HCP or External generators. This
+	// would allow component configuration to happen separately from the service stanza and removing repeated work.
 	externalParams := &config.Params{
-		OtlpHTTPEndpoint: m.otlpHTTPEndpoint,
+		ExporterConfig: m.exporterConfig,
 	}
 	externalCfg := config.PipelineConfigBuilder(externalParams)
 	externalID := component.NewID(component.DataTypeMetrics)
