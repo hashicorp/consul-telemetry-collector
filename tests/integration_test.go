@@ -124,6 +124,7 @@ func Test_OTLPHTTP(t *testing.T) {
 			}
 		}
 	})
+	envoyPort := portal.New(t).One()
 	hclog.Default().Info("Running test server", "addr", addrs)
 	collector, err := otel.NewCollector(otel.CollectorCfg{
 		ExporterConfig: &config.ExporterConfig{
@@ -137,12 +138,13 @@ func Test_OTLPHTTP(t *testing.T) {
 		},
 		MetricsPort:  portal.New(t).One(),
 		BatchTimeout: time.Second,
+		EnvoyPort:    envoyPort,
 	})
 	must.NoError(t, err)
 	ctx := context.Background()
 	go func() { must.NoError(t, collector.Run(ctx)) }()
 
-	total := generateMetrics(t, 30, 30)
+	total := generateMetrics(t, envoyPort, 30, 30)
 	ch := time.After(30 * time.Second)
 	for {
 		select {
@@ -150,6 +152,7 @@ func Test_OTLPHTTP(t *testing.T) {
 			t.Logf("Failed to get %d metrics in 30 seconds", total)
 			t.Fail()
 		default:
+			t.Log(totalMetric.Load(), total)
 			time.Sleep(500 * time.Millisecond)
 		}
 		if totalMetric.Load() == int64(total) {
@@ -172,6 +175,7 @@ func Test_OTLPGRPC(t *testing.T) {
 		}
 	})
 
+	envoyPort := portal.New(t).One()
 	hclog.Default().Info("Running test server", "addr", addrs)
 	collector, err := otel.NewCollector(otel.CollectorCfg{
 		ExporterConfig: &config.ExporterConfig{
@@ -185,12 +189,13 @@ func Test_OTLPGRPC(t *testing.T) {
 		},
 		MetricsPort:  portal.New(t).One(),
 		BatchTimeout: time.Second,
+		EnvoyPort:    envoyPort,
 	})
 	must.NoError(t, err)
 	ctx := context.Background()
 	go func() { must.NoError(t, collector.Run(ctx)) }()
 
-	total := generateMetrics(t, 30, 30)
+	total := generateMetrics(t, envoyPort, 30, 30)
 	ch := time.After(30 * time.Second)
 	for {
 		select {
@@ -198,6 +203,7 @@ func Test_OTLPGRPC(t *testing.T) {
 			t.Logf("Failed to get %d metrics in 30 seconds", total)
 			t.Fail()
 		default:
+			t.Log(totalMetric.Load())
 			time.Sleep(500 * time.Millisecond)
 		}
 		if totalMetric.Load() == int64(total) {
@@ -215,10 +221,10 @@ func ptr[T any](s T) *T {
 
 const counterNumber int = 10
 
-func generateMetrics(t *testing.T, totalSend, metricCount int) (total int) {
+func generateMetrics(t *testing.T, envoyPort, totalSend, metricCount int) (total int) {
 	t.Helper()
 	total = totalSend * metricCount
-	conn, err := grpc.Dial("127.0.0.1:9356", grpc.WithBlock(), grpc.WithInsecure())
+	conn, err := grpc.Dial(fmt.Sprintf("127.0.0.1:%d", envoyPort), grpc.WithBlock(), grpc.WithInsecure())
 	must.NoError(t, err)
 	client := metricsv3.NewMetricsServiceClient(conn)
 	streamClient, err := client.StreamMetrics(context.Background())

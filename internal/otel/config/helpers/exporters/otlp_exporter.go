@@ -6,6 +6,7 @@ package exporters
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/imdario/mergo"
 	"go.opentelemetry.io/collector/component"
@@ -53,7 +54,7 @@ type ExporterConfig struct {
 	Headers map[string]string `mapstructure:"headers,omitempty"`
 
 	// TLSSetting struct exposes TLS client configuration.
-	TLSSetting types.TLSClientSetting `mapstructure:"tls"`
+	TLSSetting *types.TLSClientSetting `mapstructure:"tls,omitempty"`
 
 	// The compression key for supported compression types within collector.
 	Compression string `mapstructure:"compression"`
@@ -69,6 +70,7 @@ func OtlpExporterCfg(e *ExporterConfig) (*confmap.Conf, error) {
 		Headers: map[string]string{
 			userAgentHeader: defaultUserAgent,
 		},
+		TLSSetting: tlsConfigForSetting(e.Endpoint),
 	}
 	defaultConfig.Endpoint = e.Endpoint
 
@@ -100,21 +102,24 @@ func OtlpExporterHCPCfg(endpoint, resourceID string, authID component.ID) *Expor
 		},
 		Auth:        &configauth.Authentication{AuthenticatorID: authID},
 		Endpoint:    endpoint,
-		TLSSetting:  tlsConfigForSetting(),
+		TLSSetting:  tlsConfigForSetting(endpoint),
 		Compression: "none",
 	}
 
 	return &cfg
 }
 
-func tlsConfigForSetting() types.TLSClientSetting {
+func tlsConfigForSetting(endpoint string) *types.TLSClientSetting {
 	setting := os.Getenv(envVarOtlpExporterTLS)
 	switch setting {
-	// case tlsSettingDisabled:
-	// 	return configtls.types.TLSClientSetting{Insecure: true}
+	case tlsSettingDisabled:
+		return &types.TLSClientSetting{Insecure: true}
 	case tlsSettingInsecure:
-		return types.TLSClientSetting{InsecureSkipVerify: true}
+		return &types.TLSClientSetting{InsecureSkipVerify: true}
 	default:
-		return types.TLSClientSetting{}
+		if strings.HasPrefix(endpoint, "http://") {
+			return &types.TLSClientSetting{Insecure: true}
+		}
+		return nil
 	}
 }

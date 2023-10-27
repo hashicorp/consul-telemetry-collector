@@ -65,8 +65,9 @@ func (m *externalProvider) Retrieve(_ context.Context, _ string, _ confmap.Watch
 
 	// 3. Build external pipeline
 	externalParams := &config.Params{
-		BatchTimeout: m.batchTimeout,
-		MetricsPort:  m.metricsPort,
+		BatchTimeout:      m.batchTimeout,
+		MetricsPort:       m.metricsPort,
+		EnvoyListenerPort: m.envoyPort,
 	}
 
 	// see if this is an empty component.ID

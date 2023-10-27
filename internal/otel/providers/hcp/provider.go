@@ -91,13 +91,14 @@ func (m *hcpProvider) Retrieve(
 	// in this set of extension IDs we want the WithExtOauthClientID which requires the params to build
 	// the actual extension.
 	hcpParams := &config.Params{
-		ExporterConfig: m.exporterConfig,
-		Client:         m.client,
-		ClientID:       m.clientID,
-		ClientSecret:   m.clientSecret,
-		ResourceID:     r.String(),
-		BatchTimeout:   m.batchTimeout,
-		MetricsPort:    m.metricsPort,
+		ExporterConfig:    m.exporterConfig,
+		Client:            m.client,
+		ClientID:          m.clientID,
+		ClientSecret:      m.clientSecret,
+		ResourceID:        r.String(),
+		BatchTimeout:      m.batchTimeout,
+		MetricsPort:       m.metricsPort,
+		EnvoyListenerPort: m.envoyPort,
 	}
 	err = c.EnrichWithExtensions(extensions, hcpParams)
 	if err != nil {
@@ -125,9 +126,10 @@ func (m *hcpProvider) Retrieve(
 	// An improvement here would be to separate the service stanza creation from the HCP or External generators. This
 	// would allow component configuration to happen separately from the service stanza and removing repeated work.
 	externalParams := &config.Params{
-		ExporterConfig: m.exporterConfig,
-		BatchTimeout:   m.batchTimeout,
-		MetricsPort:    m.metricsPort,
+		ExporterConfig:    m.exporterConfig,
+		BatchTimeout:      m.batchTimeout,
+		MetricsPort:       m.metricsPort,
+		EnvoyListenerPort: m.envoyPort,
 	}
 	externalCfg := config.PipelineConfigBuilder(externalParams)
 	externalID := component.NewID(component.DataTypeMetrics)

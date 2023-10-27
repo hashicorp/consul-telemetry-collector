@@ -45,6 +45,7 @@ func Test_OtlpHTTPExporterHCP(t *testing.T) {
 	}
 	err = conf.Unmarshal(unmarshalledCfg)
 	require.NoError(t, err)
+	require.Nil(t, cfg.TLSSetting)
 
 	require.Equal(t, cfg, unmarshalledCfg)
 }
@@ -53,25 +54,31 @@ func Test_OtlpExporter(t *testing.T) {
 	tests := map[string]struct {
 		cfg *ExporterConfig
 		env func(t *testing.T)
+		tls bool
 	}{
 		"default": {
 			cfg: &ExporterConfig{
-				Endpoint: "foobar",
+				Endpoint: "http://foobar",
 			},
 		},
 		"headers": {
 			cfg: &ExporterConfig{
-				Endpoint: "foobar",
+				Endpoint: "http://foobar",
 				Headers: map[string]string{
 					"a": "b",
 				},
 			},
 		},
 		"timeout": {
-			cfg: &ExporterConfig{},
+			cfg: &ExporterConfig{
+				Endpoint: "http://foobar",
+			},
 		},
 		"tls": {
-			cfg: &ExporterConfig{},
+			cfg: &ExporterConfig{
+				Endpoint: "https://foobar",
+			},
+			tls: true,
 		},
 	}
 
@@ -90,8 +97,16 @@ func Test_OtlpExporter(t *testing.T) {
 			must.Eq(t, testcase.cfg.Compression, string(otlpCfg.Compression))
 			must.Eq(t, testcase.cfg.Endpoint, otlpCfg.Endpoint)
 			must.Eq(t, testcase.cfg.Auth, otlpCfg.Auth)
-			// must.Nil(t, testcase.cfg.TLSSetting)
-			// must.Nil(t, otlpCfg.TLSSetting)
+
+			// when creating a grpc conn the collector calls this to turn the tls settings into a *tls.Config. We're expecting this to be nil on a plaintext endpoint so that we properly do not do TLS
+			tlsCfg, err := otlpCfg.TLSSetting.LoadTLSConfig()
+			must.NoError(t, err)
+			if testcase.tls {
+				must.NotNil(t, tlsCfg)
+			} else {
+				must.True(t, testcase.cfg.TLSSetting.Insecure)
+				must.Nil(t, tlsCfg)
+			}
 
 			must.MapContainsKey(t, testcase.cfg.Headers, userAgentHeader)
 		})
