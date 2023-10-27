@@ -135,6 +135,8 @@ func Test_OTLPHTTP(t *testing.T) {
 				},
 			},
 		},
+		MetricsPort:  portal.New(t).One(),
+		BatchTimeout: time.Second,
 	})
 	must.NoError(t, err)
 	ctx := context.Background()
@@ -181,6 +183,8 @@ func Test_OTLPGRPC(t *testing.T) {
 				},
 			},
 		},
+		MetricsPort:  portal.New(t).One(),
+		BatchTimeout: time.Second,
 	})
 	must.NoError(t, err)
 	ctx := context.Background()

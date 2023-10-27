@@ -22,8 +22,8 @@ func newProvider(cfg CollectorCfg) (otelcol.ConfigProvider, error) {
 	resolver := confmap.ResolverSettings{
 		URIs: uris,
 		Providers: makeMapProvidersMap(
-			external.NewProvider(cfg.ExporterConfig),
-			hcp.NewProvider(cfg.ExporterConfig, cfg.Client, cfg.ClientID, cfg.ClientSecret),
+			external.NewProvider(cfg.ExporterConfig, external.WithTestOpts(cfg.MetricsPort, cfg.EnvoyPort, cfg.BatchTimeout)),
+			hcp.NewProvider(cfg.ExporterConfig, cfg.Client, cfg.ClientID, cfg.ClientSecret, hcp.WithTestOpts(cfg.MetricsPort, cfg.EnvoyPort, cfg.BatchTimeout)),
 		),
 		Converters: []confmap.Converter{},
 	}

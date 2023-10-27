@@ -165,14 +165,14 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 	case receivers.OtlpReceiverID:
 		return receivers.OtlpReceiverCfg(), nil
 	case receivers.EnvoyReceiverID:
-		return receivers.EnvoyReceiverCfg(), nil
+		return receivers.EnvoyReceiverCfg(p.EnvoyListenerPort), nil
 	case receivers.PrometheusReceiverID:
-		return receivers.PrometheusReceiverCfg(), nil
+		return receivers.PrometheusReceiverCfg(p.MetricsPort), nil
 	// processors
 	case processors.MemoryLimiterID:
 		return processors.MemoryLimiterCfg(), nil
 	case processors.BatchProcessorID:
-		return processors.BatchProcessorCfg(), nil
+		return processors.BatchProcessorCfg(p.BatchTimeout), nil
 	case processors.FilterProcessorID:
 		return processors.FilterProcessorCfg(p.Client), nil
 	case processors.ResourceProcessorID:

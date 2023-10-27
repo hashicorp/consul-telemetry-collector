@@ -4,6 +4,8 @@
 package config
 
 import (
+	"time"
+
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/service/pipelines"
 
@@ -17,11 +19,14 @@ import (
 // Params are the inputs to the configuration building process. Only some config requires
 // these inputs.
 type Params struct {
-	ExporterConfig *ExporterConfig
-	Client         hcp.TelemetryClient
-	ClientID       string
-	ClientSecret   string
-	ResourceID     string
+	ExporterConfig    *ExporterConfig
+	Client            hcp.TelemetryClient
+	ClientID          string
+	ClientSecret      string
+	ResourceID        string
+	BatchTimeout      time.Duration
+	MetricsPort       int
+	EnvoyListenerPort int
 }
 
 // ExporterConfig holds a dynamic exporter configuration and corresponding component.ID

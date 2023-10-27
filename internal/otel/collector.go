@@ -5,6 +5,7 @@ package otel
 
 import (
 	"context"
+	"time"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/featuregate"
@@ -31,6 +32,16 @@ type CollectorCfg struct {
 	Client            hcp.TelemetryClient
 	ForwarderEndpoint string
 	ExporterConfig    *config.ExporterConfig
+	MetricsPort       int
+	EnvoyPort         int
+	BatchTimeout      time.Duration
+}
+
+func DefaultConfig() CollectorCfg {
+	return CollectorCfg{
+		MetricsPort:  9090,
+		BatchTimeout: time.Minute,
+	}
 }
 
 const otelFeatureGate = "telemetry.useOtelForInternalMetrics"
@@ -57,7 +68,7 @@ func NewCollector(cfg CollectorCfg) (Collector, error) {
 		BuildInfo: component.BuildInfo{
 			Command:     "consul-telemetry-collector",
 			Description: "consul-telemetry-collector is a Consul specific build of the open-telemetry collector",
-			Version:     version.Version,
+			Version:     version.GetHumanVersion(),
 		},
 		DisableGracefulShutdown: true,
 		ConfigProvider:          provider,

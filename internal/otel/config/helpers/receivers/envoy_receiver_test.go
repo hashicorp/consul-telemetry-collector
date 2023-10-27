@@ -13,7 +13,7 @@ import (
 )
 
 func Test_EnvoyReceiver(t *testing.T) {
-	cfg := EnvoyReceiverCfg()
+	cfg := EnvoyReceiverCfg(0)
 
 	conf := confmap.New()
 	err := conf.Marshal(cfg)

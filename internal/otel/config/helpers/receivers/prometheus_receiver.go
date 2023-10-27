@@ -5,6 +5,8 @@
 package receivers
 
 import (
+	"fmt"
+
 	"go.opentelemetry.io/collector/component"
 )
 
@@ -33,7 +35,7 @@ type StaticConfig struct {
 }
 
 // PrometheusReceiverCfg  generates the prometheus config for scraping the local telemetry-collector metrics
-func PrometheusReceiverCfg() *PrometheusConfig {
+func PrometheusReceiverCfg(metricsPort int) *PrometheusConfig {
 	// This should create a config that looks like this for scraping our own metrics
 	/*
 		prometheus:
@@ -46,6 +48,9 @@ func PrometheusReceiverCfg() *PrometheusConfig {
 				- localhost:9090
 	*/
 
+	if metricsPort == 0 {
+		metricsPort = 9090
+	}
 	return &PrometheusConfig{
 		Config: map[string][]ScrapeConfig{
 			scrapeConfigKey: {
@@ -54,7 +59,7 @@ func PrometheusReceiverCfg() *PrometheusConfig {
 					ScrapeInterval: "1m",
 					StaticConfigs: []StaticConfig{
 						{
-							Targets: []string{"localhost:9090"},
+							Targets: []string{fmt.Sprintf("localhost:%d", metricsPort)},
 						},
 					},
 				},

@@ -4,6 +4,8 @@
 package config
 
 import (
+	"fmt"
+
 	"go.opentelemetry.io/collector/config/configtelemetry"
 	"go.opentelemetry.io/collector/service/telemetry"
 	"go.uber.org/zap/zapcore"
@@ -15,7 +17,10 @@ const ( // supported trace propagators
 )
 
 // Telemetry returns our basic telemetry configuration.
-func Telemetry() telemetry.Config {
+func Telemetry(metricsPort int) telemetry.Config {
+	if metricsPort == 0 {
+		metricsPort = 9090
+	}
 	return telemetry.Config{
 		Logs: telemetry.LogsConfig{
 			Level:            zapcore.InfoLevel,
@@ -24,7 +29,7 @@ func Telemetry() telemetry.Config {
 			ErrorOutputPaths: []string{"stderr"},
 		},
 		Metrics: telemetry.MetricsConfig{
-			Address: "localhost:9090",
+			Address: fmt.Sprintf("localhost:%d", metricsPort),
 			Level:   configtelemetry.LevelDetailed,
 			Readers: []telemetry.MetricReader{},
 		},

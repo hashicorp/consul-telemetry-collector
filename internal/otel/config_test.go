@@ -93,13 +93,13 @@ func Test_newConfigProvider(t *testing.T) {
 					},
 				}
 			}
-			c := CollectorCfg{
-				ClientID:       "cid",
-				ClientSecret:   "csec",
-				Client:         mockClient,
-				ResourceID:     resourceURL,
-				ExporterConfig: tc.exporter,
-			}
+			c := DefaultConfig()
+			c.ClientID = "cid"
+			c.ClientSecret = "csec"
+			c.Client = mockClient
+			c.ResourceID = resourceURL
+			c.ExporterConfig = tc.exporter
+
 			provider, err := newProvider(c)
 			test.NoError(t, err)
 

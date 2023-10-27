@@ -6,6 +6,7 @@ package external
 import (
 	"context"
 	"fmt"
+	"time"
 
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/confmap"
@@ -15,15 +16,35 @@ import (
 
 type externalProvider struct {
 	exporterConfig *config.ExporterConfig
+	batchTimeout   time.Duration
+	metricsPort    int
+	envoyPort      int
+}
+
+type providerOpts func(*externalProvider)
+
+// WithTestOpts allows us to thread testing functionality into the config builder
+func WithTestOpts(metricsPort, envoyPort int, batchTimeout time.Duration) providerOpts {
+	return func(hp *externalProvider) {
+		hp.batchTimeout = batchTimeout
+		hp.metricsPort = metricsPort
+		hp.envoyPort = envoyPort
+	}
 }
 
 var _ confmap.Provider = (*externalProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider.
-func NewProvider(exporterConfig *config.ExporterConfig) confmap.Provider {
-	return &externalProvider{
+func NewProvider(exporterConfig *config.ExporterConfig, opt ...providerOpts) confmap.Provider {
+	e := &externalProvider{
 		exporterConfig: exporterConfig,
 	}
+
+	for _, o := range opt {
+		o(e)
+	}
+
+	return e
 }
 
 func (m *externalProvider) Retrieve(_ context.Context, _ string, _ confmap.WatcherFunc) (*confmap.Retrieved,
@@ -32,7 +53,7 @@ func (m *externalProvider) Retrieve(_ context.Context, _ string, _ confmap.Watch
 	c := config.NewConfig()
 
 	// 1. Setup Extensions
-	c.Service.Telemetry = config.Telemetry()
+	c.Service.Telemetry = config.Telemetry(m.metricsPort)
 
 	// 2. Setup Extensions
 	extensions := config.ExtensionBuilder()
@@ -43,7 +64,10 @@ func (m *externalProvider) Retrieve(_ context.Context, _ string, _ confmap.Watch
 	}
 
 	// 3. Build external pipeline
-	externalParams := &config.Params{}
+	externalParams := &config.Params{
+		BatchTimeout: m.batchTimeout,
+		MetricsPort:  m.metricsPort,
+	}
 
 	// see if this is an empty component.ID
 	if m.exporterConfig != nil {

@@ -16,11 +16,14 @@ const batchProcessorName = "batch"
 var BatchProcessorID component.ID = component.NewID(batchProcessorName)
 
 // BatchProcessorCfg  generates the config for a batch processor.
-func BatchProcessorCfg() *batchprocessor.Config {
+func BatchProcessorCfg(timeout time.Duration) *batchprocessor.Config {
+	if timeout == 0 {
+		timeout = time.Minute
+	}
 	factory := batchprocessor.NewFactory()
 	cfg := factory.CreateDefaultConfig().(*batchprocessor.Config)
 	cfg.SendBatchSize = 8192
-	cfg.Timeout = time.Minute * 1
+	cfg.Timeout = timeout
 	cfg.MetadataKeys = make([]string, 0)
 
 	return cfg

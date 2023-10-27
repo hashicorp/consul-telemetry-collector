@@ -23,6 +23,20 @@ type hcpProvider struct {
 	clientID       string
 	clientSecret   string
 	shutdownCh     chan struct{}
+	metricsPort    int
+	batchTimeout   time.Duration
+	envoyPort      int
+}
+
+type providerOpts func(*hcpProvider)
+
+// WithTestOpts allows us to thread testing functionality into the config builder
+func WithTestOpts(metricsPort, envoyPort int, batchTimeout time.Duration) providerOpts {
+	return func(hp *hcpProvider) {
+		hp.batchTimeout = batchTimeout
+		hp.metricsPort = metricsPort
+		hp.envoyPort = envoyPort
+	}
 }
 
 const scheme = "hcp"
@@ -36,14 +50,20 @@ func NewProvider(
 	client hcp.TelemetryClient,
 	clientID,
 	clientSecret string,
+	opt ...providerOpts,
 ) confmap.Provider {
-	return &hcpProvider{
+	p := &hcpProvider{
 		exporterConfig: exporterConfig,
 		client:         client,
 		clientID:       clientID,
 		clientSecret:   clientSecret,
 		shutdownCh:     make(chan struct{}),
 	}
+
+	for _, o := range opt {
+		o(p)
+	}
+	return p
 }
 
 func (m *hcpProvider) Retrieve(
@@ -64,7 +84,7 @@ func (m *hcpProvider) Retrieve(
 	c := config.NewConfig()
 
 	// 1. Setup Telemetery
-	c.Service.Telemetry = config.Telemetry()
+	c.Service.Telemetry = config.Telemetry(m.metricsPort)
 
 	// 2. Setup Extensions
 	extensions := config.ExtensionBuilder(config.WithExtOauthClientID)
@@ -76,6 +96,8 @@ func (m *hcpProvider) Retrieve(
 		ClientID:       m.clientID,
 		ClientSecret:   m.clientSecret,
 		ResourceID:     r.String(),
+		BatchTimeout:   m.batchTimeout,
+		MetricsPort:    m.metricsPort,
 	}
 	err = c.EnrichWithExtensions(extensions, hcpParams)
 	if err != nil {
@@ -104,6 +126,8 @@ func (m *hcpProvider) Retrieve(
 	// would allow component configuration to happen separately from the service stanza and removing repeated work.
 	externalParams := &config.Params{
 		ExporterConfig: m.exporterConfig,
+		BatchTimeout:   m.batchTimeout,
+		MetricsPort:    m.metricsPort,
 	}
 	externalCfg := config.PipelineConfigBuilder(externalParams)
 	externalID := component.NewID(component.DataTypeMetrics)
