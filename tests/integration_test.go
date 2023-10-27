@@ -61,9 +61,7 @@ func (s *impl) AdditionalGatewayServeOpts() []runtime.ServeMuxOption {
 
 // Export takes in OTLP metrics and writes them to the Prometheus backend.
 func (s *impl) Export(ctx context.Context, req *otlpcolmetrics.ExportMetricsServiceRequest) (*otlpcolmetrics.ExportMetricsServiceResponse, error) {
-	// hclog.Default().Info("Got resource metrics", "count", len(req.GetResourceMetrics()))
 	for _, resourceMetric := range req.GetResourceMetrics() {
-		// hclog.Default().Info("Got scope metrics", "count", len(resourceMetric.GetScopeMetrics()))
 		for _, scopeMetrics := range resourceMetric.GetScopeMetrics() {
 			hclog.Default().Info("Got metrics", "count", len(scopeMetrics.Metrics))
 		}
@@ -224,7 +222,7 @@ const counterNumber int = 10
 func generateMetrics(t *testing.T, envoyPort, totalSend, metricCount int) (total int) {
 	t.Helper()
 	total = totalSend * metricCount
-	conn, err := grpc.Dial(fmt.Sprintf("127.0.0.1:%d", envoyPort), grpc.WithBlock(), grpc.WithInsecure())
+	conn, err := grpc.Dial(fmt.Sprintf("127.0.0.1:%d", envoyPort), grpc.WithBlock(), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	must.NoError(t, err)
 	client := metricsv3.NewMetricsServiceClient(conn)
 	streamClient, err := client.StreamMetrics(context.Background())
@@ -232,7 +230,7 @@ func generateMetrics(t *testing.T, envoyPort, totalSend, metricCount int) (total
 
 	for i := 0; i < totalSend; i++ {
 		hclog.Default().Info("sending metric")
-		streamClient.Send(&metricsv3.StreamMetricsMessage{
+		err := streamClient.Send(&metricsv3.StreamMetricsMessage{
 			Identifier: &metricsv3.StreamMetricsMessage_Identifier{
 				Node: &corev3.Node{
 					Id:      "integration_test",
@@ -241,6 +239,7 @@ func generateMetrics(t *testing.T, envoyPort, totalSend, metricCount int) (total
 			},
 			EnvoyMetrics: NewEnvoyMetrics(metricCount),
 		})
+		must.NoError(t, err)
 	}
 	return total
 }

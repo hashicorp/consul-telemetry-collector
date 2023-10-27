@@ -37,6 +37,7 @@ type CollectorCfg struct {
 	BatchTimeout      time.Duration
 }
 
+// DefaultConfig provides a config with default values for the CollectorCfg
 func DefaultConfig() CollectorCfg {
 	return CollectorCfg{
 		MetricsPort:  9090,

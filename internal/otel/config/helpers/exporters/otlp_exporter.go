@@ -39,6 +39,7 @@ var (
 	HCPExporterID = component.NewIDWithName(otlpHTTPExporterName, "hcp")
 	// BaseOtlpExporterID is the id of a base otel exporter.
 	BaseOtlpExporterID = component.NewID(otlpHTTPExporterName)
+	// GRPCOtlpExporterID is the id of the grpc otel exporter.
 	GRPCOtlpExporterID = component.NewID(otlpGRPCExporterName)
 )
 

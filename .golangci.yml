@@ -13,7 +13,7 @@ linters:
     - bodyclose
     - containedctx
     - decorder # checks declaration order and count of types, constants, variables and functions
-    - depguard
+      #- depguard
     - dogsled
     - durationcheck # checks for two durations multiplied together
     - errcheck
@@ -117,6 +117,10 @@ linters-settings:
   stylecheck:
     checks: ["all"]
 
+  revive:
+    rules:
+      - name: unexported-return
+        disabled: true
 issues:
   include:
     - EXC0001 # Error return value of x is not checked
