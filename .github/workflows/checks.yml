@@ -58,7 +58,7 @@ jobs:
           make go/lint
 
   e2e:
-    if: github.repository_owner == 'hashicorp' && contains(github.event.pull_request.labels.*.name, 'e2e')
+    if: github.repository == 'hashicorp/consul-telemetry-collector' && contains(github.event.pull_request.labels.*.name, 'e2e')
     needs:
       [test, golangci]
     uses: ./.github/workflows/e2e.yml
