@@ -31,6 +31,7 @@ import (
 // impl is an OTLP metrics server.
 type impl struct {
 	otlpcolmetrics.UnimplementedMetricsServiceServer
+	// TODO right now we just call this validation func but we should put a slice of flattened metrics so that we can compare against the prom metrics
 	validation func(req *otlpcolmetrics.ExportMetricsServiceRequest)
 }
 
@@ -75,6 +76,7 @@ type Addrs struct {
 	HTTPEndpoint string
 }
 
+// TODO move test server into a separate file for easier reading
 func NewTestServer(t *testing.T, validation func(req *otlpcolmetrics.ExportMetricsServiceRequest)) Addrs {
 	t.Helper()
 	ctx := context.Background()
@@ -124,6 +126,8 @@ func Test_OTLPHTTP(t *testing.T) {
 	})
 	envoyPort := portal.New(t).One()
 	hclog.Default().Info("Running test server", "addr", addrs)
+
+	// TODO construct this from the NewTestServer (or start the collector there)
 	collector, err := otel.NewCollector(otel.CollectorCfg{
 		ExporterConfig: &config.ExporterConfig{
 			ID: exporters.BaseOtlpExporterID,
@@ -143,19 +147,12 @@ func Test_OTLPHTTP(t *testing.T) {
 	go func() { must.NoError(t, collector.Run(ctx)) }()
 
 	total := generateMetrics(t, envoyPort, 30, 30)
-	ch := time.After(30 * time.Second)
 	for {
-		select {
-		case <-ch:
-			t.Logf("Failed to get %d metrics in 30 seconds", total)
-			t.Fail()
-		default:
-			t.Log(totalMetric.Load(), total)
-			time.Sleep(500 * time.Millisecond)
-		}
 		if totalMetric.Load() == int64(total) {
 			break
 		}
+		time.Sleep(1 * time.Second)
+		hclog.Default().Info("Waiting on metric collection", "sent", total, "got", totalMetric.Load())
 	}
 
 	collector.Shutdown()
@@ -194,19 +191,13 @@ func Test_OTLPGRPC(t *testing.T) {
 	go func() { must.NoError(t, collector.Run(ctx)) }()
 
 	total := generateMetrics(t, envoyPort, 30, 30)
-	ch := time.After(30 * time.Second)
 	for {
-		select {
-		case <-ch:
-			t.Logf("Failed to get %d metrics in 30 seconds", total)
-			t.Fail()
-		default:
-			t.Log(totalMetric.Load())
-			time.Sleep(500 * time.Millisecond)
-		}
+		// TODO: right now we just validate that we got the same number of metrics as we're sending. This validates the client -> server communication
 		if totalMetric.Load() == int64(total) {
 			break
 		}
+		time.Sleep(1 * time.Second)
+		hclog.Default().Info("Waiting on metric collection", "sent", total, "got", totalMetric.Load())
 	}
 
 	collector.Shutdown()
