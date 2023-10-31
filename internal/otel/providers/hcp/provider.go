@@ -14,6 +14,7 @@ import (
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers"
 	"github.com/hashicorp/hcp-sdk-go/resource"
 )
 
@@ -39,9 +40,7 @@ func NewProvider(
 	client hcp.TelemetryClient,
 	clientID,
 	clientSecret string,
-	batchTimeout time.Duration,
-	metricsPort,
-	envoyPort int,
+	sharedParams providers.SharedParams,
 ) confmap.Provider {
 	p := &hcpProvider{
 		exporterConfig: exporterConfig,
@@ -49,9 +48,9 @@ func NewProvider(
 		clientID:       clientID,
 		clientSecret:   clientSecret,
 		shutdownCh:     make(chan struct{}),
-		batchTimeout:   batchTimeout,
-		metricsPort:    metricsPort,
-		envoyPort:      envoyPort,
+		batchTimeout:   sharedParams.BatchTimeout,
+		metricsPort:    sharedParams.MetricsPort,
+		envoyPort:      sharedParams.EnvoyPort,
 	}
 
 	return p

@@ -12,6 +12,7 @@ import (
 	"go.opentelemetry.io/collector/confmap"
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers"
 )
 
 type externalProvider struct {
@@ -24,12 +25,12 @@ type externalProvider struct {
 var _ confmap.Provider = (*externalProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider.
-func NewProvider(exporterConfig *config.ExporterConfig, batchTimeout time.Duration, metricsPort, envoyPort int) confmap.Provider {
+func NewProvider(exporterConfig *config.ExporterConfig, sharedParams providers.SharedParams) confmap.Provider {
 	e := &externalProvider{
 		exporterConfig: exporterConfig,
-		batchTimeout:   batchTimeout,
-		envoyPort:      envoyPort,
-		metricsPort:    metricsPort,
+		batchTimeout:   sharedParams.BatchTimeout,
+		envoyPort:      sharedParams.EnvoyPort,
+		metricsPort:    sharedParams.MetricsPort,
 	}
 
 	return e

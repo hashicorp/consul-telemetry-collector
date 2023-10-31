@@ -9,6 +9,7 @@ import (
 	"go.opentelemetry.io/collector/confmap"
 	"go.opentelemetry.io/collector/otelcol"
 
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers/external"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers/hcp"
 )
@@ -19,11 +20,17 @@ func newProvider(cfg CollectorCfg) (otelcol.ConfigProvider, error) {
 		uris = append(uris, fmt.Sprintf("hcp:%s", cfg.ResourceID))
 	}
 
+	params := providers.SharedParams{
+		BatchTimeout: cfg.BatchTimeout,
+		MetricsPort:  cfg.MetricsPort,
+		EnvoyPort:    cfg.EnvoyPort,
+	}
+
 	resolver := confmap.ResolverSettings{
 		URIs: uris,
 		Providers: makeMapProvidersMap(
-			external.NewProvider(cfg.ExporterConfig, cfg.BatchTimeout, cfg.MetricsPort, cfg.EnvoyPort),
-			hcp.NewProvider(cfg.ExporterConfig, cfg.Client, cfg.ClientID, cfg.ClientSecret, cfg.BatchTimeout, cfg.MetricsPort, cfg.EnvoyPort),
+			external.NewProvider(cfg.ExporterConfig, params),
+			hcp.NewProvider(cfg.ExporterConfig, cfg.Client, cfg.ClientID, cfg.ClientSecret, params),
 		),
 		Converters: []confmap.Converter{},
 	}
