@@ -5,6 +5,7 @@ package envoyreceiver
 
 import (
 	"context"
+	"fmt"
 	"time"
 
 	"go.opentelemetry.io/collector/component"
@@ -18,10 +19,11 @@ const (
 	// ID is the indentifier for the receiver.
 	ID = "envoy"
 
-	defaultGRPCEndpoint = "127.0.0.1:9356"
-
+	// DefaultGRPCPort is the default grpc port
 	DefaultGRPCPort = 9356
 )
+
+var defaultGRPCEndpoint = fmt.Sprintf("127.0.0.1:%d", DefaultGRPCPort)
 
 // NewFactory creates a new envoy receiver factory.
 func NewFactory() receiver.Factory {
