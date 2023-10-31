@@ -14,7 +14,12 @@ import (
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
 	"github.com/hashicorp/consul-telemetry-collector/internal/version"
+	"github.com/hashicorp/consul-telemetry-collector/receivers/envoyreceiver"
 )
+
+const defaultMetricsPort = 9090
+const defaultBatchTimeout = time.Minute
+const defaultEnvoyPort = envoyreceiver.DefaultGRPCPort
 
 // Collector is an interface that is satisfied by the otelcol.Collector struct.
 // This allows us to wrap the opentelemetry collector and not necessarily run it ourselves.
@@ -37,11 +42,17 @@ type CollectorCfg struct {
 	BatchTimeout      time.Duration
 }
 
-// DefaultConfig provides a config with default values for the CollectorCfg
-func DefaultConfig() CollectorCfg {
-	return CollectorCfg{
-		MetricsPort:  9090,
-		BatchTimeout: time.Minute,
+func (c *CollectorCfg) init() {
+	if c.MetricsPort == 0 {
+		c.MetricsPort = defaultMetricsPort
+	}
+
+	if c.BatchTimeout == 0 {
+		c.BatchTimeout = defaultBatchTimeout
+	}
+
+	if c.EnvoyPort == 0 {
+		c.EnvoyPort = defaultEnvoyPort
 	}
 }
 
@@ -58,6 +69,8 @@ func NewCollector(cfg CollectorCfg) (Collector, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	cfg.init()
 
 	provider, err := newProvider(cfg)
 	if err != nil {

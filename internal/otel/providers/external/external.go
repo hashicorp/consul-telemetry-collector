@@ -21,27 +21,15 @@ type externalProvider struct {
 	envoyPort      int
 }
 
-type providerOpts func(*externalProvider)
-
-// WithTestOpts allows us to thread testing functionality into the config builder
-func WithTestOpts(metricsPort, envoyPort int, batchTimeout time.Duration) providerOpts {
-	return func(hp *externalProvider) {
-		hp.batchTimeout = batchTimeout
-		hp.metricsPort = metricsPort
-		hp.envoyPort = envoyPort
-	}
-}
-
 var _ confmap.Provider = (*externalProvider)(nil)
 
 // NewProvider creates a new static in memory configmap provider.
-func NewProvider(exporterConfig *config.ExporterConfig, opt ...providerOpts) confmap.Provider {
+func NewProvider(exporterConfig *config.ExporterConfig, batchTimeout time.Duration, metricsPort, envoyPort int) confmap.Provider {
 	e := &externalProvider{
 		exporterConfig: exporterConfig,
-	}
-
-	for _, o := range opt {
-		o(e)
+		batchTimeout:   batchTimeout,
+		envoyPort:      envoyPort,
+		metricsPort:    metricsPort,
 	}
 
 	return e

@@ -28,17 +28,6 @@ type hcpProvider struct {
 	envoyPort      int
 }
 
-type providerOpts func(*hcpProvider)
-
-// WithTestOpts allows us to thread testing functionality into the config builder
-func WithTestOpts(metricsPort, envoyPort int, batchTimeout time.Duration) providerOpts {
-	return func(hp *hcpProvider) {
-		hp.batchTimeout = batchTimeout
-		hp.metricsPort = metricsPort
-		hp.envoyPort = envoyPort
-	}
-}
-
 const scheme = "hcp"
 const schemePrefix = scheme + ":"
 
@@ -50,7 +39,9 @@ func NewProvider(
 	client hcp.TelemetryClient,
 	clientID,
 	clientSecret string,
-	opt ...providerOpts,
+	batchTimeout time.Duration,
+	metricsPort,
+	envoyPort int,
 ) confmap.Provider {
 	p := &hcpProvider{
 		exporterConfig: exporterConfig,
@@ -58,11 +49,11 @@ func NewProvider(
 		clientID:       clientID,
 		clientSecret:   clientSecret,
 		shutdownCh:     make(chan struct{}),
+		batchTimeout:   batchTimeout,
+		metricsPort:    metricsPort,
+		envoyPort:      envoyPort,
 	}
 
-	for _, o := range opt {
-		o(p)
-	}
 	return p
 }
 

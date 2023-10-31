@@ -18,9 +18,6 @@ const ( // supported trace propagators
 
 // Telemetry returns our basic telemetry configuration.
 func Telemetry(metricsPort int) telemetry.Config {
-	if metricsPort == 0 {
-		metricsPort = 9090
-	}
 	return telemetry.Config{
 		Logs: telemetry.LogsConfig{
 			Level:            zapcore.InfoLevel,

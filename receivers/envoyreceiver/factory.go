@@ -19,6 +19,8 @@ const (
 	ID = "envoy"
 
 	defaultGRPCEndpoint = "127.0.0.1:9356"
+
+	DefaultGRPCPort = 9356
 )
 
 // NewFactory creates a new envoy receiver factory.

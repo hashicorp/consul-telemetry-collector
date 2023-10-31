@@ -6,6 +6,7 @@ package external
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/shoenig/test"
 	"github.com/shoenig/test/must"
@@ -16,7 +17,7 @@ import (
 
 func Test_InMem(t *testing.T) {
 	t.Run("no forwarder", func(t *testing.T) {
-		provider := NewProvider(nil)
+		provider := NewProvider(nil, time.Minute, 9090, 9091)
 		retrieved, err := provider.Retrieve(context.Background(), "", nil)
 		test.NoError(t, err)
 
@@ -35,7 +36,7 @@ func Test_InMem(t *testing.T) {
 			Exporter: &exporters.ExporterConfig{
 				Endpoint: "https://localhost:6060",
 			},
-		})
+		}, time.Minute, 9090, 9091)
 		retrieved, err := provider.Retrieve(context.Background(), "", nil)
 		test.NoError(t, err)
 

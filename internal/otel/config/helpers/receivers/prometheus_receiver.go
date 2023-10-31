@@ -48,9 +48,6 @@ func PrometheusReceiverCfg(metricsPort int) *PrometheusConfig {
 				- localhost:9090
 	*/
 
-	if metricsPort == 0 {
-		metricsPort = 9090
-	}
 	return &PrometheusConfig{
 		Config: map[string][]ScrapeConfig{
 			scrapeConfigKey: {
