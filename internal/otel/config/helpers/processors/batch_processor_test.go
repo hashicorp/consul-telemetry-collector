@@ -5,6 +5,7 @@ package processors
 
 import (
 	"testing"
+	"time"
 
 	"github.com/stretchr/testify/require"
 	"go.opentelemetry.io/collector/confmap"
@@ -12,7 +13,7 @@ import (
 )
 
 func Test_BatchProcessor(t *testing.T) {
-	cfg := BatchProcessorCfg()
+	cfg := BatchProcessorCfg(time.Minute)
 	require.NotNil(t, cfg)
 
 	// Marshall the configuration

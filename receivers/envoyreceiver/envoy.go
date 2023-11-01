@@ -93,7 +93,10 @@ func (r *envoyReceiver) Shutdown(_ context.Context) error {
 
 	r.logger.Info("Shutting down envoy receiver gracefully")
 	r.grpcServer.GracefulStop()
-	<-r.shutdownCh
+	if r.shutdownCh != nil {
+		<-r.shutdownCh
+	}
+
 	return nil
 }
 

@@ -12,11 +12,12 @@ import (
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config/helpers/exporters"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers"
 )
 
 func Test_InMem(t *testing.T) {
 	t.Run("no forwarder", func(t *testing.T) {
-		provider := NewProvider(nil)
+		provider := NewProvider(nil, providers.SharedParams{})
 		retrieved, err := provider.Retrieve(context.Background(), "", nil)
 		test.NoError(t, err)
 
@@ -35,7 +36,7 @@ func Test_InMem(t *testing.T) {
 			Exporter: &exporters.ExporterConfig{
 				Endpoint: "https://localhost:6060",
 			},
-		})
+		}, providers.SharedParams{})
 		retrieved, err := provider.Retrieve(context.Background(), "", nil)
 		test.NoError(t, err)
 

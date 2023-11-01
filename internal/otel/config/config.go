@@ -60,7 +60,7 @@ func (c *Config) EnrichWithPipelineCfg(
 	err := buildComponents(c.Receivers, pCfg.Receivers, p)
 	merr = multierror.Append(merr, err)
 	// Exporters
-	err = buildComponents(c.Exporters, pCfg.Exporters, p)
+	err = buildExporterComponents(c.Exporters, pCfg.Exporters, p)
 	merr = multierror.Append(merr, err)
 	// Processors
 	err = buildComponents(c.Processors, pCfg.Processors, p)
@@ -108,25 +108,26 @@ func buildComponents(
 	return nil
 }
 
-// buildComponent returns a configuration type for a specific ID.
-func buildComponent(id component.ID, p *Params) (any, error) {
+func buildExporterComponents(
+	componentMap componentMap,
+	componentIDs []component.ID,
+	p *Params,
+) error {
+	for _, id := range componentIDs {
+		if _, ok := componentMap[id]; !ok {
+			component, err := buildExporters(id, p)
+			if err != nil {
+				return err
+			}
+			componentMap[id] = component
+		}
+	}
+
+	return nil
+}
+
+func buildExporters(id component.ID, p *Params) (any, error) {
 	switch id {
-	// receivers
-	case receivers.OtlpReceiverID:
-		return receivers.OtlpReceiverCfg(), nil
-	case receivers.EnvoyReceiverID:
-		return receivers.EnvoyReceiverCfg(), nil
-	case receivers.PrometheusReceiverID:
-		return receivers.PrometheusReceiverCfg(), nil
-	// processors
-	case processors.MemoryLimiterID:
-		return processors.MemoryLimiterCfg(), nil
-	case processors.BatchProcessorID:
-		return processors.BatchProcessorCfg(), nil
-	case processors.FilterProcessorID:
-		return processors.FilterProcessorCfg(p.Client), nil
-	case processors.ResourceProcessorID:
-		return processors.ResourcesProcessorCfg(p.Client), nil
 	// exporters
 	case exporters.LoggingExporterID:
 		return exporters.LogExporterCfg(), nil
@@ -140,6 +141,42 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		}
 
 		return exporters.OtlpExporterHCPCfg(metricsEndpoint, p.ResourceID, extensions.OauthClientID), nil
+	case exporters.BaseOtlpExporterID:
+		cfg, err := exporters.OtlpExporterCfg(p.ExporterConfig.Exporter)
+		if err != nil {
+			return nil, err
+		}
+		return cfg.ToStringMap(), nil
+	case exporters.GRPCOtlpExporterID:
+		cfg, err := exporters.OtlpExporterCfg(p.ExporterConfig.Exporter)
+		if err != nil {
+			return nil, err
+		}
+		return cfg.ToStringMap(), nil
+	default:
+		return nil, fmt.Errorf("unsupported component id: %s", id)
+	}
+}
+
+// buildComponent returns a configuration type for a specific ID.
+func buildComponent(id component.ID, p *Params) (any, error) {
+	switch id {
+	// receivers
+	case receivers.OtlpReceiverID:
+		return receivers.OtlpReceiverCfg(), nil
+	case receivers.EnvoyReceiverID:
+		return receivers.EnvoyReceiverCfg(p.EnvoyListenerPort), nil
+	case receivers.PrometheusReceiverID:
+		return receivers.PrometheusReceiverCfg(p.MetricsPort), nil
+	// processors
+	case processors.MemoryLimiterID:
+		return processors.MemoryLimiterCfg(), nil
+	case processors.BatchProcessorID:
+		return processors.BatchProcessorCfg(p.BatchTimeout), nil
+	case processors.FilterProcessorID:
+		return processors.FilterProcessorCfg(p.Client), nil
+	case processors.ResourceProcessorID:
+		return processors.ResourcesProcessorCfg(p.Client), nil
 	// extensions
 	case extensions.BallastID:
 		return extensions.BallastCfg(), nil
@@ -149,13 +186,6 @@ func buildComponent(id component.ID, p *Params) (any, error) {
 		}
 		return extensions.OauthClientCfg(p.ClientID, p.ClientSecret), nil
 	default:
-		if id == p.ExporterConfig.ID {
-			cfg, err := exporters.OtlpExporterCfg(p.ExporterConfig.Exporter)
-			if err != nil {
-				return nil, err
-			}
-			return cfg.ToStringMap(), nil
-		}
 		return nil, fmt.Errorf("unsupported component id: %s", id)
 	}
 }

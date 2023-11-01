@@ -14,6 +14,7 @@ import (
 
 	"github.com/hashicorp/consul-telemetry-collector/internal/hcp"
 	"github.com/hashicorp/consul-telemetry-collector/internal/otel/config"
+	"github.com/hashicorp/consul-telemetry-collector/internal/otel/providers"
 	"github.com/hashicorp/hcp-sdk-go/resource"
 )
 
@@ -23,6 +24,9 @@ type hcpProvider struct {
 	clientID       string
 	clientSecret   string
 	shutdownCh     chan struct{}
+	metricsPort    int
+	batchTimeout   time.Duration
+	envoyPort      int
 }
 
 const scheme = "hcp"
@@ -36,14 +40,20 @@ func NewProvider(
 	client hcp.TelemetryClient,
 	clientID,
 	clientSecret string,
+	sharedParams providers.SharedParams,
 ) confmap.Provider {
-	return &hcpProvider{
+	p := &hcpProvider{
 		exporterConfig: exporterConfig,
 		client:         client,
 		clientID:       clientID,
 		clientSecret:   clientSecret,
 		shutdownCh:     make(chan struct{}),
+		batchTimeout:   sharedParams.BatchTimeout,
+		metricsPort:    sharedParams.MetricsPort,
+		envoyPort:      sharedParams.EnvoyPort,
 	}
+
+	return p
 }
 
 func (m *hcpProvider) Retrieve(
@@ -64,18 +74,21 @@ func (m *hcpProvider) Retrieve(
 	c := config.NewConfig()
 
 	// 1. Setup Telemetery
-	c.Service.Telemetry = config.Telemetry()
+	c.Service.Telemetry = config.Telemetry(m.metricsPort)
 
 	// 2. Setup Extensions
 	extensions := config.ExtensionBuilder(config.WithExtOauthClientID)
 	// in this set of extension IDs we want the WithExtOauthClientID which requires the params to build
 	// the actual extension.
 	hcpParams := &config.Params{
-		ExporterConfig: m.exporterConfig,
-		Client:         m.client,
-		ClientID:       m.clientID,
-		ClientSecret:   m.clientSecret,
-		ResourceID:     r.String(),
+		ExporterConfig:    m.exporterConfig,
+		Client:            m.client,
+		ClientID:          m.clientID,
+		ClientSecret:      m.clientSecret,
+		ResourceID:        r.String(),
+		BatchTimeout:      m.batchTimeout,
+		MetricsPort:       m.metricsPort,
+		EnvoyListenerPort: m.envoyPort,
 	}
 	err = c.EnrichWithExtensions(extensions, hcpParams)
 	if err != nil {
@@ -103,7 +116,10 @@ func (m *hcpProvider) Retrieve(
 	// An improvement here would be to separate the service stanza creation from the HCP or External generators. This
 	// would allow component configuration to happen separately from the service stanza and removing repeated work.
 	externalParams := &config.Params{
-		ExporterConfig: m.exporterConfig,
+		ExporterConfig:    m.exporterConfig,
+		BatchTimeout:      m.batchTimeout,
+		MetricsPort:       m.metricsPort,
+		EnvoyListenerPort: m.envoyPort,
 	}
 	externalCfg := config.PipelineConfigBuilder(externalParams)
 	externalID := component.NewID(component.DataTypeMetrics)

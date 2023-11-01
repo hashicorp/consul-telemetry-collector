@@ -13,7 +13,7 @@ import (
 )
 
 func Test_PrometheusReceiverCfg(t *testing.T) {
-	cfg := PrometheusReceiverCfg()
+	cfg := PrometheusReceiverCfg(0)
 
 	conf := confmap.New()
 	err := conf.Marshal(cfg)

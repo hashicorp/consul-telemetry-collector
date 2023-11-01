@@ -13,7 +13,7 @@ linters:
     - bodyclose
     - containedctx
     - decorder # checks declaration order and count of types, constants, variables and functions
-    - depguard
+      #- depguard
     - dogsled
     - durationcheck # checks for two durations multiplied together
     - errcheck

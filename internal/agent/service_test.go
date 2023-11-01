@@ -34,7 +34,7 @@ func Test_runSvc(t *testing.T) {
 				errCh <- err
 			}()
 
-			time.After(time.Second)
+			time.After(1 * time.Second)
 			cancel()
 			<-ctx.Done()
 			err = <-errCh

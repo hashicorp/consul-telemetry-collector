@@ -5,6 +5,8 @@
 package receivers
 
 import (
+	"fmt"
+
 	"go.opentelemetry.io/collector/component"
 	"go.opentelemetry.io/collector/config/configgrpc"
 
@@ -20,8 +22,9 @@ type Config struct {
 }
 
 // EnvoyReceiverCfg  generates the config for an otlp receiver.
-func EnvoyReceiverCfg() *envoyreceiver.Config {
+func EnvoyReceiverCfg(listenerPort int) *envoyreceiver.Config {
 	defaults := envoyreceiver.NewFactory().CreateDefaultConfig().(*envoyreceiver.Config)
+	defaults.GRPC.NetAddr.Endpoint = fmt.Sprintf("127.0.0.1:%d", listenerPort)
 
 	return defaults
 }

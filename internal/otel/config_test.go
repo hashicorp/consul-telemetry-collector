@@ -42,6 +42,18 @@ func Test_newConfigProvider(t *testing.T) {
 				},
 			},
 		},
+		"stock-with-forwarder-grpc": {
+			testfile: "stock-with-forwarder-grpc.yaml",
+			exporter: &config.ExporterConfig{
+				ID: exporters.GRPCOtlpExporterID,
+				Exporter: &exporters.ExporterConfig{
+					Endpoint: "https://test-forwarder-endpoint:4138",
+					Headers: map[string]string{
+						"authorization": "abc123",
+					},
+				},
+			},
+		},
 		"hcp": {
 			testfile: "hcp.yaml",
 			hcpResource: &resource.Resource{
@@ -88,6 +100,9 @@ func Test_newConfigProvider(t *testing.T) {
 				ResourceID:     resourceURL,
 				ExporterConfig: tc.exporter,
 			}
+
+			c.init()
+
 			provider, err := newProvider(c)
 			test.NoError(t, err)
 
@@ -101,7 +116,7 @@ func Test_newConfigProvider(t *testing.T) {
 			test.NoError(t, err)
 			cfg, err := provider.Get(ctx, factories)
 
-			must.NoError(t, err)
+			must.NoError(t, err, must.Sprintf("%#v", cfg))
 			must.NoError(t, cfg.Validate(), must.Sprint("provider configuration is invalid"))
 
 			testprovider := testConfigProvider(t, []string{tc.testfile})
