@@ -16,5 +16,6 @@ source .release/varz.bash
 CRT_STAGING_REGISTRY="crt-core-staging-docker-local.artifactory.hashicorp.engineering"
 TARGET=release-default
 
-TAG="${CRT_STAGING_REGISTRY}/${REPO}/${TARGET}:${PRODUCT_VERSION}/${SHA}"
+TAG="${CRT_STAGING_REGISTRY}/${REPO}/${TARGET}:${PRODUCT_VERSION}_${SHA}"
+echo pulling $TAG
 docker pull $TAG
