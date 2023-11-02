@@ -1,0 +1,7 @@
+{{- define "note" -}}
+{{ if eq .Type "imagechange" -}}
+{{.Body}} [[Commit](https://github.com/hashicorp/cloud-consul-host-manager/commit/{{ .Hash }})]
+{{- else -}}
+{{.Body}}[[PR-{{- .Issue -}}](https://github.com/hashicorp/cloud-consul-host-manager/issues/{{- .Issue -}})]
+{{- end -}}
+{{- end -}}

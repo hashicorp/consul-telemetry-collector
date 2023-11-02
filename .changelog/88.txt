@@ -1,0 +1,4 @@
+```release-note:enhancement
+Add otlp exporter and configuration
+* Add new parameters to allow user settable HTTP or GRPC headers
+```
