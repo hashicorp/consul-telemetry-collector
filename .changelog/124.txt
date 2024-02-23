@@ -1,0 +1,3 @@
+```release:enhancement
+cli: added `CO_OTEL_GRPC_ENDPOINT` and `grpc-collector-endpoint` user configurable parameters to set external metrics collection gRPC endpoint.
+```
