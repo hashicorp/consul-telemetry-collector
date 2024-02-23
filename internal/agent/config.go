@@ -30,6 +30,7 @@ func configFromEnvVars() *Config {
 		},
 		ConfigFile:            os.Getenv(COOConfigPath),
 		HTTPCollectorEndpoint: os.Getenv(COOtelHTTPEndpoint),
+		GRPCCollectorEndpoint: os.Getenv(COOtelGRPCEndpoint),
 	}
 }
 
@@ -73,6 +74,7 @@ func readConfiguration(reader io.Reader, filename string) (*Config, error) {
 type Config struct {
 	Cloud                 *Cloud `hcl:"cloud,block"`
 	HTTPCollectorEndpoint string `hcl:"http_collector_endpoint,optional"`
+	GRPCCollectorEndpoint string `hcl:"grpc_collector_endpoint,optional"`
 	ConfigFile            string
 	ExporterConfig        *ExporterConfig `hcl:"exporter_config,block"`
 }

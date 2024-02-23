@@ -47,6 +47,46 @@ func Test_InMem(t *testing.T) {
 		otlp := asMap(t, exporters["otlphttp"])
 		test.Eq(t, otlp["endpoint"], "https://localhost:6060")
 	})
+
+	t.Run("with tls grpc forwarder", func(t *testing.T) {
+		provider := NewProvider(&config.ExporterConfig{
+			ID: exporters.GRPCOtlpExporterID,
+			Exporter: &exporters.ExporterConfig{
+				Endpoint: "https://localhost:6060",
+			},
+		}, providers.SharedParams{})
+		retrieved, err := provider.Retrieve(context.Background(), "", nil)
+		test.NoError(t, err)
+
+		conf, err := retrieved.AsConf()
+		test.NoError(t, err)
+		confMap := conf.ToStringMap()
+		exporters := asMap(t, confMap["exporters"])
+		otlp := asMap(t, exporters["otlp"])
+		test.Eq(t, otlp["endpoint"], "https://localhost:6060")
+		test.Eq(t, otlp["tls"], nil)
+	})
+
+	t.Run("with non-tls grpc forwarder", func(t *testing.T) {
+		provider := NewProvider(&config.ExporterConfig{
+			ID: exporters.GRPCOtlpExporterID,
+			Exporter: &exporters.ExporterConfig{
+				Endpoint: "http://localhost:6060",
+			},
+		}, providers.SharedParams{})
+		retrieved, err := provider.Retrieve(context.Background(), "", nil)
+		test.NoError(t, err)
+
+		conf, err := retrieved.AsConf()
+		test.NoError(t, err)
+		confMap := conf.ToStringMap()
+		exporters := asMap(t, confMap["exporters"])
+		otlp := asMap(t, exporters["otlp"])
+		test.Eq(t, otlp["endpoint"], "http://localhost:6060")
+		tlsSetting := asMap(t, otlp["tls"])
+		test.Eq(t, tlsSetting["insecure"], true)
+		test.Eq(t, tlsSetting["insecure_skip_verify"], false)
+	})
 }
 
 func asMap(t *testing.T, a any) map[string]any {
