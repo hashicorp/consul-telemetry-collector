@@ -37,6 +37,15 @@ func NewService(cfg *Config) (*Service, error) {
 		}
 	}
 
+	if cfg.GRPCCollectorEndpoint != "" {
+		s.cfg.ExporterConfig = &config.ExporterConfig{
+			ID: exporters.GRPCOtlpExporterID,
+			Exporter: &exporters.ExporterConfig{
+				Endpoint: cfg.GRPCCollectorEndpoint,
+			},
+		}
+	}
+
 	if cfg.Cloud != nil && cfg.Cloud.IsEnabled() {
 		hcpClient, err := hcp.New(&hcp.Params{
 			ClientID:     cfg.Cloud.ClientID,
