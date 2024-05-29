@@ -24,8 +24,14 @@ const (
 	// COOtelHTTPEndpoint is the environment variable for  OpenTelemetry HTTP Endpoints where metrics are forwarded.
 	COOtelHTTPEndpoint = "CO_OTEL_HTTP_ENDPOINT"
 
+	// COOtelGRPCEndpoint is the environment variable for  OpenTelemetry gRPC Endpoints where metrics are forwarded.
+	COOtelGRPCEndpoint = "CO_OTEL_GRPC_ENDPOINT"
+
 	// COOtelHTTPEndpointOpt is the cli opt for the OpenTelemetry HTTP Endpoints where metrics are forwarded.
 	COOtelHTTPEndpointOpt = "http-collector-endpoint"
+
+	// COOtelGRPCEndpointOpt is the cli opt for the OpenTelemetry HTTP Endpoints where metrics are forwarded.
+	COOtelGRPCEndpointOpt = "grpc-collector-endpoint"
 
 	// COOConfigPath is the environment variable for path to the config.
 	COOConfigPath = "COO_CONFIG_PATH"
