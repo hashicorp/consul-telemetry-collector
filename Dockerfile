@@ -38,6 +38,7 @@ ARG PRODUCT_REVISION
 ARG PRODUCT_NAME=${BIN_NAME}
 # TARGETARCH and TARGETOS are set automatically when --platform is provided.
 ARG TARGETOS TARGETARCH
+ENV PRODUCT_NAME=$BIN_NAME
 
 LABEL name="Consul Telemetry Collector" \
 	  maintainer="Consul Cloud Team <team-consul-cloud@hashicorp.com>" \
@@ -45,13 +46,15 @@ LABEL name="Consul Telemetry Collector" \
       version=${PRODUCT_VERSION} \
       release=${PRODUCT_REVISION} \
       revision=${PRODUCT_REVISION} \
-      description="Consul Telemetry Collector is a service mesh observability tool that collects and forwards service mesh information via open-telemetry"
+      description="Consul Telemetry Collector is a service mesh observability tool that collects and forwards service mesh information via open-telemetry" \
+      org.opencontainers.image.licenses="MPL-2.0"
 
 # Create a non-root user to run the software.
 RUN addgroup $PRODUCT_NAME && \
     adduser -S -G $PRODUCT_NAME 100
 
 COPY dist/$TARGETOS/$TARGETARCH/$BIN_NAME /bin/
+COPY LICENSE /usr/share/doc/$PRODUCT_NAME/LICENSE.txt
 
 USER 100
 COPY .github/docker/entrypoint.sh /usr/bin/entrypoint.sh
@@ -81,7 +84,7 @@ ARG PRODUCT_REVISION
 ARG PRODUCT_NAME=$BIN_NAME
 # TARGETARCH and TARGETOS are set automatically when --platform is provided.
 ARG TARGETOS TARGETARCH
-
+ENV PRODUCT_NAME=$BIN_NAME
 
 LABEL name="Consul Telemetry Collector" \
 	  maintainer="Consul Cloud Team <team-consul-cloud@hashicorp.com>" \
@@ -89,7 +92,8 @@ LABEL name="Consul Telemetry Collector" \
       version=${PRODUCT_VERSION} \
       release=${PRODUCT_REVISION} \
       revision=${PRODUCT_REVISION} \
-      description="Consul Telemetry Collector is a service mesh observability tools that collectors and forwards service mesh information via open-telemetry"
+      description="Consul Telemetry Collector is a service mesh observability tools that collectors and forwards service mesh information via open-telemetry" \
+      org.opencontainers.image.licenses="MPL-2.0"
 
 # Create a non-root user to run the software.
 RUN groupadd --gid 1000 $PRODUCT_NAME && \
@@ -99,6 +103,7 @@ RUN groupadd --gid 1000 $PRODUCT_NAME && \
 COPY dist/$TARGETOS/$TARGETARCH/$BIN_NAME /bin/
 # copy license for redhat certification
 COPY LICENSE /licenses/copyright.txt
+COPY LICENSE /usr/share/doc/$PRODUCT_NAME/LICENSE.txt
 
 USER 101
 CMD /bin/$BIN_NAME

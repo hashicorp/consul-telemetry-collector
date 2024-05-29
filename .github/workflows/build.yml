@@ -118,6 +118,7 @@ jobs:
           arch: ${{ matrix.goarch }}
           reproducible: report
           instructions: |
+            cp LICENSE $TARGET_DIR/LICENSE.txt
             make build
 
   build-linux:
@@ -147,7 +148,15 @@ jobs:
           arch: ${{ matrix.goarch }}
           reproducible: assert
           instructions: |
+            cp LICENSE $TARGET_DIR/LICENSE.txt
             make build
+
+      - name: Copy license file
+        env:
+          LICENSE_DIR: ".release/linux/package/usr/share/doc/${{ env.PKG_NAME }}"
+        run: |
+          mkdir -p "$LICENSE_DIR"
+          cp LICENSE "$LICENSE_DIR/LICENSE.txt"
 
       - name: Package
         if: ${{ matrix.goos == 'linux' }}
@@ -163,6 +172,7 @@ jobs:
           binary: "dist/${{ env.PKG_NAME }}"
           deb_depends: "openssl"
           rpm_depends: "openssl"
+          config_dir: ".release/linux/package"
 
       - name: Set Package Names
         if: ${{ matrix.goos == 'linux' }}
@@ -212,6 +222,7 @@ jobs:
           arch: ${{ matrix.goarch }}
           reproducible: assert
           instructions: |
+            cp LICENSE $TARGET_DIR/LICENSE.txt
             make build
 
   build-docker-default:
