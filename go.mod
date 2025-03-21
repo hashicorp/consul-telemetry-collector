@@ -1,8 +1,6 @@
 module github.com/hashicorp/consul-telemetry-collector
 
-go 1.23.0
-
-toolchain go1.23.7
+go 1.24
 
 require (
 	github.com/envoyproxy/go-control-plane v0.11.1
