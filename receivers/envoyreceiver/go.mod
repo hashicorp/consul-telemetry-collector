@@ -1,6 +1,8 @@
 module github.com/hashicorp/consul-telemetry-collector/receivers/envoyreceiver
 
-go 1.24
+go 1.23.0
+
+toolchain go1.23.7
 
 require (
 	github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc
