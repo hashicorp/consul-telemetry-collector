@@ -111,6 +111,7 @@ func NewTestServer(t *testing.T, validation func(req *otlpcolmetrics.ExportMetri
 
 	httpSvr := httptest.NewServer(f)
 	t.Cleanup(httpSvr.Close)
+
 	return Addrs{
 		GRPCEndpoint: ln.Addr().String(),
 		HTTPEndpoint: httpSvr.Listener.Addr().String(),
@@ -219,6 +220,10 @@ func generateMetrics(t *testing.T, envoyPort, totalSend, metricCount int) (total
 	conn, err := grpc.NewClient(fmt.Sprintf("127.0.0.1:%d", envoyPort), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	must.NoError(t, err)
 	client := metricsv3.NewMetricsServiceClient(conn)
+
+	// wait for server startup
+	time.Sleep(time.Second)
+
 	streamClient, err := client.StreamMetrics(context.Background())
 	must.NoError(t, err)
 
