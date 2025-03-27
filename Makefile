@@ -67,4 +67,4 @@ build/docker:
 
 .PHONY: deps
 deps:
-	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.52.2
+	go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.62.0

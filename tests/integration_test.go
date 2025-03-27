@@ -216,7 +216,7 @@ const counterNumber int = 10
 func generateMetrics(t *testing.T, envoyPort, totalSend, metricCount int) (total int) {
 	t.Helper()
 	total = totalSend * metricCount
-	conn, err := grpc.Dial(fmt.Sprintf("127.0.0.1:%d", envoyPort), grpc.WithBlock(), grpc.WithTransportCredentials(insecure.NewCredentials()))
+	conn, err := grpc.NewClient(fmt.Sprintf("127.0.0.1:%d", envoyPort), grpc.WithTransportCredentials(insecure.NewCredentials()))
 	must.NoError(t, err)
 	client := metricsv3.NewMetricsServiceClient(conn)
 	streamClient, err := client.StreamMetrics(context.Background())

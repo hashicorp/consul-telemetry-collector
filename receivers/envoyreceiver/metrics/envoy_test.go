@@ -52,8 +52,7 @@ func TestReceiver_StreamMetrics(t *testing.T) {
 	// WithBlock() should make sure that we have a connection before calling StreamMetrics().
 	// We have an open TCP connection even if the server might not be serving yet, so we shouldn't have a fatal error
 	// here.
-	conn, err := grpc.Dial(addr,
-		grpc.WithBlock(),
+	conn, err := grpc.NewClient(addr,
 		grpc.WithTransportCredentials(insecure.NewCredentials()),
 	)
 	must.NoError(t, err)
