@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     if: github.repository_owner == 'hashicorp'
     steps:
-    - uses: benc-uk/workflow-dispatch@25b02cc069be46d637e8fe2f1e8484008e9e9609 # v1.2.3
+    - uses: benc-uk/workflow-dispatch@e2e5e9a103e331dad343f381a29e654aea3cf8fc # v1.2.4
       name: kubernetes
       with:
         workflow: collector.yml
