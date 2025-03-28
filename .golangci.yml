@@ -19,7 +19,6 @@ linters:
     - errcheck
     - errname
     - errorlint
-    - exportloopref # checks for pointers to enclosing loop variables
     - gci
     - gochecknoinits # checks that no init functions are present in Go code
     - gocritic
@@ -52,6 +51,7 @@ linters:
     - usestdlibvars # detects the possibility to use variables/constants from the Go standard library
     - wastedassign # finds wasted assignment statements
     - whitespace # detects leading and trailing whitespace
+    - copyloopvar
 
 linters-settings:
   gci:
