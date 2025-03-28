@@ -32,7 +32,7 @@ require (
 	github.com/golang/snappy v0.0.4 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/klauspost/compress v1.17.1 // indirect
+	github.com/klauspost/compress v1.17.8 // indirect
 	github.com/knadh/koanf v1.5.0 // indirect
 	github.com/knadh/koanf/v2 v2.0.1 // indirect
 	github.com/mitchellh/copystructure v1.2.0 // indirect
@@ -40,7 +40,7 @@ require (
 	github.com/mitchellh/reflectwalk v1.0.2 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/mostynb/go-grpc-compression v1.2.2 // indirect
+	github.com/mostynb/go-grpc-compression v1.2.3 // indirect
 	github.com/planetscale/vtprotobuf v0.6.1-0.20240319094008-0393e58bdf10 // indirect
 	github.com/pmezard/go-difflib v1.0.1-0.20181226105442-5d4384ee4fb2 // indirect
 	go.opentelemetry.io/auto/sdk v1.1.0 // indirect
