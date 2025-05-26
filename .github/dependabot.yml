@@ -4,11 +4,11 @@ updates:
   directory: "/"
   schedule:
       interval: "weekly"
-    groups:
-      github-actions-breaking:
-        update-types:
-          - major
-      github-actions-backward-compatible:
-        update-types:
-          - minor
-          - patch
+  groups:
+    github-actions-breaking:
+      update-types:
+        - major
+    github-actions-backward-compatible:
+      update-types:
+        - minor
+        - patch
